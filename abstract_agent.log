@@ -1,0 +1,348 @@
+2022-09-02 08:37:41 INFO     Initializing: logging started
+2022-09-02 08:37:41 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 08:37:41 INFO     connected to broker
+2022-09-02 08:37:41 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 08:37:41 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 08:37:49 INFO     received a message "connectMount"
+2022-09-02 08:37:51 INFO     received a message "enableMount"
+2022-09-02 08:37:53 INFO     received a message "homeMount"
+2022-09-02 08:37:55 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 08:37:57 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 08:37:59 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 08:38:01 INFO     received a message "parkMount"
+2022-09-02 08:38:03 INFO     received a message "disableMount"
+2022-09-02 08:38:05 INFO     received a message "disconnectMount"
+2022-09-02 08:38:07 INFO     received a message "settemp(-15.0)"
+2022-09-02 08:38:21 INFO     received a message "end"
+2022-09-02 08:38:21 INFO     received a message "end"
+2022-09-02 08:40:51 INFO     Initializing: logging started
+2022-09-02 08:40:51 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 08:40:51 INFO     connected to broker
+2022-09-02 08:40:51 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 08:40:51 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 08:44:40 INFO     Initializing: logging started
+2022-09-02 08:44:40 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 08:44:40 INFO     connected to broker
+2022-09-02 08:44:40 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 08:44:40 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 08:53:47 INFO     Initializing: logging started
+2022-09-02 08:53:47 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 08:53:47 INFO     connected to broker
+2022-09-02 08:53:47 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 08:53:47 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 08:53:53 INFO     received a message "connectMount"
+2022-09-02 08:54:58 INFO     received a message "enableMount"
+2022-09-02 08:54:58 INFO     received a message "homeMount"
+2022-09-02 08:54:58 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 08:54:58 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 08:54:58 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 08:54:58 INFO     received a message "parkMount"
+2022-09-02 08:54:58 INFO     received a message "disableMount"
+2022-09-02 08:54:58 INFO     received a message "disconnectMount"
+2022-09-02 08:54:58 INFO     received a message "settemp(-15.0)"
+2022-09-02 08:54:58 INFO     received a message "end"
+2022-09-02 08:54:58 INFO     received a message "end"
+2022-09-02 08:55:22 INFO     Initializing: logging started
+2022-09-02 08:55:22 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 08:55:22 INFO     connected to broker
+2022-09-02 08:55:22 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 08:55:22 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 08:55:27 INFO     received a message "connectMount"
+2022-09-02 08:55:46 INFO     received a message "enableMount"
+2022-09-02 08:55:46 INFO     received a message "homeMount"
+2022-09-02 08:55:46 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 08:55:46 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 08:55:46 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 08:55:46 INFO     received a message "parkMount"
+2022-09-02 08:55:46 INFO     received a message "disableMount"
+2022-09-02 08:55:46 INFO     received a message "disconnectMount"
+2022-09-02 08:55:46 INFO     received a message "settemp(-15.0)"
+2022-09-02 08:57:24 INFO     Initializing: logging started
+2022-09-02 08:57:24 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 08:57:24 INFO     connected to broker
+2022-09-02 08:57:24 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 08:57:24 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 08:57:32 INFO     received a message "connectMount"
+2022-09-02 08:58:08 INFO     received a message "enableMount"
+2022-09-02 08:58:08 INFO     received a message "homeMount"
+2022-09-02 08:58:08 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 08:58:08 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 08:58:08 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 08:58:08 INFO     received a message "parkMount"
+2022-09-02 08:58:08 INFO     received a message "disableMount"
+2022-09-02 08:58:08 INFO     received a message "disconnectMount"
+2022-09-02 08:58:08 INFO     received a message "settemp(-15.0)"
+2022-09-02 08:58:08 INFO     received a message "end"
+2022-09-02 08:58:08 INFO     received a message "end"
+2022-09-02 08:58:32 INFO     Initializing: logging started
+2022-09-02 08:58:32 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 08:58:32 INFO     connected to broker
+2022-09-02 08:58:32 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 08:58:32 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 08:58:37 INFO     received a message "connectMount"
+2022-09-02 08:59:02 INFO     received a message "enableMount"
+2022-09-02 08:59:02 INFO     received a message "homeMount"
+2022-09-02 08:59:02 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 08:59:02 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 08:59:02 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 08:59:02 INFO     received a message "parkMount"
+2022-09-02 08:59:02 INFO     received a message "disableMount"
+2022-09-02 08:59:02 INFO     received a message "disconnectMount"
+2022-09-02 08:59:02 INFO     received a message "settemp(-15.0)"
+2022-09-02 08:59:14 INFO     Initializing: logging started
+2022-09-02 08:59:14 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 08:59:14 INFO     connected to broker
+2022-09-02 08:59:14 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 08:59:14 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 08:59:20 INFO     received a message "connectMount"
+2022-09-02 08:59:40 INFO     received a message "enableMount"
+2022-09-02 08:59:40 INFO     received a message "homeMount"
+2022-09-02 08:59:40 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 08:59:40 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 08:59:40 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 08:59:40 INFO     received a message "parkMount"
+2022-09-02 08:59:40 INFO     received a message "disableMount"
+2022-09-02 08:59:40 INFO     received a message "disconnectMount"
+2022-09-02 08:59:40 INFO     received a message "settemp(-15.0)"
+2022-09-02 09:02:05 INFO     Initializing: logging started
+2022-09-02 09:02:05 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:02:05 INFO     connected to broker
+2022-09-02 09:02:05 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:02:05 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:02:11 INFO     received a message "connectMount"
+2022-09-02 09:02:25 INFO     received a message "enableMount"
+2022-09-02 09:02:25 INFO     received a message "homeMount"
+2022-09-02 09:02:25 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 09:02:25 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 09:02:25 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 09:02:25 INFO     received a message "parkMount"
+2022-09-02 09:02:25 INFO     received a message "disableMount"
+2022-09-02 09:03:11 INFO     Initializing: logging started
+2022-09-02 09:03:11 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:03:11 INFO     connected to broker
+2022-09-02 09:03:11 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:03:11 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:03:17 INFO     received a message "connectMount"
+2022-09-02 09:03:19 INFO     received a message "enableMount"
+2022-09-02 09:03:21 INFO     received a message "homeMount"
+2022-09-02 09:03:23 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 09:03:25 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 09:03:27 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 09:03:29 INFO     received a message "parkMount"
+2022-09-02 09:03:31 INFO     received a message "disableMount"
+2022-09-02 09:03:33 INFO     received a message "disconnectMount"
+2022-09-02 09:03:35 INFO     received a message "settemp(-15.0)"
+2022-09-02 09:05:14 INFO     Initializing: logging started
+2022-09-02 09:05:14 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:05:14 INFO     connected to broker
+2022-09-02 09:05:14 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:05:14 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:05:19 INFO     received a message "connectMount"
+2022-09-02 09:05:21 INFO     received a message "enableMount"
+2022-09-02 09:05:23 INFO     received a message "homeMount"
+2022-09-02 09:05:25 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 09:05:27 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 09:05:29 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 09:05:31 INFO     received a message "parkMount"
+2022-09-02 09:05:33 INFO     received a message "disableMount"
+2022-09-02 09:05:35 INFO     received a message "disconnectMount"
+2022-09-02 09:05:37 INFO     received a message "settemp(-15.0)"
+2022-09-02 09:05:51 INFO     received a message "end"
+2022-09-02 09:05:51 INFO     received a message "end"
+2022-09-02 09:09:16 INFO     Initializing: logging started
+2022-09-02 09:09:16 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:09:16 INFO     connected to broker
+2022-09-02 09:09:16 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:09:16 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:09:21 INFO     received a message "connectMount"
+2022-09-02 09:09:23 INFO     received a message "enableMount"
+2022-09-02 09:09:25 INFO     received a message "homeMount"
+2022-09-02 09:09:27 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 09:09:29 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 09:09:31 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 09:09:33 INFO     received a message "parkMount"
+2022-09-02 09:09:35 INFO     received a message "disableMount"
+2022-09-02 09:09:37 INFO     received a message "disconnectMount"
+2022-09-02 09:09:39 INFO     received a message "settemp(-15.0)"
+2022-09-02 09:09:53 INFO     received a message "end"
+2022-09-02 09:09:53 INFO     received a message "end"
+2022-09-02 09:32:17 INFO     Initializing: logging started
+2022-09-02 09:32:17 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:32:17 INFO     connected to broker
+2022-09-02 09:32:17 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:32:17 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:32:24 INFO     received a message "connectMount"
+2022-09-02 09:32:26 INFO     received a message "enableMount"
+2022-09-02 09:32:28 INFO     received a message "homeMount"
+2022-09-02 09:32:30 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 09:32:32 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 09:32:34 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 09:32:36 INFO     received a message "parkMount"
+2022-09-02 09:32:38 INFO     received a message "disableMount"
+2022-09-02 09:32:40 INFO     received a message "disconnectMount"
+2022-09-02 09:32:42 INFO     received a message "settemp(-15.0)"
+2022-09-02 09:32:56 INFO     received a message "end"
+2022-09-02 09:32:56 INFO     received a message "end"
+2022-09-02 09:34:43 INFO     Initializing: logging started
+2022-09-02 09:34:43 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:34:43 INFO     connected to broker
+2022-09-02 09:34:43 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:34:43 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:36:00 INFO     Initializing: logging started
+2022-09-02 09:36:00 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:36:00 INFO     connected to broker
+2022-09-02 09:36:00 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:36:00 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:36:11 INFO     received a message "connectMount"
+2022-09-02 09:36:13 INFO     received a message "enableMount"
+2022-09-02 09:36:15 INFO     received a message "homeMount"
+2022-09-02 09:36:17 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 09:36:19 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 09:36:21 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 09:36:23 INFO     received a message "parkMount"
+2022-09-02 09:36:25 INFO     received a message "disableMount"
+2022-09-02 09:36:27 INFO     received a message "disconnectMount"
+2022-09-02 09:36:29 INFO     received a message "settemp(-15.0)"
+2022-09-02 09:36:43 INFO     received a message "end"
+2022-09-02 09:36:43 INFO     received a message "end"
+2022-09-02 09:40:27 INFO     Initializing: logging started
+2022-09-02 09:40:27 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:40:27 INFO     connected to broker
+2022-09-02 09:40:27 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:40:27 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:40:57 INFO     Initializing: logging started
+2022-09-02 09:40:57 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:40:57 INFO     connected to broker
+2022-09-02 09:40:57 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:40:57 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:41:09 INFO     received a message "connectMount"
+2022-09-02 09:41:11 INFO     received a message "enableMount"
+2022-09-02 09:41:13 INFO     received a message "homeMount"
+2022-09-02 09:41:15 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 09:41:17 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 09:41:19 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 09:41:21 INFO     received a message "parkMount"
+2022-09-02 09:41:23 INFO     received a message "disableMount"
+2022-09-02 09:41:25 INFO     received a message "disconnectMount"
+2022-09-02 09:41:27 INFO     received a message "settemp(-15.0)"
+2022-09-02 09:41:41 INFO     received a message "end"
+2022-09-02 09:41:41 INFO     received a message "end"
+2022-09-02 09:43:43 INFO     Initializing: logging started
+2022-09-02 09:43:43 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:43:43 INFO     connected to broker
+2022-09-02 09:43:43 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:43:43 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:43:51 INFO     received a message "connectMount"
+2022-09-02 09:43:53 INFO     received a message "enableMount"
+2022-09-02 09:43:55 INFO     received a message "homeMount"
+2022-09-02 09:43:57 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 09:43:59 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 09:44:01 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 09:44:03 INFO     received a message "parkMount"
+2022-09-02 09:44:05 INFO     received a message "disableMount"
+2022-09-02 09:44:07 INFO     received a message "disconnectMount"
+2022-09-02 09:44:09 INFO     received a message "settemp(-15.0)"
+2022-09-02 09:44:39 INFO     Initializing: logging started
+2022-09-02 09:44:39 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:44:39 INFO     connected to broker
+2022-09-02 09:44:39 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:44:39 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:44:46 INFO     received a message "connectMount"
+2022-09-02 09:44:48 INFO     received a message "enableMount"
+2022-09-02 09:44:50 INFO     received a message "homeMount"
+2022-09-02 09:44:52 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 09:44:54 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 09:44:56 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 09:44:58 INFO     received a message "parkMount"
+2022-09-02 09:45:00 INFO     received a message "disableMount"
+2022-09-02 09:45:25 INFO     Initializing: logging started
+2022-09-02 09:45:25 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:45:25 INFO     connected to broker
+2022-09-02 09:45:25 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:45:25 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:45:32 INFO     received a message "connectMount"
+2022-09-02 09:45:34 INFO     received a message "enableMount"
+2022-09-02 09:45:36 INFO     received a message "homeMount"
+2022-09-02 09:45:38 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 09:45:40 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 09:45:42 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 09:45:44 INFO     received a message "parkMount"
+2022-09-02 09:45:46 INFO     received a message "disableMount"
+2022-09-02 09:45:48 INFO     received a message "disconnectMount"
+2022-09-02 09:46:53 INFO     Initializing: logging started
+2022-09-02 09:46:53 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:46:53 INFO     connected to broker
+2022-09-02 09:46:53 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:46:53 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:46:57 INFO     received a message "connectMount"
+2022-09-02 09:46:59 INFO     received a message "enableMount"
+2022-09-02 09:47:01 INFO     received a message "homeMount"
+2022-09-02 09:47:03 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 09:47:05 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 09:47:07 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 09:47:09 INFO     received a message "parkMount"
+2022-09-02 09:47:11 INFO     received a message "disableMount"
+2022-09-02 09:47:58 INFO     Initializing: logging started
+2022-09-02 09:47:58 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:47:58 INFO     connected to broker
+2022-09-02 09:47:58 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:47:58 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:48:05 INFO     received a message "connectMount"
+2022-09-02 09:48:07 INFO     received a message "enableMount"
+2022-09-02 09:48:09 INFO     received a message "homeMount"
+2022-09-02 09:48:11 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 09:48:13 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 09:48:15 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 09:48:17 INFO     received a message "parkMount"
+2022-09-02 09:48:19 INFO     received a message "disableMount"
+2022-09-02 09:48:21 INFO     received a message "disconnectMount"
+2022-09-02 09:48:23 INFO     received a message "settemp(-15.0)"
+2022-09-02 09:48:37 INFO     received a message "end"
+2022-09-02 09:48:37 INFO     received a message "end"
+2022-09-02 09:49:22 INFO     Initializing: logging started
+2022-09-02 09:49:22 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:49:22 INFO     connected to broker
+2022-09-02 09:49:22 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:49:22 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:49:32 INFO     received a message "connectMount"
+2022-09-02 09:49:34 INFO     received a message "enableMount"
+2022-09-02 09:49:36 INFO     received a message "homeMount"
+2022-09-02 09:49:38 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 09:49:40 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 09:49:42 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 09:49:44 INFO     received a message "parkMount"
+2022-09-02 09:49:46 INFO     received a message "disableMount"
+2022-09-02 09:49:48 INFO     received a message "disconnectMount"
+2022-09-02 09:49:50 INFO     received a message "settemp(-15.0)"
+2022-09-02 09:50:33 INFO     Initializing: logging started
+2022-09-02 09:50:33 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:50:33 INFO     connected to broker
+2022-09-02 09:50:33 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:50:33 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:50:39 INFO     received a message "connectMount"
+2022-09-02 09:50:41 INFO     received a message "enableMount"
+2022-09-02 09:50:43 INFO     received a message "homeMount"
+2022-09-02 09:50:45 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 09:50:47 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 09:50:49 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 09:50:51 INFO     received a message "parkMount"
+2022-09-02 09:50:53 INFO     received a message "disableMount"
+2022-09-02 09:50:55 INFO     received a message "disconnectMount"
+2022-09-02 09:50:57 INFO     received a message "settemp(-15.0)"
+2022-09-02 09:51:11 INFO     received a message "end"
+2022-09-02 09:51:11 INFO     received a message "end"
+2022-09-02 09:52:37 INFO     Initializing: logging started
+2022-09-02 09:52:37 INFO     connecting to broker at ['tanagra', 61613]
+2022-09-02 09:52:37 INFO     connected to broker
+2022-09-02 09:52:37 INFO     subscribing to topic: lorax.*.*.*
+2022-09-02 09:52:37 INFO     subscribed to topic lorax.*.*.*
+2022-09-02 09:52:43 INFO     received a message "connectMount"
+2022-09-02 09:52:45 INFO     received a message "enableMount"
+2022-09-02 09:52:47 INFO     received a message "homeMount"
+2022-09-02 09:52:49 INFO     received a message "gotoAltAz(45.6, 170.34)"
+2022-09-02 09:52:51 INFO     received a message "gotoAltAz(20.6, 340.34)"
+2022-09-02 09:52:53 INFO     received a message "gotoAltAz(75.6, 10.34)"
+2022-09-02 09:52:55 INFO     received a message "parkMount"
+2022-09-02 09:52:57 INFO     received a message "disableMount"
+2022-09-02 09:52:59 INFO     received a message "disconnectMount"
+2022-09-02 09:53:01 INFO     received a message "settemp(-15.0)"

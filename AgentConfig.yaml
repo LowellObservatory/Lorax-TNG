@@ -1,0 +1,9 @@
+---
+log_file: "abstract_agent.log"
+broker_hosts:
+  - tanagra
+  - 61613
+incoming_topic: "lorax.*.*.*"
+dto_topic: "lorax.*.*.dto"
+broadcast_topic: "lorax.*.*.broadcast"
+status_broadcast_rate: 0.5
