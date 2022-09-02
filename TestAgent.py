@@ -31,3 +31,4 @@ if __name__ == "__main__":
         else:
             ta.get_status_and_broadcast()
         time.sleep(ta.config["status_broadcast_rate"])
+        # junk
