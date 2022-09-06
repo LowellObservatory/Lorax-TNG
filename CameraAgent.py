@@ -15,6 +15,38 @@ class CameraAgent(Agent):
         print("message: ", end="")
         print(self.current_message.headers["destination"] + ": ", end="")
         print(self.current_message.body)
+        msg = self.current_message.body
+        if "expose" in msg:
+            # check arguments.
+            # check exposure settings.
+            # send "wait" to DTO.
+            # request FITS dictionary from Locutus.
+            # send camera specific command to camera. (call cam_specific_expose)
+            # when done, request another FITS dictionary from Locutus.
+            # save image data to local disk.
+            # spawn fits_writer in seperate process (data, fits1, fits2)
+            # send "go" command to DTO.
+            pass
+        if "set_exposure_length" in msg:
+            # check arguments against exposure length limits.
+            # send camera specific set_exposure_length.
+            pass
+        if "set_exposure_type" in msg:
+            # check arguments against exposure types.
+            # send camera specific set_exposure_type.
+            pass
+        if "set_binning" in msg:
+            # check arguments against binning limits.
+            # send camera specific set_binning.
+            pass
+        if "set_origin" in msg:
+            # check arguments against origin limits.
+            # send camera specific set_origin.
+            pass
+        if "set_size" in msg:
+            # check arguments against size limits.
+            # send camera specific set_size.
+            pass
 
     @abstractmethod
     def status(self):
