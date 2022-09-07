@@ -18,7 +18,7 @@ logging.getLogger("stomp").setLevel(logging.WARNING)
 
 class Locutus(SpecialAgent):
     def __init__(self, cfile):
-        print("in CameraAgent.init")
+        print("in Locutus.init")
         SpecialAgent.__init__(self, cfile)
 
     def assemble_dictionary_and_broadcast(self, dict_requested):
@@ -36,6 +36,31 @@ class Locutus(SpecialAgent):
     def dict_to_xml(self, this_dict):
         xml_dict = this_dict + "xyz"
         return xml_dict
+
+    def handle_message(self):
+        print("")
+        print("message: ", end="")
+        print(self.current_message.headers["destination"] + ": ", end="")
+        print(self.current_message.body)
+        if "mount" in self.current_destination:
+            # Store camera status in Redis.
+            pass
+
+        if "camera" in self.current_destination:
+            # Store mount status in Redis.
+            pass
+
+        if "weather" in self.current_destination:
+            # Store weather status in Redis.
+            pass
+
+        if self.config["dictionary_request_topic"] in self.current_destination:
+            # A dictionary has been requested, get dictionary details,
+            # assemble dictionary, translate to XML and broadcast.
+            self.assemble_dictionary_and_broadcast(locutus.current_message)
+
+        # Wait a bit for another message
+        time.sleep(self.config["message_wait_time"])
 
     class MyListener(stomp.ConnectionListener):
         def __init__(self, parent):
@@ -57,36 +82,7 @@ class Locutus(SpecialAgent):
 if __name__ == "__main__":
     locutus = Locutus()
 
-    # -------------------------
-
     while True:
         if locutus.message_received:
-            print(locutus.current_message)
-            # if locutus.current_message == "end":
-            #     os._exit(0)
-            # else:
-            #     put info in Redis
+            locutus.handle_message()
             locutus.message_received = 0
-
-            if locutus.config["incoming_camera_topic"] in locutus.current_destination:
-                # Store camera status in Redis.
-                pass
-
-            if locutus.config["incoming_mount_topic"] in locutus.current_destination:
-                # Store mount status in Redis.
-                pass
-
-            if locutus.config["incoming_weather_topic"] in locutus.current_destination:
-                # Store weather status in Redis.
-                pass
-
-            if (
-                locutus.config["dictionary_request_topic"]
-                in locutus.current_destination
-            ):
-                # A dictionary has been requested, get dictionary details,
-                # assemble dictionary, translate to XML and broadcast.
-                locutus.assemble_dictionary_and_broadcast(locutus.current_message)
-
-            # Wait a bit for another message
-            time.sleep(0.5)

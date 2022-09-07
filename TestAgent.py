@@ -18,7 +18,7 @@ class TestAgent(Agent):
         print("")
         print("message: ", end="")
         print(self.current_message.headers["destination"] + ": ", end="")
-        print(ta.current_message.body)
+        print(self.current_message.body)
 
 
 if __name__ == "__main__":

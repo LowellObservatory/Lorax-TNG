@@ -9,3 +9,4 @@ incoming_topics:
   - "lorax.timo.weather.broadcast"
   - "lorax.timo.locutus.dictrequest"
 dictionary_broadcast_topic: "lorax.timo.locutus.dictbroadcast"
+message_wait_time: 0.1

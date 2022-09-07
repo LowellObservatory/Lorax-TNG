@@ -8,3 +8,4 @@ incoming_camera_topic: "lorax.timo.camera.broadcast"
 incoming_weather_topic: "lorax.timo.weather.broadcast"
 dictionary_request_topic: "lorax.timo.locutus.dictrequest"
 dictionary_broadcast_topic: "lorax.timo.locutus.dictbroadcast"
+status_broadcast_rate: 0.5
