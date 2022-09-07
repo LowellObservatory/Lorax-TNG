@@ -62,22 +62,6 @@ class Locutus(SpecialAgent):
         # Wait a bit for another message
         time.sleep(self.config["message_wait_time"])
 
-    class MyListener(stomp.ConnectionListener):
-        def __init__(self, parent):
-            self.parent = parent
-            pass
-
-        def on_error(self, message):
-            print('received an error "%s"' % message)
-
-        def on_message(self, message):
-            # print('received a message "%s"' % message)
-
-            self.parent.locutus_logger.info('received a message "%s"' % message.body)
-            self.parent.current_destination = message.destination
-            self.parent.current_message = message.body
-            self.parent.message_received = 1
-
 
 if __name__ == "__main__":
     locutus = Locutus()

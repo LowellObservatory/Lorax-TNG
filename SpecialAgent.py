@@ -85,6 +85,7 @@ class SpecialAgent(ABC):
         def on_message(self, message):
             # print('received a message "%s"' % message)
 
-            self.parent.logger.info('received a message "%s"' % message.body)
-            self.parent.current_message = message
+            self.parent.locutus_logger.info('received a message "%s"' % message.body)
+            self.parent.current_destination = message.destination
+            self.parent.current_message = message.body
             self.parent.message_received = 1
