@@ -7,8 +7,8 @@ Created on Aug 22, 2022
 
 import time
 import logging
-import stomp
-import yaml
+import xmltodict
+import redis
 
 from SpecialAgent import SpecialAgent
 
@@ -20,6 +20,9 @@ class Locutus(SpecialAgent):
     def __init__(self, cfile):
         print("in Locutus.init")
         SpecialAgent.__init__(self, cfile)
+        redis_handle = redis.Redis(
+            host=locutus.config["redis_hostname"], port=locutus.config["redis_port"]
+        )
 
     def assemble_dictionary_and_broadcast(self, dict_requested):
         this_dict = self.gather_dictionary(dict_requested)
@@ -42,9 +45,18 @@ class Locutus(SpecialAgent):
         print("message: ", end="")
         print(self.current_message.headers["destination"] + ": ", end="")
         print(self.current_message.body)
+        xml_message = self.current_message.body
         if "mount" in self.current_destination:
             # Store camera status in Redis.
-            pass
+            # Decode the XML message into a python dictionary.
+            status_dict = xmltodict.parse(xml_message)
+
+            # Based on the mount storage map, pick out pieces we need.
+            # Storage maps are in config file.
+            mount_store_list = self.config["mount_storage"]
+            output_list = []
+            for topic in mount_store_list:
+                output_list.append(topic, status_dict[topic])
 
         if "camera" in self.current_destination:
             # Store mount status in Redis.

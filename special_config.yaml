@@ -10,3 +10,10 @@ incoming_topics:
   - "lorax.timo.locutus.dictrequest"
 dictionary_broadcast_topic: "lorax.timo.locutus.dictbroadcast"
 message_wait_time: 0.1
+redis_hostname: "tanagra"
+redis_port: 1234
+mount_storage:
+  - ra
+  - dec
+  - alt
+  - az
