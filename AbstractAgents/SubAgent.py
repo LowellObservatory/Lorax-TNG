@@ -18,5 +18,5 @@ class SubAgent(ABC):
         pass
 
     @abstractmethod
-    def handle_message(self):
+    def handle_message(self, message):
         pass

@@ -1,0 +1,23 @@
+---
+log_file: qhy600_composite.log
+broker_hosts:
+  - tanagra
+  - 61613
+agents_in_composite:
+  - camera:
+      agent_name: QHY600Camera
+      camera_name: "QHY CCD QHY600M-d0a5a44"
+      camera_host: "localhost"
+      camera_port: 7624
+      incoming_topic: lorax.ldtboresight.dto.camera1
+      outgoing_topic: lorax.ldtboresight.camera1.broadcast
+      dto_command_topic: lorax.ldtboresight.camera1.dto
+  - ccdcooler:
+      agent_name: QHY600CcdCooler
+      cooler_name: "QHY CCD QHY600M-d0a5a44"
+      cooler_host: "localhost"
+      cooler_port: 7624
+      incoming_topic: lorax.ldtboresight.dto.ccdcooler1
+      outgoing_topic: lorax.ldtboresight.ccdcooler1.broadcast
+      dto_command_topic: lorax.ldtboresight.ccdcooler1.dto
+message_wait_time: 0.5
