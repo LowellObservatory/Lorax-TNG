@@ -15,4 +15,8 @@ outgoing_topics:
   - "lorax.timo.camera.broadcast"
   - "lorax.timo.filterwheel.broadcast"
   - "lorax.timo.ccdcooler.broadcast"
+command_topics:
+  - "lorax.timo.camera.dto"
+  - "lorax.timo.filterwheel.dto"
+  - "lorax.timo.ccdcooler.dto"
 message_wait_time: 0.1
