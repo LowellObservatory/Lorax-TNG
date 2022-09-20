@@ -74,7 +74,7 @@ class CompositeAgent(ABC):
         # Keep them in an array.
         for sub_agent in self.config("agent_list"):
             agent = __import__(sub_agent)
-            self.agents.append(agent())
+            self.agents.append(agent(self.logger, self.conn, self.config))
 
     @abstractmethod
     def get_status_and_broadcast(self):

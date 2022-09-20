@@ -7,8 +7,10 @@ from abc import ABC, abstractmethod
 
 # General Sub-Agent class, inherit from Abstract Base Class
 class SubAgent(ABC):
-    def __init__(self):
-        pass
+    def __init__(self, logger, conn, config):
+        self.logger = logger
+        self.conn = conn
+        self.config = config
 
     @abstractmethod
     def get_status_and_broadcast(self):
