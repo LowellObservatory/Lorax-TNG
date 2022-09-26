@@ -15,7 +15,7 @@ logging.getLogger("stomp").setLevel(logging.WARNING)
 
 # Special Agent class, inherit from Abstract Base Class
 class SpecialAgent(ABC):
-    hosts = ""
+    host = ""
     log_file = ""
     current_message = ""
     message_received = 0
@@ -46,11 +46,11 @@ class SpecialAgent(ABC):
 
         # Get the broker host from the configuration.
         # Make a connection to the broker.
-        self.hosts = [tuple(self.config["broker_hosts"])]
-        self.logger.info("connecting to broker at " + str(self.config["broker_hosts"]))
+        self.host = [tuple(self.config["broker_host"])]
+        self.logger.info("connecting to broker at " + str(self.config["broker_host"]))
         try:
             # Get a connection handle.
-            self.conn = stomp.Connection(host_and_ports=self.hosts)
+            self.conn = stomp.Connection(host_and_ports=self.host)
 
             # Set up a listener and and connect. Pass this class to listener.
             self.conn.set_listener("", self.BrokerListener(self))
