@@ -47,7 +47,7 @@ class Locutus(SpecialAgent):
         print(self.current_message)
         xml_message = self.current_message
         if "mount" in self.current_destination:
-            # Store camera status in Redis.
+            # Store mount status in Redis.
             # Decode the XML message into a python dictionary.
             status_dict = xmltodict.parse(xml_message)
             print(status_dict)

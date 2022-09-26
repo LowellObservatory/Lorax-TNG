@@ -1,0 +1,50 @@
+---
+log_file: "locutus.log"
+broker_hosts:
+  - tanagra
+  - 61613
+dictionary_request_topic: "lorax.timo.locutus.dictrequest"
+dictionary_broadcast_topic: "lorax.timo.locutus.dictbroadcast"
+message_wait_time: 0.1
+redis_hostname: "tanagra"
+redis_port: 6379
+mount_storage:
+  - "RA-J2000"
+  - "dec-j2000"
+  - "altitude"
+  - "azimuth"
+things:
+  mount:
+    - "mount_incoming_topic":
+        - "lorax.timo.mount.broadcast"
+    - "mount_storage":
+        - "RA_J2000"
+        - "dec-j2000"
+        - "altitude"
+        - "azimuth"
+  filterwheel:
+    - "filterwheel_incoming_topic":
+        - "lorax.timo.filterwheel.broadcast"
+    - "filterwheel_storage":
+        - "filter_position"
+  camera:
+    - "camera_incoming_topic":
+        - "lorax.timo.camera.broadcast"
+    - "camera_storage":
+        - "exposure_type"
+        - "exposure_time"
+        - "binning"
+        - "origin"
+        - "size"
+  ccdcooler:
+    - "ccdcooler_incoming_topic":
+        - "lorax.timo.ccdcooler.broadcast"
+    - "ccdcooler_storage":
+        - "set_point"
+        - "temperature"
+  dome:
+    - "dome_incoming_topic":
+        - "lorax.timo.dome.broadcast"
+    - "dome_storage":
+        - "azimuth"
+        - "shutter_status"
