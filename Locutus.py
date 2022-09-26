@@ -20,8 +20,8 @@ class Locutus(SpecialAgent):
     def __init__(self, cfile):
         print("in Locutus.init")
         SpecialAgent.__init__(self, cfile)
-        redis_handle = redis.Redis(
-            host=locutus.config["redis_hostname"], port=locutus.config["redis_port"]
+        self.redis_handle = redis.Redis(
+            host=self.config["redis_hostname"], port=self.config["redis_port"]
         )
 
     def assemble_dictionary_and_broadcast(self, dict_requested):
@@ -43,20 +43,27 @@ class Locutus(SpecialAgent):
     def handle_message(self):
         print("")
         print("message: ", end="")
-        print(self.current_message.headers["destination"] + ": ", end="")
-        print(self.current_message.body)
-        xml_message = self.current_message.body
+        print(self.current_destination + ": ", end="")
+        print(self.current_message)
+        xml_message = self.current_message
         if "mount" in self.current_destination:
             # Store camera status in Redis.
             # Decode the XML message into a python dictionary.
             status_dict = xmltodict.parse(xml_message)
+            print(status_dict)
 
             # Based on the mount storage map, pick out pieces we need.
             # Storage maps are in config file.
             mount_store_list = self.config["mount_storage"]
-            output_list = []
+            output_dict = {}
             for topic in mount_store_list:
-                output_list.append(topic, status_dict[topic])
+                print(topic)
+                print(status_dict)
+                output_dict[topic] = (status_dict["mount_status"])[topic]
+            # print(output_dict)
+            self.redis_handle.hmset("mountStatus", output_dict)
+            dict_from_redis = self.redis_handle.hgetall("mountStatus")
+            print(dict_from_redis)
 
         if "camera" in self.current_destination:
             # Store mount status in Redis.
@@ -76,7 +83,7 @@ class Locutus(SpecialAgent):
 
 
 if __name__ == "__main__":
-    locutus = Locutus()
+    locutus = Locutus("special_config.yaml")
 
     while True:
         if locutus.message_received:

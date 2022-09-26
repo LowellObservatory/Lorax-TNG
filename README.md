@@ -1,1 +1,1 @@
-Lorax The Next Generation
+Lorax, The Next Generation
