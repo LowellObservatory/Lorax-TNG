@@ -8,41 +8,41 @@ redis_host:
   - 6379
 dictionary_request_topic: lorax.timo.locutus.dictrequest
 dictionary_broadcast_topic: lorax.timo.locutus.dictbroadcast
-information_request_topic: lorax.timo.locutus.getinfo
+information_request_topic: lorax.timo.locutus.inforequest
 information_broadcast_topic: lorax.timo.locutus.infobroadcast
 message_wait_time: 0.1
 agents_to_monitor:
-  mount:
-    - mount_incoming_topic:
-        - lorax.timo.mount.broadcast
-    - mount_storage:
-        - RA_J2000
-        - dec-j2000
-        - altitude
-        - azimuth
-  filterwheel:
-    - filterwheel_incoming_topic:
-        - lorax.timo.filterwheel.broadcast
-    - filterwheel_storage:
-        - filter_position
-  camera:
-    - camera_incoming_topic:
-        - lorax.timo.camera.broadcast
-    - camera_storage:
-        - exposure_type
-        - exposure_time
-        - binning
-        - origin
-        - size
-  ccdcooler:
-    - ccdcooler_incoming_topic:
-        - lorax.timo.ccdcooler.broadcast
-    - ccdcooler_storage:
-        - set_point
-        - temperature
-  dome:
-    - dome_incoming_topic:
-        - lorax.timo.dome.broadcast
-    - dome_storage:
-        - azimuth
-        - shutter_status
+  - mount:
+      - mount_incoming_topic:
+          - lorax.timo.mount.broadcast
+      - mount_storage:
+          - RA_J2000
+          - dec-j2000
+          - altitude
+          - azimuth
+  - filterwheel:
+      - filterwheel_incoming_topic:
+          - lorax.timo.filterwheel.broadcast
+      - filterwheel_storage:
+          - filter_position
+  - camera:
+      - camera_incoming_topic:
+          - lorax.timo.camera.broadcast
+      - camera_storage:
+          - exposure_type
+          - exposure_time
+          - binning
+          - origin
+          - size
+  - ccdcooler:
+      - ccdcooler_incoming_topic:
+          - lorax.timo.ccdcooler.broadcast
+      - ccdcooler_storage:
+          - set_point
+          - temperature
+  - dome:
+      - dome_incoming_topic:
+          - lorax.timo.dome.broadcast
+      - dome_storage:
+          - azimuth
+          - shutter_status
