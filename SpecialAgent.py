@@ -62,14 +62,18 @@ class SpecialAgent(ABC):
         # Subscribe to topics in each agent description in "agents_to_monitor".
         agent_list = self.config["agents_to_monitor"]
         for agent in agent_list:
-            this_topic = list(agent.values())[0][0]["incoming_topic"][0]
-            self.logger.info("subscribing to topic: " + this_topic)
-            self.conn.subscribe(
-                id=1,
-                destination="/topic/" + this_topic,
-                headers={},
-            )
-            self.logger.info("subscribed to topic " + this_topic)
+            print(agent)
+            this_topic = list(agent.values())[0]["incoming_topic"]
+            self.broker_subscribe(this_topic)
+
+    def broker_subscribe(self, topic):
+        self.logger.info("subscribing to topic: " + topic)
+        self.conn.subscribe(
+            id=1,
+            destination="/topic/" + topic,
+            headers={},
+        )
+        self.logger.info("subscribed to topic " + topic)
 
     @abstractmethod
     def handle_message(self):
