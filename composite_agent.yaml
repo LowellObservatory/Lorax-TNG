@@ -5,14 +5,17 @@ broker_hosts:
   - 61613
 agents_in_composite:
   - filterwheel:
+      agent_name: SBIGFilterWheel
       incoming_topic: lorax.timo.dto.filterwheel
       outgoing_topic: lorax.timo.filterwheel.broadcast
       dto_command_topic: lorax.timo.filterwheel.dto
   - camera:
+      agent_name: SBIGCamera
       incoming_topic: lorax.timo.dto.camera
       outgoing_topic: lorax.timo.camera.broadcast
       dto_command_topic: lorax.timo.camera.dto
   - ccdcooler:
+      agent_name: SBIGCcdCooler
       incoming_topic: lorax.timo.dto.ccdcooler
       outgoing_topic: lorax.timo.ccdcooler.broadcast
       dto_command_topic: lorax.timo.ccdcooler.dto

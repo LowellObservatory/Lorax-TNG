@@ -59,22 +59,28 @@ class CompositeAgent(ABC):
             self.logger.error("Connection to broker failed")
         self.logger.info("connected to broker")
 
-        # Subscribe to topics from "incoming_topic_list"
-        topic_list = self.config["incoming_topics"]
-        for topic in topic_list:
-            self.logger.info("subscribing to topic: " + topic)
-            self.conn.subscribe(
-                id=1,
-                destination="/topic/" + topic,
-                headers={},
-            )
-            self.logger.info("subscribed to topic " + topic)
+        # For each agent in list, subscribe to agent "incoming_topic".
+        agent_list = self.config["agents_in_composite"]
+        for agent in agent_list:
+            # print(agent)
+            this_topic = list(agent.values())[0]["incoming_topic"]
+            self.broker_subscribe(this_topic)
 
         # Create each of the sub-agents in the agent list.
         # Keep them in an array.
-        for sub_agent in self.config("agent_list"):
+        for agent in agent_list:
+            sub_agent = list(agent.values())[0]["agent_name"]
             agent = __import__(sub_agent)
             self.agents.append(agent(self.logger, self.conn, self.config))
+
+    def broker_subscribe(self, topic):
+        self.logger.info("subscribing to topic: " + topic)
+        self.conn.subscribe(
+            id=1,
+            destination="/topic/" + topic,
+            headers={},
+        )
+        self.logger.info("subscribed to topic " + topic)
 
     @abstractmethod
     def get_status_and_broadcast(self):
