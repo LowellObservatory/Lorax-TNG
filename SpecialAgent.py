@@ -88,10 +88,10 @@ class SpecialAgent(ABC):
             print('received an error "%s"' % message)
 
         def on_message(self, message):
-            print('received a message "%s"' % message)
+            # print('received a message "%s"' % message)
 
             self.parent.logger.info('received a message "%s"' % message.body)
-            print(message.headers["destination"])
+            # print(message.headers["destination"])
             self.parent.current_destination = message.headers["destination"]
             self.parent.current_message = message.body
             self.parent.message_received = 1
