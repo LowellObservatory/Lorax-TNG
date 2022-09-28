@@ -3,7 +3,7 @@ log_file: SBIGAgent.log
 broker_hosts:
   - tanagra
   - 61613
-agents_to_monitor:
+agents_in_composite:
   - filterwheel:
       incoming_topic: lorax.timo.dto.filterwheel
       outgoing_topic: lorax.timo.filterwheel.broadcast
