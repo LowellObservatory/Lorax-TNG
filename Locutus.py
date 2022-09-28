@@ -20,9 +20,22 @@ class Locutus(SpecialAgent):
     def __init__(self, cfile):
         print("in Locutus.init")
         SpecialAgent.__init__(self, cfile)
+        self.logger.info("Connecting to Redis at: " + self.config["redis_host"][0])
         self.redis_handle = redis.Redis(
-            host=self.config["redis_hostname"], port=self.config["redis_port"]
+            host=self.config["redis_host"][0], port=self.config["redis_host"][1]
         )
+        # Subscribe to dictrequest and inforequest.
+        self.broker_subscribe(self.config["dictionary_request_topic"])
+        self.broker_subscribe(self.config["information_request_topic"])
+
+    def broker_subscribe(self, topic):
+        self.logger.info("subscribing to topic: " + topic)
+        self.conn.subscribe(
+            id=1,
+            destination="/topic/" + topic,
+            headers={},
+        )
+        self.logger.info("subscribed to topic " + topic)
 
     def assemble_dictionary_and_broadcast(self, dict_requested):
         this_dict = self.gather_dictionary(dict_requested)
@@ -83,7 +96,7 @@ class Locutus(SpecialAgent):
 
 
 if __name__ == "__main__":
-    locutus = Locutus("special_config.yaml")
+    locutus = Locutus("locutus.yaml")
 
     while True:
         if locutus.message_received:

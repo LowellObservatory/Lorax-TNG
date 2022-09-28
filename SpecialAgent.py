@@ -59,16 +59,17 @@ class SpecialAgent(ABC):
             self.logger.error("Connection to broker failed")
         self.logger.info("connected to broker")
 
-        # Subscribe to topics from "incoming_topic_list"
-        topic_list = self.config["incoming_topics"]
-        for topic in topic_list:
-            self.logger.info("subscribing to topic: " + topic)
+        # Subscribe to topics in each agent description in "agents_to_monitor".
+        agent_list = self.config["agents_to_monitor"]
+        for agent in agent_list:
+            this_topic = list(agent.values())[0][0]["incoming_topic"][0]
+            self.logger.info("subscribing to topic: " + this_topic)
             self.conn.subscribe(
                 id=1,
-                destination="/topic/" + topic,
+                destination="/topic/" + this_topic,
                 headers={},
             )
-            self.logger.info("subscribed to topic " + topic)
+            self.logger.info("subscribed to topic " + this_topic)
 
     @abstractmethod
     def handle_message(self):

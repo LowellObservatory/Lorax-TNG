@@ -13,36 +13,36 @@ information_broadcast_topic: lorax.timo.locutus.infobroadcast
 message_wait_time: 0.1
 agents_to_monitor:
   - mount:
-      - mount_incoming_topic:
+      - incoming_topic:
           - lorax.timo.mount.broadcast
-      - mount_storage:
+      - storage:
           - RA_J2000
           - dec-j2000
           - altitude
           - azimuth
   - filterwheel:
-      - filterwheel_incoming_topic:
+      - incoming_topic:
           - lorax.timo.filterwheel.broadcast
-      - filterwheel_storage:
+      - storage:
           - filter_position
   - camera:
-      - camera_incoming_topic:
+      - incoming_topic:
           - lorax.timo.camera.broadcast
-      - camera_storage:
+      - storage:
           - exposure_type
           - exposure_time
           - binning
           - origin
           - size
   - ccdcooler:
-      - ccdcooler_incoming_topic:
+      - incoming_topic:
           - lorax.timo.ccdcooler.broadcast
-      - ccdcooler_storage:
+      - storage:
           - set_point
           - temperature
   - dome:
-      - dome_incoming_topic:
+      - incoming_topic:
           - lorax.timo.dome.broadcast
-      - dome_storage:
+      - storage:
           - azimuth
           - shutter_status
