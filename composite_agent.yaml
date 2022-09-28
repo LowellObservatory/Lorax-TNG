@@ -1,22 +1,19 @@
 ---
-log_file: "SBIGAgent.log"
+log_file: SBIGAgent.log
 broker_hosts:
   - tanagra
   - 61613
-agent_list:
-  - "SBIGCameraAgent"
-  - "SBIGFilterWheelAgent"
-  - "SBIGCCDCoolerAgent"
-incoming_topics:
-  - "lorax.timo.dto.camera"
-  - "lorax.timo.dto.filterwheel"
-  - "lorax.timo.dto.ccdcooler"
-outgoing_topics:
-  - "lorax.timo.camera.broadcast"
-  - "lorax.timo.filterwheel.broadcast"
-  - "lorax.timo.ccdcooler.broadcast"
-command_topics:
-  - "lorax.timo.camera.dto"
-  - "lorax.timo.filterwheel.dto"
-  - "lorax.timo.ccdcooler.dto"
+agents_to_monitor:
+  - filterwheel:
+      incoming_topic: lorax.timo.dto.filterwheel
+      outgoing_topic: lorax.timo.filterwheel.broadcast
+      dto_command_topic: lorax.timo.filterwheel.dto
+  - camera:
+      incoming_topic: lorax.timo.dto.camera
+      outgoing_topic: lorax.timo.camera.broadcast
+      dto_command_topic: lorax.timo.camera.dto
+  - ccdcooler:
+      incoming_topic: lorax.timo.dto.ccdcooler
+      outgoing_topic: lorax.timo.ccdcooler.broadcast
+      dto_command_topic: lorax.timo.ccdcooler.dto
 message_wait_time: 0.1
