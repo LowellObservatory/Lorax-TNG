@@ -1,5 +1,5 @@
 ---
-log_file: SBIGAgent.log
+log_file: CompositeAgent.log
 broker_hosts:
   - tanagra
   - 61613

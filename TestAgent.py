@@ -1,12 +1,12 @@
-from Agent import Agent
+from CompositeAgent import CompositeAgent
 import time
 from datetime import datetime
 
 
-class TestAgent(Agent):
+class TestAgent(CompositeAgent):
     def __init__(self, cfile):
         print("in TestAgent.init")
-        Agent.__init__(self, cfile)
+        CompositeAgent.__init__(self, cfile)
 
     def get_status_and_broadcast(self):
         now = datetime.now()
@@ -22,7 +22,7 @@ class TestAgent(Agent):
 
 
 if __name__ == "__main__":
-    ta = TestAgent("AgentConfig.yaml")
+    ta = TestAgent("composite_agent.yaml")
 
     while True:
         if ta.message_received:
@@ -30,5 +30,4 @@ if __name__ == "__main__":
             ta.message_received = 0
         else:
             ta.get_status_and_broadcast()
-        time.sleep(ta.config["status_broadcast_rate"])
-        # junk
+        time.sleep(ta.config["message_wait_time"])

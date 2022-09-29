@@ -22,7 +22,7 @@ class CompositeAgent(ABC):
 
     def __init__(self, config_file):
 
-        print("in agent.init")
+        print("in composite_agent.init")
         # Read the config file.
         with open(config_file, "r") as stream:
             try:
@@ -61,6 +61,8 @@ class CompositeAgent(ABC):
 
         # For each agent in list, subscribe to agent "incoming_topic".
         agent_list = self.config["agents_in_composite"]
+        print("agent_list")
+        print(agent_list)
         for agent in agent_list:
             # print(agent)
             this_topic = list(agent.values())[0]["incoming_topic"]
@@ -70,10 +72,11 @@ class CompositeAgent(ABC):
         # Keep them in an array.
         for agent in agent_list:
             sub_agent = list(agent.values())[0]["agent_name"]
-            agent = __import__(sub_agent)
-            self.agents.append(agent(self.logger, self.conn, self.config))
+            # agent = __import__(sub_agent)
+            # self.agents.append(agent(self.logger, self.conn, self.config))
 
     def broker_subscribe(self, topic):
+        print(topic)
         self.logger.info("subscribing to topic: " + topic)
         self.conn.subscribe(
             id=1,
