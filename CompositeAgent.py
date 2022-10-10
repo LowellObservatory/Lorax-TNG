@@ -72,8 +72,9 @@ class CompositeAgent(ABC):
         # Keep them in an array.
         for agent in agent_list:
             sub_agent = list(agent.values())[0]["agent_name"]
-            # agent = __import__(sub_agent)
-            # self.agents.append(agent(self.logger, self.conn, self.config))
+            agent = __import__(sub_agent, fromlist=[sub_agent])
+            agent = getattr(agent, sub_agent)
+            self.agents.append(agent(self.logger, self.conn, self.config))
 
     def broker_subscribe(self, topic):
         print(topic)
@@ -91,7 +92,6 @@ class CompositeAgent(ABC):
         for agent in self.agents:
             agent.get_status_and_broadcast()
 
-    @abstractmethod
     def handle_message(self):
         # Look up which agent the message is addressed to and send to that agent.
         i = 0
@@ -105,7 +105,7 @@ class CompositeAgent(ABC):
         if agent_position != -1:
             # If we found the topic, send the current message to the
             # corresponding agent.
-            self.agents[i](self.current_message)
+            self.agents[i].handle_message(self.current_message)
 
     class BrokerListener(stomp.ConnectionListener):
         def __init__(self, parent):
