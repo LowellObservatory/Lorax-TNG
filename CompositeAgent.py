@@ -6,6 +6,7 @@ Created on Aept. 19, 2022
 import logging
 import stomp
 import yaml
+import string
 from abc import ABC, abstractmethod
 
 # Set stomp so it only logs WARNING and higher messages. (default is DEBUG)
@@ -19,6 +20,7 @@ class CompositeAgent(ABC):
     current_destination = ""
     message_received = 0
     agents = []
+    incoming_topics = []
 
     def __init__(self, config_file):
 
@@ -61,20 +63,23 @@ class CompositeAgent(ABC):
 
         # For each agent in list, subscribe to agent "incoming_topic".
         agent_list = self.config["agents_in_composite"]
-        print("agent_list")
-        print(agent_list)
+        # print("agent_list")
+        # print(agent_list)
         for agent in agent_list:
             # print(agent)
             this_topic = list(agent.values())[0]["incoming_topic"]
+            self.incoming_topics.append(this_topic)
             self.broker_subscribe(this_topic)
 
         # Create each of the sub-agents in the agent list.
         # Keep them in an array.
         for agent in agent_list:
             sub_agent = list(agent.values())[0]["agent_name"]
-            agent = __import__(sub_agent, fromlist=[sub_agent])
-            agent = getattr(agent, sub_agent)
-            self.agents.append(agent(self.logger, self.conn, self.config))
+            the_agent = __import__(sub_agent, fromlist=[sub_agent])
+            the_agent = getattr(the_agent, sub_agent)
+            self.agents.append(
+                the_agent(self.logger, self.conn, list(agent.values())[0])
+            )
 
     def broker_subscribe(self, topic):
         print(topic)
@@ -90,22 +95,32 @@ class CompositeAgent(ABC):
     def get_status_and_broadcast(self):
         # Send "get_status_and_broadcast" to each of the sub_agents.
         for agent in self.agents:
-            agent.get_status_and_broadcast()
+            agent.get_status_and_broadcast(self)
 
     def handle_message(self):
         # Look up which agent the message is addressed to and send to that agent.
         i = 0
         agent_position = -1
-        topic_list = self.config["incoming_topics"]
-        # Match the topic of the message in the incoming_topics list.
-        while i < len(topic_list):
-            if self.current_destination == topic_list[i]:
-                agent_postion = i
 
+        # Match the topic of the message in the incoming_topics list.
+        while i < len(self.incoming_topics):
+            compare_1 = self.current_destination.rsplit(".", 1)[-1]
+            compare_2 = self.incoming_topics[i].rsplit(".", 1)[-1]
+            print(compare_1)
+            print(compare_2)
+            if compare_1 == compare_2:
+                print("found it!")
+                print(i)
+                agent_position = i
+            i = i + 1
+        print("agent_position")
+        print(agent_position)
         if agent_position != -1:
             # If we found the topic, send the current message to the
             # corresponding agent.
-            self.agents[i].handle_message(self.current_message)
+            print(len(self.agents))
+            print(self.current_message)
+            self.agents[agent_position].handle_message(self.current_message)
 
     class BrokerListener(stomp.ConnectionListener):
         def __init__(self, parent):
@@ -120,6 +135,6 @@ class CompositeAgent(ABC):
 
             self.parent.logger.info('received a message "%s"' % message.body)
             # self.parent.current_message = message
-            self.parent.current_destination = message.destination
+            self.parent.current_destination = message.headers["destination"]
             self.parent.current_message = message.body
             self.parent.message_received = 1

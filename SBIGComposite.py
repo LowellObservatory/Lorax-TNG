@@ -12,6 +12,7 @@ class SBIGComposite(CompositeAgent):
         # Send "get_status_and_broadcast" to each of the sub_agents.
         for agent in self.agents:
             agent.get_status_and_broadcast()
+        time.sleep(self.config["message_wait_time"])
 
 
 if __name__ == "__main__":
