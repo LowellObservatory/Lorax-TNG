@@ -14,7 +14,7 @@ class IndiClient(PyIndi.BaseClient):
         status = {}
 
     def newDevice(self, d):
-        # print("Receiving Device... " + d.getDeviceName())
+        print("Receiving Device... " + d.getDeviceName())
         self.device = d
         self.parent.device = d
 

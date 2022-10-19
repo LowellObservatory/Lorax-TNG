@@ -13,18 +13,17 @@ class SBIGFilterWheel(SubAgent):
         # print("Status: " + current_status)
         print("filter wheel status")
 
-    def handle_message(self):
+    def handle_message(self, message):
         print("got message: in SBIGFilterWheel")
-        print(self.current_destination)
-        print(self.current_message)
-        if "home" in self.current_message:
+        print(message)
+        if "home" in message:
             # send wheel home.
             # send "wait" to DTO.
             # send specific command, "home", to filter wheel
             # keep checking status until done.
             # send "go" command to DTO.
             print("filter wheel: home")
-        if "move" in self.current_message:
+        if "move" in message:
             # send wheel to specific position.
             # check arguments against position limits.
             # send "wait" to DTO.
