@@ -93,6 +93,12 @@ class IndiClient(PyIndi.BaseClient):
         prop_name = p.getName()
         if "CCD" in prop_name or "FILTER" in prop_name:
             self.store_prop(p)
+        elif "COOLER" in prop_name:
+            # Do something else?
+            pass
+        elif "DOME" in prop_name or "MOUNT" in prop_name:
+            # Placeholder to illustrate other agent types
+            pass
 
     def removeProperty(self, p):
         """Emmited when a property is deleted for an INDI driver

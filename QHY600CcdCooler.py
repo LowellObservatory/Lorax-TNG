@@ -32,10 +32,10 @@ import xmltodict
 
 # Internal Imports
 from HardwareClients import IndiClient
-from SubAgent import SubAgent
+from SubAgent import CcdCoolerSubAgent
 
 
-class QHY600CcdCooler(SubAgent):
+class QHY600CcdCooler(CcdCoolerSubAgent):
     """QHY600M CCD Cooler Agent (SubAgent to QHY600Composite)
 
     _extended_summary_
@@ -52,7 +52,7 @@ class QHY600CcdCooler(SubAgent):
 
     def __init__(self, logger, conn, config):
         print("in QHY600CcdCooler.init")
-        SubAgent.__init__(self, logger, conn, config)
+        super().__init__(logger, conn, config)
         # Get the host and port for the connection to mount.
         # "config", in this case, is just a dictionary.
         self.indiclient = IndiClient(self)
@@ -64,15 +64,15 @@ class QHY600CcdCooler(SubAgent):
 
         self.indiclient.connectServer()
 
-        device_ccd = self.indiclient.getDevice(self.config["cooler_name"])
-        while not device_ccd:
+        device_cooler = self.indiclient.getDevice(self.config["cooler_name"])
+        while not device_cooler:
             time.sleep(0.5)
-            device_ccd = self.indiclient.getDevice(self.config["cooler_name"])
+            device_cooler = self.indiclient.getDevice(self.config["cooler_name"])
 
-        self.device_ccd = device_ccd
+        self.device_cooler = device_cooler
 
         # Define other instance attributes for later population
-        self.ccd = None
+        self.cooler = None
 
     def get_status_and_broadcast(self):
 
@@ -94,49 +94,6 @@ class QHY600CcdCooler(SubAgent):
             destination="/topic/" + self.config["outgoing_topic"],
         )
 
-    def handle_message(self, message):
-        print("got message: in QHY600CcdCooler")
-        print(message)
-
-        if "(" in message:
-            mcom = message[0 : message.find("(")]
-        else:
-            mcom = message
-        print(mcom)
-
-        if mcom == "connect_to_cooler":
-            print("doing connect_to_cooler")
-            self.connect_to_cooler()
-
-        if mcom == "settemp":
-            # Get the arguments.
-            # setTemp(-45.0)
-            print("doing settemp")
-            com = message
-            temperature = float(com[com.find("(") + 1 : com.find(")")])
-            print("setting temp to " + str(temperature))
-            self.set_temperature(temperature)
-
-        elif mcom == "status":
-            print("doing status")
-            self.get_status_and_broadcast()
-
-        # if "set_temp" in message:
-        # send set temp.
-        # send "wait" to DTO.
-        # send specific command, "set temp", to ccd cooler
-        # keep checking status until temp within limits.
-        # send "go" command to DTO.
-        # print("ccd cooler: set temp")
-        # if "report_temp" in message:
-        # report temp.
-        # send specific command, "report temp", to ccd cooler
-        # broadcast temp
-        # print("ccd cooler: report temp")
-
-        else:
-            print("Unknown command")
-
     def connect_to_cooler(self):
         """Connect to the cooler
 
@@ -147,40 +104,40 @@ class QHY600CcdCooler(SubAgent):
         print(f"This is the list of connected devices: {devlist}")
 
         # Check that the desired CCD is in the list of devices on the INDI server
-        self.ccd = self.config["cooler_name"]
-        if self.ccd not in devlist:
-            print(f"Warning: {self.ccd} not in the list of available INDI devices!")
+        self.cooler = self.config["cooler_name"]
+        if self.cooler not in devlist:
+            print(f"Warning: {self.cooler} not in the list of available INDI devices!")
             return
 
         # Get the device from the INDI server
-        device_ccd = self.indiclient.getDevice(self.ccd)
-        while not device_ccd:
+        device_cooler = self.indiclient.getDevice(self.cooler)
+        while not device_cooler:
             print("  Waiting on connection to the CMOS Camera...")
             time.sleep(0.5)
-            device_ccd = self.indiclient.getDevice(self.ccd)
-        self.device_ccd = device_ccd
+            device_cooler = self.indiclient.getDevice(self.cooler)
+        self.device_cooler = device_cooler
 
         # Make the connection -- exit if no connection
-        ccd_connect = self.device_ccd.getSwitch("CONNECTION")
+        ccd_connect = self.device_cooler.getSwitch("CONNECTION")
         while not ccd_connect:
             print("not connected")
             time.sleep(0.5)
-            ccd_connect = self.device_ccd.getSwitch("CONNECTION")
-        while not device_ccd.isConnected():
+            ccd_connect = self.device_cooler.getSwitch("CONNECTION")
+        while not device_cooler.isConnected():
             print("still not connected")
             ccd_connect[0].s = PyIndi.ISS_ON  # the "CONNECT" switch
             ccd_connect[1].s = PyIndi.ISS_OFF  # the "DISCONNECT" switch
             self.indiclient.sendNewSwitch(ccd_connect)
             time.sleep(0.5)
-        print(f"Are we connected yet? {self.device_ccd.isConnected()}")
-        if not self.device_ccd.isConnected():
+        print(f"Are we connected yet? {self.device_cooler.isConnected()}")
+        if not self.device_cooler.isConnected():
             sys.exit()
 
         # Print a happy acknowledgment
-        print(f"The Agent is now connected to {self.ccd}")
+        print(f"The Agent is now connected to {self.cooler}")
 
         # Tell the INDI server send the "CCD1" blob to this client
-        self.indiclient.setBLOBMode(PyIndi.B_ALSO, self.ccd, "CCD1")
+        self.indiclient.setBLOBMode(PyIndi.B_ALSO, self.cooler, "CCD1")
 
     def set_temperature(self, cool_temp, tolerance=1.0):
         """Set the cooler temperature
@@ -201,7 +158,7 @@ class QHY600CcdCooler(SubAgent):
         print(f"QHY600 Setting Cooler Temperature to {cool_temp:.1f}ºC")
 
         # Get the number vector property, set the new value, and send it back
-        temp = self.device_ccd.getNumber("CCD_TEMPERATURE")
+        temp = self.device_cooler.getNumber("CCD_TEMPERATURE")
         temp[0].value = float(cool_temp)  ### new temperature to reach
         self.indiclient.sendNewNumber(temp)
 
@@ -218,7 +175,7 @@ class QHY600CcdCooler(SubAgent):
         )
 
         while np.abs(ccd_cooler_temp - cool_temp) > tolerance:
-            temp = self.device_ccd.getNumber("CCD_TEMPERATURE")
+            temp = self.device_cooler.getNumber("CCD_TEMPERATURE")
             temp[0].value = float(cool_temp)  ### new temperature to reach
             self.indiclient.sendNewNumber(temp)
 
@@ -234,19 +191,3 @@ class QHY600CcdCooler(SubAgent):
             f"Cooler is stable at {ccd_cooler_temp:.1f}ºC, cooler power: {ccd_cooler_powr:.0f}%"
         )
         self.conn.send(body="Go", destination="/topic/" + self.config["dto_topic"])
-
-    def check_cooler_connection(self):
-        """Check that the client is connected to the camera
-
-        Returns
-        -------
-        ``bool``
-            Whether the camera is connected
-        """
-        if self.device_ccd and self.device_ccd.isConnected():
-            return True
-
-        print(
-            "Warning: CCD Cooler must be connected first (cooler : connect_to_cooler)"
-        )
-        return False

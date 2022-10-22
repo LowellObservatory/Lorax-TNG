@@ -30,13 +30,17 @@ import PyIndi
 
 # Internal Imports
 from HardwareClients import IndiClient
-from SubAgent import SubAgent
+from SubAgent import CameraSubAgent
 
 
-class QHY600Camera(SubAgent):
+class QHY600Camera(CameraSubAgent):
     """QHY600M Camera Agent (SubAgent to QHY600Composite)
 
-    _extended_summary_
+    The QHY600M Camera communicates via INDI.
+
+    This class handles all of the hardware-specific portions of the CameraAgent
+    implementation, leaving the more general, generic methods for the abstract
+    parent class.
 
     Parameters
     ----------
@@ -50,7 +54,7 @@ class QHY600Camera(SubAgent):
 
     def __init__(self, logger, conn, config):
         print("in QHY600Camera.init")
-        SubAgent.__init__(self, logger, conn, config)
+        super().__init__(logger, conn, config)
 
         # -----
         # Get the host and port for the connection to mount.
@@ -73,70 +77,10 @@ class QHY600Camera(SubAgent):
         print(self.device_ccd)
         # -----
 
-        # Define other instance attributes for later population
-        self.ccd = None
-        self.exptime = None
-        self.exptype = None
-        self.ccd_binning = (1, 1)
-
     def get_status_and_broadcast(self):
         # current_status = self.status()
         # print("Status: " + current_status)
         print("camera status")
-
-    def handle_message(self, message):
-        print("got message: in QHY600Camera")
-        print(message)
-        if "connect_to_camera" in message:
-            print("doing connect_to_camera")
-            self.connect_to_camera()
-
-        if "expose" in message:
-            # check arguments.
-            # check exposure settings.
-            # send "wait" to DTO.
-            # request FITS dictionary from Locutus.
-            # send camera specific command to camera. (call cam_specific_expose)
-            # when done, request another FITS dictionary from Locutus.
-            # save image data to local disk.
-            # spawn fits_writer in seperate process (data, fits1, fits2)
-            # send "go" command to DTO.
-            print("camera:take exposure")
-            self.expose()
-        if "set_exposure_length" in message:
-            # check arguments against exposure length limits.
-            # send camera specific set_exposure_length.
-            print("camera:set_exposure_length")
-            try:
-                exptime = float(message[message.find("(") + 1 : message.find(")")])
-            except ValueError:
-                print("Exposure time must be a float.")
-                return
-            self.set_exposure_length(exptime)
-
-        if "set_exposure_type" in message:
-            # check arguments against exposure types.
-            # send camera specific set_exposure_type.
-            print("camera:set_exposure_type")
-            try:
-                exptype = str(message[message.find("(") + 1 : message.find(")")])
-            except ValueError:
-                print("Exposure type must be a str.")
-                return
-            self.set_exposure_type(exptype)
-
-        if "set_binning" in message:
-            # check arguments against binning limits.
-            # send camera specific set_binning.
-            print("camera:set_binning")
-        if "set_origin" in message:
-            # check arguments against origin limits.
-            # send camera specific set_origin.
-            print("camera:set_origin")
-        if "set_size" in message:
-            # check arguments against size limits.
-            # send camera specific set_size.
-            print("camera:set_size")
 
     def connect_to_camera(self):
         """CameraAgent: Connect to the camera
@@ -191,90 +135,6 @@ class QHY600Camera(SubAgent):
         if not self.check_camera_connection():
             return
         # print("QHY600 Status...")
-
-    def set_exposure_length(self, exposure_length):
-        """CameraAgent: Set the exposure length
-
-        This is a separate command from expose(), and saves the desired
-        exposure time into the instance attribute ``exptime``.
-
-        Parameters
-        ----------
-        exposure_length : ``float``
-            The desired exposure time in seconds.
-        """
-        if not self.check_camera_connection():
-            return
-        print("QHY600 Setting Exposure Length...")
-        print(f"This is the exposure time passed from on high: {exposure_length}")
-        self.exptime = exposure_length
-
-    def set_exposure_type(self, exposure_type):
-        """CameraAgent: Set the exposure type
-
-        This is a separate command from expose(), and saves the desired
-        exposure type into the instance attribute ``exptype``.
-
-        Parameters
-        ----------
-        exposure_type : ``str``
-            The desired exposure type.
-        """
-        if not self.check_camera_connection():
-            return
-        print("QHY600 Setting Exposure Type...")
-        print(f"This is the exposure type passed from on high: {exposure_type}")
-        self.exptype = exposure_type
-
-    def set_binning(self, x_binning, y_binning):
-        """CameraAgent: Set the CCD binning
-
-        _extended_summary_
-
-        Parameters
-        ----------
-        x_binning : ``int``
-            CCD binning in the x direction
-        y_binning : ``int``
-            CCD binning in the y direction
-        """
-        if not self.check_camera_connection():
-            return
-        print("QHY600 Setting Binning...")
-        print(f"This is the CCD binning passed from on high: {(x_binning, y_binning)}")
-        self.ccd_binning = (x_binning, y_binning)
-
-    def set_origin(self, x, y):
-        """CameraAgent: Set the origin of a subregion
-
-        _extended_summary_
-
-        Parameters
-        ----------
-        x : _type_
-            _description_
-        y : _type_
-            _description_
-        """
-        if not self.check_camera_connection():
-            return
-        print("QHY600 Setting Origin...")
-
-    def set_size(self, width, height):
-        """CameraAgent: Set the size of a subregion
-
-        _extended_summary_
-
-        Parameters
-        ----------
-        width : _type_
-            _description_
-        height : _type_
-            _description_
-        """
-        if not self.check_camera_connection():
-            return
-        print("QHY600 Setting Size...")
 
     def expose(self, n_exp=1):
         """CameraAgent: Take an exposure
@@ -374,17 +234,3 @@ class QHY600Camera(SubAgent):
                 #       Also, figure out how to do some sort of incremental file numbering
                 #       or something.
                 hdulist.writeto("simimage.fits", overwrite=True)
-
-    def check_camera_connection(self):
-        """Check that the client is connected to the camera
-
-        Returns
-        -------
-        ``bool``
-            Whether the camera is connected
-        """
-        if self.device_ccd and self.device_ccd.isConnected():
-            return True
-
-        print("Warning: Camera must be connected first (camera : connect_to_camera)")
-        return False
