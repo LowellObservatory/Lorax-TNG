@@ -23,8 +23,8 @@ class IndiClient(PyIndi.BaseClient):
         # print("new property " + p.getName() + " for device " + p.getDeviceName())
         # print("type = " + str(p.getType()))
         # Go store the property in the appropriate status dictionary.
-        prop_name = p.getName()
-        if "CCD" in prop_name or "FILTER" in prop_name:
+        device_name = p.getDeviceName()
+        if "CCD" in device_name:
             self.store_prop(p)
 
     def removeProperty(self, p):
@@ -59,17 +59,18 @@ class IndiClient(PyIndi.BaseClient):
         self.parent.device_status[prop_name] = prop_dict
 
     def newText(self, tvp):
-        prop_name = tvp.name
-        prop_type = 2
-        # Text type
-        temp = tvp.getText()
-        prop_dict = {"prop_type": prop_type}
-        prop_dict["length"] = len(temp)
-        prop_vals = []
-        for val in temp:
-            prop_vals.append((val.name, val.text))
-        prop_dict["vals"] = prop_vals
-        self.parent.device_status[prop_name] = prop_dict
+        pass
+        # prop_name = tvp.name
+        # prop_type = 2
+        # # Text type
+        # temp = tvp.getText()
+        # prop_dict = {"prop_type": prop_type}
+        # prop_dict["length"] = len(temp)
+        # prop_vals = []
+        # for val in temp:
+        #     prop_vals.append((val.name, val.text))
+        # prop_dict["vals"] = prop_vals
+        # self.parent.device_status[prop_name] = prop_dict
 
     def newLight(self, lvp):
         pass
