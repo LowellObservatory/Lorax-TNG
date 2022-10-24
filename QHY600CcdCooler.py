@@ -51,7 +51,7 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
     """
 
     def __init__(self, logger, conn, config):
-        print("in QHY600CcdCooler.init")
+        print("   ---> Initializing the QHY600 Cooler SubAgent")
         super().__init__(logger, conn, config)
         # Get the host and port for the connection to mount.
         # "config", in this case, is just a dictionary.
@@ -77,7 +77,7 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
     def get_status_and_broadcast(self):
 
         # print(self.device_status)
-        print("cooler status")
+        #print("cooler status")
 
         c_status = {
             "message_id": uuid.uuid4(),
@@ -87,7 +87,7 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
         status = {"root": c_status}
         xml_format = xmltodict.unparse(status, pretty=True)
 
-        print("/topic/" + self.config["outgoing_topic"])
+        #print("/topic/" + self.config["outgoing_topic"])
 
         self.conn.send(
             body=xml_format,
@@ -191,3 +191,6 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
             f"Cooler is stable at {ccd_cooler_temp:.1f}ºC, cooler power: {ccd_cooler_powr:.0f}%"
         )
         self.conn.send(body="Go", destination="/topic/" + self.config["dto_topic"])
+
+    def status(self):
+        pass

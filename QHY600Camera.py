@@ -20,13 +20,16 @@ contained in the HardwareClients module.
 """
 
 # Built-In Libraries
+import datetime
 import io
 import sys
 import time
+import uuid
 
 # 3rd Party Libraries
 import astropy.io.fits
 import PyIndi
+import xmltodict
 
 # Internal Imports
 from HardwareClients import IndiClient
@@ -53,7 +56,7 @@ class QHY600Camera(CameraSubAgent):
     """
 
     def __init__(self, logger, conn, config):
-        print("in QHY600Camera.init")
+        print("   ---> Initializing the QHY600 Camera SubAgent")
         super().__init__(logger, conn, config)
 
         # -----
@@ -74,13 +77,26 @@ class QHY600Camera(CameraSubAgent):
             device_ccd = self.indiclient.getDevice(self.config["camera_name"])
 
         self.device_ccd = device_ccd
-        print(self.device_ccd)
         # -----
 
     def get_status_and_broadcast(self):
         # current_status = self.status()
         # print("Status: " + current_status)
-        print("camera status")
+        # print("camera status")
+        c_status = {
+            "message_id": uuid.uuid4(),
+            "timestamput": datetime.datetime.utcnow(),
+            "root": self.device_status,
+        }
+        status = {"root": c_status}
+        xml_format = xmltodict.unparse(status, pretty=True)
+
+        #print("/topic/" + self.config["outgoing_topic"])
+
+        self.conn.send(
+            body=xml_format,
+            destination="/topic/" + self.config["outgoing_topic"],
+        )
 
     def connect_to_camera(self):
         """CameraAgent: Connect to the camera

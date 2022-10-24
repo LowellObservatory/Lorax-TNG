@@ -41,14 +41,14 @@ class QHY600Composite(CompositeAgent):
     """
 
     def __init__(self, config_file):
-        CompositeAgent.__init__(self, config_file)
+        super().__init__(config_file)
         print("in QHY600Composite.init")
 
-    def get_status_and_broadcast(self):
-        # Send "get_status_and_broadcast" to each of the sub_agents.
-        for agent in self.agents:
-            agent.get_status_and_broadcast()
-        time.sleep(self.config["message_wait_time"])
+    # def get_status_and_broadcast(self):
+    #     # Send "get_status_and_broadcast" to each of the sub_agents.
+    #     for agent in self.agents:
+    #         agent.get_status_and_broadcast()
+    #     # time.sleep(self.config["message_wait_time"])
 
 
 # =============================================================================#
