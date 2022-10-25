@@ -76,18 +76,18 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
 
     def get_status_and_broadcast(self):
 
-        # print(self.device_status)
-        #print("cooler status")
+        # Check if the cooler is connected
+        device_status = self.device_status #if self.device_cooler.isConnected() else {}
 
         c_status = {
             "message_id": uuid.uuid4(),
             "timestamput": datetime.datetime.utcnow(),
-            "root": self.device_status,
+            "root": device_status,
         }
         status = {"root": c_status}
         xml_format = xmltodict.unparse(status, pretty=True)
 
-        #print("/topic/" + self.config["outgoing_topic"])
+        # print("/topic/" + self.config["outgoing_topic"])
 
         self.conn.send(
             body=xml_format,
@@ -118,26 +118,39 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
         self.device_cooler = device_cooler
 
         # Make the connection -- exit if no connection
-        ccd_connect = self.device_cooler.getSwitch("CONNECTION")
-        while not ccd_connect:
+        cooler_connect = self.device_cooler.getSwitch("CONNECTION")
+        while not cooler_connect:
             print("not connected")
             time.sleep(0.5)
-            ccd_connect = self.device_cooler.getSwitch("CONNECTION")
-        while not device_cooler.isConnected():
+            cooler_connect = self.device_cooler.getSwitch("CONNECTION")
+        while not self.device_cooler.isConnected():
             print("still not connected")
-            ccd_connect[0].s = PyIndi.ISS_ON  # the "CONNECT" switch
-            ccd_connect[1].s = PyIndi.ISS_OFF  # the "DISCONNECT" switch
-            self.indiclient.sendNewSwitch(ccd_connect)
+            cooler_connect[0].s = PyIndi.ISS_ON  # the "CONNECT" switch
+            cooler_connect[1].s = PyIndi.ISS_OFF  # the "DISCONNECT" switch
+            self.indiclient.sendNewSwitch(cooler_connect)
             time.sleep(0.5)
-        print(f"Are we connected yet? {self.device_cooler.isConnected()}")
+        # print(f"Are we connected yet? {self.device_cooler.isConnected()}")
         if not self.device_cooler.isConnected():
             sys.exit()
 
         # Print a happy acknowledgment
         print(f"The Agent is now connected to {self.cooler}")
 
-        # Tell the INDI server send the "CCD1" blob to this client
-        self.indiclient.setBLOBMode(PyIndi.B_ALSO, self.cooler, "CCD1")
+    def disconnect_from_cooler(self):
+        """Disconnect from the cooler
+
+        _extended_summary_
+        """
+        # Turn off cooler
+        cooler_power = self.device_cooler.getSwitch("CCD_COOLER")
+        cooler_power[0].s = PyIndi.ISS_OFF  # the "COOLER_ON" switch
+        cooler_power[1].s = PyIndi.ISS_ON  # the "COOLER_OFF" switch
+        self.indiclient.sendNewSwitch(cooler_power)
+
+        # Reset instance attributes
+        self.cooler = None
+        self.device_cooler = None
+
 
     def set_temperature(self, cool_temp, tolerance=1.0):
         """Set the cooler temperature
@@ -165,13 +178,19 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
         # NOTE: This should probably also send a "Wait" command back to the DTO
         #       and should quietly loop until either the temperature reaches
         #       the requested value or a timeout is reached.
-        self.conn.send(body="Wait", destination="/topic/" + self.config["dto_topic"])
+        self.conn.send(
+            body="WAIT", destination="/topic/" + self.config["dto_command_topic"]
+        )
 
         ccd_cooler_temp = self.device_status["CCD_TEMPERATURE"]["vals"][0][1]
         ccd_cooler_powr = self.device_status["CCD_COOLER_POWER"]["vals"][0][1]
+        ccd_cooler_ramp = self.device_status["CCD_TEMP_RAMP"]["vals"][0][1]
 
         print(
-            f"Temperature difference: {np.abs(ccd_cooler_temp - cool_temp)}  Tolerance: {tolerance}   IF conditional: {np.abs(ccd_cooler_temp - cool_temp) > tolerance}"
+            f"Temperature difference: {np.abs(ccd_cooler_temp - cool_temp):.1f}Cº  "
+            f"Temperature ramp {ccd_cooler_ramp:.3f}Cº/min  "
+            f"Tolerance: {tolerance:.1f}Cº   "
+            f"Stable condition: {np.abs(ccd_cooler_temp - cool_temp) <= tolerance}"
         )
 
         while np.abs(ccd_cooler_temp - cool_temp) > tolerance:
@@ -179,18 +198,22 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
             temp[0].value = float(cool_temp)  ### new temperature to reach
             self.indiclient.sendNewNumber(temp)
 
-            time.sleep(1.0)
+            time.sleep(0.5)
+            # Broadcast the status while we're waiting
+            self.get_status_and_broadcast()
+
             ccd_cooler_temp = self.device_status["CCD_TEMPERATURE"]["vals"][0][1]
             ccd_cooler_powr = self.device_status["CCD_COOLER_POWER"]["vals"][0][1]
+            ccd_cooler_ramp = self.device_status["CCD_TEMP_RAMP"]["vals"][0][1]
             print(
                 f"CCD Temp: {ccd_cooler_temp:.1f}ºC  "
                 f"Set point: {cool_temp:.1f}ºC  "
+                f"Cooler Ramp: {ccd_cooler_ramp:.3f}Cº/min  "
                 f"Cooler Power: {ccd_cooler_powr:.0f}%"
             )
         print(
             f"Cooler is stable at {ccd_cooler_temp:.1f}ºC, cooler power: {ccd_cooler_powr:.0f}%"
         )
-        self.conn.send(body="Go", destination="/topic/" + self.config["dto_topic"])
-
-    def status(self):
-        pass
+        self.conn.send(
+            body="GO", destination="/topic/" + self.config["dto_command_topic"]
+        )

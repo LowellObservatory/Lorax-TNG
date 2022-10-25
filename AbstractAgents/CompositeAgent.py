@@ -125,29 +125,14 @@ class CompositeAgent(ABC):
 
         _extended_summary_
         """
-        # Look up which agent the message is addressed to and send to that agent.
-        i = 0
-        agent_position = -1
+        # This is the message's destination agent
+        msg_destination = self.current_destination.rsplit(".", 1)[-1]
 
-        # Match the topic of the message in the incoming_topics list.
-        while i < len(self.incoming_topics):
-            compare_1 = self.current_destination.rsplit(".", 1)[-1]
-            compare_2 = self.incoming_topics[i].rsplit(".", 1)[-1]
-            # print(compare_1)
-            # print(compare_2)
-            if compare_1 == compare_2:
-                # print("found it!")
-                # print(i)
-                agent_position = i
-            i = i + 1
-        # print("agent_position")
-        # print(agent_position)
-        if agent_position != -1:
-            # If we found the topic, send the current message to the
-            # corresponding agent.
-            # print(len(self.agents))
-            # print(self.current_message)
-            self.agents[agent_position].handle_message(self.current_message)
+        # Loop through the list of "incoming topics" (i.e., "DTO -> Agent")
+        # NOTE: Both self.incoming_topics and self.agents are lists in the same order
+        for i, incoming_topic in enumerate(self.incoming_topics):
+            if incoming_topic.rsplit(".", 1)[-1] == msg_destination:
+                self.agents[i].handle_message(self.current_message)
 
     class BrokerListener(stomp.ConnectionListener):
         """STOMP broker listener

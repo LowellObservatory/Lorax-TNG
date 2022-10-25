@@ -67,13 +67,22 @@ class CameraSubAgent(SubAgent):
         self.ccd_binning = (1, 1)
 
     def handle_message(self, message):
-        print("got message: in CameraSubAgent")
-        print(message)
+        print(f"\nReceived message in CameraSubAgent: {message}")
+
         if "connect_to_camera" in message:
-            print("doing connect_to_camera")
+            print("Connecting to the camera...")
             self.connect_to_camera()
 
-        if "expose" in message:
+        elif "disconnect" in message:
+            print("Disconnecting from camera...")
+            # Reset all internal attributes
+            self.ccd = None
+            self.device_ccd = None
+            self.exptime = None
+            self.exptype = None
+            self.ccd_binning = (1, 1)
+
+        elif "expose" in message:
             # check arguments.
             # check exposure settings.
             # send "wait" to DTO.
@@ -83,42 +92,50 @@ class CameraSubAgent(SubAgent):
             # save image data to local disk.
             # spawn fits_writer in seperate process (data, fits1, fits2)
             # send "go" command to DTO.
-            print("camera:take exposure")
+            # print("camera:take exposure")
             self.expose()
-        if "set_exposure_length" in message:
+
+        elif "set_exposure_length" in message:
             # check arguments against exposure length limits.
             # send camera specific set_exposure_length.
-            print("camera:set_exposure_length")
+            # print("camera:set_exposure_length")
             try:
                 exptime = float(message[message.find("(") + 1 : message.find(")")])
             except ValueError:
                 print("Exposure time must be a float.")
                 return
             self.set_exposure_length(exptime)
+            print(f"Exposure length set to {exptime:.2f}s")
 
-        if "set_exposure_type" in message:
+        elif "set_exposure_type" in message:
             # check arguments against exposure types.
             # send camera specific set_exposure_type.
-            print("camera:set_exposure_type")
+            # print("camera:set_exposure_type")
             try:
                 exptype = str(message[message.find("(") + 1 : message.find(")")])
             except ValueError:
                 print("Exposure type must be a str.")
                 return
             self.set_exposure_type(exptype)
+            print(f"Exposure type set to {exptype}")
 
-        if "set_binning" in message:
+        elif "set_binning" in message:
             # check arguments against binning limits.
             # send camera specific set_binning.
-            print("camera:set_binning")
-        if "set_origin" in message:
+            print("camera:set_binning (no effect)")
+
+        elif "set_origin" in message:
             # check arguments against origin limits.
             # send camera specific set_origin.
-            print("camera:set_origin")
-        if "set_size" in message:
+            print("camera:set_origin (no effect)")
+
+        elif "set_size" in message:
             # check arguments against size limits.
             # send camera specific set_size.
-            print("camera:set_size")
+            print("camera:set_size (no effect)")
+
+        else:
+            print("Unknown command")
 
     def check_camera_connection(self):
         """Check that the client is connected to the camera
@@ -147,8 +164,7 @@ class CameraSubAgent(SubAgent):
         """
         if not self.check_camera_connection():
             return
-        print("CameraSubAgent Setting Exposure Length...")
-        print(f"This is the exposure time passed from on high: {exposure_length}")
+        print(f"CameraSubAgent Setting Exposure Length to {exposure_length}s")
         self.exptime = exposure_length
 
     def set_exposure_type(self, exposure_type):
@@ -164,8 +180,7 @@ class CameraSubAgent(SubAgent):
         """
         if not self.check_camera_connection():
             return
-        print("CameraSubAgent Setting Exposure Type...")
-        print(f"This is the exposure type passed from on high: {exposure_type}")
+        print(f"CameraSubAgent Setting Exposure Type to {exposure_type}")
         self.exptype = exposure_type
 
     def set_binning(self, x_binning, y_binning):
@@ -182,8 +197,7 @@ class CameraSubAgent(SubAgent):
         """
         if not self.check_camera_connection():
             return
-        print("CameraSubAgent Setting Binning...")
-        print(f"This is the CCD binning passed from on high: {(x_binning, y_binning)}")
+        print(f"CameraSubAgent Setting Binning to {(x_binning, y_binning)}")
         self.ccd_binning = (x_binning, y_binning)
 
     def set_origin(self, x, y):
@@ -200,7 +214,7 @@ class CameraSubAgent(SubAgent):
         """
         if not self.check_camera_connection():
             return
-        print("CameraSubAgent Setting Origin...")
+        print("CameraSubAgent Setting Origin (not really)")
 
     def set_size(self, width, height):
         """Set the size of a subregion
@@ -216,19 +230,11 @@ class CameraSubAgent(SubAgent):
         """
         if not self.check_camera_connection():
             return
-        print("CameraSubAgent Setting Size...")
+        print("CameraSubAgent Setting Size (not really)")
 
     @abstractmethod
     def connect_to_camera(self):
         """Connect to camera
-
-        Must be implemented by hardware-specific Agent
-        """
-        raise NotImplementedError("Specific hardware Agent must implement this method.")
-
-    @abstractmethod
-    def status(self):
-        """Get the camera status
 
         Must be implemented by hardware-specific Agent
         """
@@ -273,30 +279,29 @@ class CcdCoolerSubAgent(SubAgent):
         self.device_cooler = None
 
     def handle_message(self, message):
-        print("got message: in CcdCoolerSubAgent")
-        print(message)
+        print(f"\nReceived message in CcdCoolerSubAgent: {message}")
 
-        if "(" in message:
-            mcom = message[0 : message.find("(")]
-        else:
-            mcom = message
-        print(mcom)
-
-        if mcom == "connect_to_cooler":
-            print("doing connect_to_cooler")
+        if "connect_to_cooler" in message:
+            print("Connecting to the cooler...")
             self.connect_to_cooler()
 
-        if mcom == "settemp":
+        elif "disconnect" in message:
+            print("Disconnecting from cooler...")
+            self.disconnect_from_cooler()
+            self.cooler = None
+            self.device_cooler = None
+
+        elif "set_temperature" in message:
             # Get the arguments.
             # setTemp(-45.0)
-            print("doing settemp")
+            # print("doing settemp")
             com = message
             temperature = float(com[com.find("(") + 1 : com.find(")")])
-            print("setting temp to " + str(temperature))
             self.set_temperature(temperature)
+            print(f"Temperature set to {temperature:.1f}ºC")
 
-        elif mcom == "status":
-            print("doing status")
+        elif "status" in message:
+            # print("doing status")
             self.get_status_and_broadcast()
 
         # if "set_temp" in message:
@@ -340,8 +345,8 @@ class CcdCoolerSubAgent(SubAgent):
         raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
-    def status(self):
-        """Get the CCD cooler status
+    def disconnect_from_cooler(self):
+        """Disconnect from CCD cooler
 
         Must be implemented by hardware-specific Agent
         """
@@ -386,16 +391,25 @@ class FilterWheelSubAgent(SubAgent):
         self.device_filterwheel = None
 
     def handle_message(self, message):
-        print("got message: FilterWheelSubAgent")
-        print(message)
-        if "home" in message:
+        print(f"\nReceived message in FilterWheelSubAgent: {message}")
+
+        if "connect_to_filterwheel" in message:
+            print("Connecting to the filter wheel...")
+            self.connect_to_filterwheel()
+
+        elif "disconnect" in message:
+            print("Disconnecting from filter wheel...")
+            self.disconnect_from_filterwheel()
+
+        elif "home" in message:
             # send wheel home.
             # send "wait" to DTO.
             # send specific command, "home", to filter wheel
             # keep checking status until done.
             # send "go" command to DTO.
             print("filter wheel: home")
-        if "move" in message:
+
+        elif "move" in message:
             # send wheel to specific position.
             # check arguments against position limits.
             # send "wait" to DTO.
@@ -403,6 +417,9 @@ class FilterWheelSubAgent(SubAgent):
             # keep checking status until done.
             # send "go" command to DTO.
             print("filter wheel: move")
+
+        else:
+            print("Unknown command")
 
     def check_filterwheel_connection(self):
         """Check that the client is connected to the filter wheel
@@ -429,8 +446,8 @@ class FilterWheelSubAgent(SubAgent):
         raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
-    def status(self):
-        """Get the filter wheel status
+    def disconnect_from_filterwheel(self):
+        """Disconnect from filter wheel
 
         Must be implemented by hardware-specific Agent
         """
@@ -483,16 +500,25 @@ class MountSubAgent(SubAgent):
         self.device_mount = None
 
     def handle_message(self, message):
-        print("got message: MountSubAgent")
-        print(message)
-        if "home" in message:
+        print(f"\nReceived message in MountSubAgent: {message}")
+
+        if "connect_to_mount" in message:
+            print("Connecting to the mount...")
+            self.connect_to_mount()
+
+        elif "disconnect" in message:
+            print("Disconnecting from mount...")
+            self.disconnect_from_mount()
+
+        elif "home" in message:
             # send mount home.
             # send "wait" to DTO.
             # send specific command, "home", to filter wheel
             # keep checking status until done.
             # send "go" command to DTO.
             print("mount: home")
-        if "move" in message:
+
+        elif "move" in message:
             # send mount to specific position.
             # check arguments against position limits.
             # send "wait" to DTO.
@@ -500,6 +526,9 @@ class MountSubAgent(SubAgent):
             # keep checking status until done.
             # send "go" command to DTO.
             print("mount: move")
+
+        else:
+            print("Unknown command")
 
     def check_mount_connection(self):
         """Check that the client is connected to the mount
@@ -523,8 +552,8 @@ class MountSubAgent(SubAgent):
         raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
-    def status(self):
-        """Get the mount status
+    def disconnect_from_mount(self):
+        """Disconnect from mount
 
         Must be implemented by hardware-specific Agent
         """
@@ -577,16 +606,25 @@ class DomeSubAgent(SubAgent):
         self.device_dome = None
 
     def handle_message(self, message):
-        print("got message: DomeSubAgent")
-        print(message)
-        if "home" in message:
+        print(f"\nReceived message in DomeSubAgent: {message}")
+
+        if "connect_to_dome" in message:
+            print("Connecting to the dome...")
+            self.connect_to_dome()
+
+        elif "disconnect" in message:
+            print("Disconnecting from dome...")
+            self.disconnect_from_dome()
+
+        elif "home" in message:
             # send dome home.
             # send "wait" to DTO.
             # send specific command, "home", to filter wheel
             # keep checking status until done.
             # send "go" command to DTO.
             print("dome: home")
-        if "move" in message:
+
+        elif "move" in message:
             # send dome to specific position.
             # check arguments against position limits.
             # send "wait" to DTO.
@@ -594,6 +632,9 @@ class DomeSubAgent(SubAgent):
             # keep checking status until done.
             # send "go" command to DTO.
             print("dome: move")
+
+        else:
+            print("Unknown command")
 
     def check_dome_connection(self):
         """Check that the client is connected to the dome
@@ -614,12 +655,11 @@ class DomeSubAgent(SubAgent):
 
         Must be implemented by hardware-specific Agent
         """
-
         raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
-    def status(self):
-        """Get the dome status
+    def disconnect_from_dome(self):
+        """Disconnect from dome
 
         Must be implemented by hardware-specific Agent
         """

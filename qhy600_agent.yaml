@@ -4,7 +4,7 @@ broker_hosts:
   - tanagra
   - 61613
 agents_in_composite:
-  - camera:
+  - camera1:
       agent_name: QHY600Camera
       camera_name: "QHY CCD QHY600M-d0a5a44"
       camera_host: "localhost"
@@ -12,7 +12,7 @@ agents_in_composite:
       incoming_topic: lorax.ldtboresight.dto.camera1
       outgoing_topic: lorax.ldtboresight.camera1.broadcast
       dto_command_topic: lorax.ldtboresight.camera1.dto
-  - ccdcooler:
+  - ccdcooler1:
       agent_name: QHY600CcdCooler
       cooler_name: "QHY CCD QHY600M-d0a5a44"
       cooler_host: "localhost"

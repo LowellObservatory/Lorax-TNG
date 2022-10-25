@@ -80,18 +80,20 @@ class QHY600Camera(CameraSubAgent):
         # -----
 
     def get_status_and_broadcast(self):
-        # current_status = self.status()
-        # print("Status: " + current_status)
-        # print("camera status")
+
+        # Check if the cooler is connected
+        print(f" &&&&&&&& Should we even be asking after the status? {self.device_ccd.isConnected()}")
+        device_status = self.device_status if self.device_ccd.isConnected() else {}
+
         c_status = {
             "message_id": uuid.uuid4(),
             "timestamput": datetime.datetime.utcnow(),
-            "root": self.device_status,
+            "root": device_status,
         }
         status = {"root": c_status}
         xml_format = xmltodict.unparse(status, pretty=True)
 
-        #print("/topic/" + self.config["outgoing_topic"])
+        # print("/topic/" + self.config["outgoing_topic"])
 
         self.conn.send(
             body=xml_format,
@@ -133,7 +135,7 @@ class QHY600Camera(CameraSubAgent):
             ccd_connect[1].s = PyIndi.ISS_OFF  # the "DISCONNECT" switch
             self.indiclient.sendNewSwitch(ccd_connect)
             time.sleep(0.5)
-        print(f"Are we connected yet? {self.device_ccd.isConnected()}")
+        # print(f"Are we connected yet? {self.device_ccd.isConnected()}")
         if not self.device_ccd.isConnected():
             sys.exit()
 
@@ -142,15 +144,6 @@ class QHY600Camera(CameraSubAgent):
 
         # Tell the INDI server send the "CCD1" blob to this client
         self.indiclient.setBLOBMode(PyIndi.B_ALSO, self.ccd, "CCD1")
-
-    def status(self):
-        """CameraAgent / CoolerAgent: Report the status
-
-        _extended_summary_
-        """
-        if not self.check_camera_connection():
-            return
-        # print("QHY600 Status...")
 
     def expose(self, n_exp=1):
         """CameraAgent: Take an exposure
@@ -184,6 +177,16 @@ class QHY600Camera(CameraSubAgent):
 
         # Say what we're going to do
         print(f"Exposing {self.exptype} frame for {self.exptime:.2f}s...")
+
+        # Send the DTO a "WAIT" message
+        print(
+            f"   +++> Sending 'WAIT' to {'/topic/' + self.config['dto_command_topic']}"
+        )
+
+        self.conn.send(
+            body="WAIT",
+            destination="/topic/" + self.config["dto_command_topic"],
+        )
 
         # TODO: Need to figure out how to specify things like the exposure
         #       type, binning, and ROI to the INDI server.  Do those things
@@ -238,7 +241,9 @@ class QHY600Camera(CameraSubAgent):
             # Meanwhile, process the received exposure
             for blob in ccd_ccd1:
                 # Print out some information about this exposure
-                print(f"name: {blob.name} size: {blob.size} format: {blob.format}")
+                print(
+                    f"BLOB name: {blob.name}  size: {blob.size/1024**2:.2f} MB  format: {blob.format}"
+                )
 
                 # Use the PyIndi-supplied getblobdata() method to access the contents of
                 #   the BLOB, which is a bytearray in Python.  Run it through io.BytesIO
@@ -250,3 +255,9 @@ class QHY600Camera(CameraSubAgent):
                 #       Also, figure out how to do some sort of incremental file numbering
                 #       or something.
                 hdulist.writeto("simimage.fits", overwrite=True)
+
+        # Send the DTO a "GO" message
+        self.conn.send(
+            body="GO",
+            destination="/topic/" + self.config["dto_command_topic"],
+        )
