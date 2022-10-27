@@ -5,13 +5,16 @@ import sys
 import astropy.io.fits
 import io
 import threading
-from datetime import datetime
+import uuid
+import xmltodict
+from datetime import datetime, timezone
 
 
 class IndiClient(PyIndi.BaseClient):
-    def __init__(self, parent):
+    def __init__(self, parent, config):
         super(IndiClient, self).__init__()
         self.parent = parent
+        self.config = config
         self.blobEvent = threading.Event()
         self.camera = None
         status = {}
@@ -27,8 +30,8 @@ class IndiClient(PyIndi.BaseClient):
         # print("type = " + str(p.getType()))
         # Go store the property in the appropriate status dictionary.
         # prop_name = p.getName()
-        device_name = p.getDeviceName()
-        if "CCD" in device_name:
+        prop_name = p.getName()
+        if prop_name in self.config["status"]:
             print("storing prop: " + p.getName())
             self.store_prop(p)
 
@@ -48,7 +51,8 @@ class IndiClient(PyIndi.BaseClient):
         for val in svp:
             prop_vals.append((val.name, val.s))
         prop_dict["vals"] = prop_vals
-        self.parent.device_status[prop_name] = prop_dict
+        if svp.name in self.config["status"]:
+            self.parent.device_status[prop_name] = prop_dict
 
     def newNumber(self, nvp):
         prop_name = nvp.name
@@ -59,21 +63,20 @@ class IndiClient(PyIndi.BaseClient):
         for val in nvp:
             prop_vals.append((val.name, val.value))
         prop_dict["vals"] = prop_vals
-        self.parent.device_status[prop_name] = prop_dict
+        if nvp.name in self.config["status"]:
+            self.parent.device_status[prop_name] = prop_dict
 
     def newText(self, tvp):
-        pass
-        # prop_name = tvp.name
-        # prop_type = 2
-        # # Text type
-        # temp = tvp.getText()
-        # prop_dict = {"prop_type": prop_type}
-        # prop_dict["length"] = len(temp)
-        # prop_vals = []
-        # for val in temp:
-        #     prop_vals.append((val.name, val.text))
-        # prop_dict["vals"] = prop_vals
-        # self.parent.device_status[prop_name] = prop_dict
+        prop_name = tvp.name
+        prop_type = 2
+        prop_dict = {"prop_type": prop_type}
+        prop_dict["length"] = len(tvp)
+        prop_vals = []
+        for val in tvp:
+            prop_vals.append((val.name, val.text))
+        prop_dict["vals"] = prop_vals
+        if tvp.name in self.config["status"]:
+            self.parent.device_status[prop_name] = prop_dict
 
     def newLight(self, lvp):
         pass
@@ -95,8 +98,9 @@ class IndiClient(PyIndi.BaseClient):
             if prop_type == 0:
                 # Number Type
                 temp = prop.getNumber()
-                prop_dict = {"prop_type": prop_type}
-                prop_dict["length"] = len(temp)
+                prop_dict = {}
+                # prop_dict = {"prop_type": prop_type}
+                # prop_dict["length"] = len(temp)
                 prop_vals = []
                 for val in temp:
                     # print(dir(val))
@@ -106,8 +110,9 @@ class IndiClient(PyIndi.BaseClient):
             elif prop_type == 1:
                 # Switch type
                 temp = prop.getSwitch()
-                prop_dict = {"prop_type": prop_type}
-                prop_dict["length"] = len(temp)
+                prop_dict = {}
+                # prop_dict = {"prop_type": prop_type}
+                # prop_dict["length"] = len(temp)
                 prop_vals = []
                 for val in temp:
                     # print(dir(val))
@@ -120,8 +125,9 @@ class IndiClient(PyIndi.BaseClient):
                 temp = prop.getText()
                 # print(len(temp))
                 # print(dir(temp[0]))
-                prop_dict = {"prop_type": prop_type}
-                prop_dict["length"] = len(temp)
+                prop_dict = {}
+                # prop_dict = {"prop_type": prop_type}
+                # prop_dict["length"] = len(temp)
                 prop_vals = []
                 for val in temp:
                     # print(dir(val))
@@ -133,8 +139,9 @@ class IndiClient(PyIndi.BaseClient):
             elif prop_type == 3:
                 # Light type
                 temp = prop.getLight()
-                prop_dict = {"prop_type": prop_type}
-                prop_dict["length"] = len(temp)
+                prop_dict = {}
+                # prop_dict = {"prop_type": prop_type}
+                # prop_dict["length"] = len(temp)
                 prop_vals = []
                 for val in temp:
                     prop_vals.append((val.name, val.text))
@@ -150,7 +157,7 @@ class SBIGCamera(SubAgent):
         # -----
         # Get the host and port for the connection to mount.
         # "config", in this case, is just a dictionary.
-        self.indiclient = IndiClient(self)
+        self.indiclient = IndiClient(self, config)
         # print(self.config)
         self.indiclient.setServer(
             self.config["camera_host"], self.config["camera_port"]
@@ -172,9 +179,20 @@ class SBIGCamera(SubAgent):
         # -----
 
     def get_status_and_broadcast(self):
-        # current_status = self.status()
-        # print("Status: " + current_status)
-        print("camera status")
+        c_status = {
+            "message_id": uuid.uuid4(),
+            "timestamput": datetime.now(timezone.utc),
+            "root": self.device_status,
+        }
+        status = {"root": c_status}
+        xml_format = xmltodict.unparse(status, pretty=True)
+
+        print("/topic/" + self.config["outgoing_topic"])
+
+        self.conn.send(
+            body=xml_format,
+            destination="/topic/" + self.config["outgoing_topic"],
+        )
 
     def handle_message(self, message):
         print("got message: in SBIGCamera")

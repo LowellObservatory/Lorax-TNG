@@ -59,18 +59,15 @@ class IndiClient(PyIndi.BaseClient):
         self.parent.device_status[prop_name] = prop_dict
 
     def newText(self, tvp):
-        pass
-        # prop_name = tvp.name
-        # prop_type = 2
-        # # Text type
-        # temp = tvp.getText()
-        # prop_dict = {"prop_type": prop_type}
-        # prop_dict["length"] = len(temp)
-        # prop_vals = []
-        # for val in temp:
-        #     prop_vals.append((val.name, val.text))
-        # prop_dict["vals"] = prop_vals
-        # self.parent.device_status[prop_name] = prop_dict
+        prop_name = tvp.name
+        prop_type = 2
+        prop_dict = {"prop_type": prop_type}
+        prop_dict["length"] = len(tvp)
+        prop_vals = []
+        for val in tvp:
+            prop_vals.append((val.name, val.text))
+        prop_dict["vals"] = prop_vals
+        self.parent.device_status[prop_name] = prop_dict
 
     def newLight(self, lvp):
         pass

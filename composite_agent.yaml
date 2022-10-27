@@ -17,6 +17,13 @@ agents_in_composite:
       incoming_topic: lorax.timo.dto.camera
       outgoing_topic: lorax.timo.camera.broadcast
       dto_command_topic: lorax.timo.camera.dto
+      status:
+        - CCD_EXPOSURE
+        - CCD_BINNING
+        - CCD_FRAME_TYPE
+        - CCD_GAIN
+        - CCD_OFFSET
+        - CCD_DIRECTORY_LOCATION
   - ccdcooler:
       agent_name: SBIGCcdCooler
       cooler_name: "CCD Simulator"
