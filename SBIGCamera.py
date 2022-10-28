@@ -26,7 +26,7 @@ class IndiClient(PyIndi.BaseClient):
 
     def newProperty(self, p):
         # print(dir(p))
-        print("new property " + p.getName() + " for device " + p.getDeviceName())
+        # print("new property " + p.getName() + " for device " + p.getDeviceName())
         # print("type = " + str(p.getType()))
         # Go store the property in the appropriate status dictionary.
         # prop_name = p.getName()
@@ -52,7 +52,6 @@ class IndiClient(PyIndi.BaseClient):
 
     def newNumber(self, nvp):
         prop_name = nvp.name
-        # ----
         for val in nvp:
             if prop_name in self.config["status"]:
                 self.parent.device_status[val.name] = val.value
@@ -116,7 +115,7 @@ class SBIGCamera(SubAgent):
         print("in SBIGCamera.init")
         SubAgent.__init__(self, logger, conn, config)
 
-        # Get the host and port for the connection to mount.
+        # Get the host and port for the connection to camera.
         # "config", in this case, is just a dictionary.
         self.indiclient = IndiClient(self, config)
         # print(self.config)
@@ -137,64 +136,7 @@ class SBIGCamera(SubAgent):
         self.exptime = 1.0
         self.exptype = "FRAME_LIGHT"
         self.ccd_binning = (1, 1)
-        # -----
-        # connect the scope (apparently we need to do this to get expose to work))
-        telescope = "Telescope Simulator"
-        device_telescope = None
-        telescope_connect = None
 
-        # get the telescope device
-        device_telescope = self.indiclient.getDevice(telescope)
-        while not (device_telescope):
-            time.sleep(0.5)
-            device_telescope = self.indiclient.getDevice(telescope)
-
-        # wait CONNECTION property be defined for telescope
-        telescope_connect = device_telescope.getSwitch("CONNECTION")
-        while not (telescope_connect):
-            time.sleep(0.5)
-            telescope_connect = device_telescope.getSwitch("CONNECTION")
-
-        # if the telescope device is not connected, we do connect it
-        if not (device_telescope.isConnected()):
-            # Property vectors are mapped to iterable Python objects
-            # Hence we can access each element of the vector using Python indexing
-            # each element of the "CONNECTION" vector is a ISwitch
-            telescope_connect[0].s = PyIndi.ISS_ON  # the "CONNECT" switch
-            telescope_connect[1].s = PyIndi.ISS_OFF  # the "DISCONNECT" switch
-            self.indiclient.sendNewSwitch(
-                telescope_connect
-            )  # send this new value to the device
-
-        # Now let's make a goto to vega
-        # Beware that ra/dec are in decimal hours/degrees
-        vega = {"ra": (279.23473479 * 24.0) / 360.0, "dec": +38.78368896}
-
-        # We want to set the ON_COORD_SET switch to engage tracking after goto
-        # device.getSwitch is a helper to retrieve a property vector
-        telescope_on_coord_set = device_telescope.getSwitch("ON_COORD_SET")
-        while not (telescope_on_coord_set):
-            time.sleep(0.5)
-            telescope_on_coord_set = device_telescope.getSwitch("ON_COORD_SET")
-        # the order below is defined in the property vector, look at the standard Properties page
-        # or enumerate them in the Python shell when you're developing your program
-        telescope_on_coord_set[0].s = PyIndi.ISS_ON  # TRACK
-        telescope_on_coord_set[1].s = PyIndi.ISS_OFF  # SLEW
-        telescope_on_coord_set[2].s = PyIndi.ISS_OFF  # SYNC
-        self.indiclient.sendNewSwitch(telescope_on_coord_set)
-        # We set the desired coordinates
-        telescope_radec = device_telescope.getNumber("EQUATORIAL_EOD_COORD")
-        while not (telescope_radec):
-            time.sleep(0.5)
-            telescope_radec = device_telescope.getNumber("EQUATORIAL_EOD_COORD")
-        telescope_radec[0].value = vega["ra"]
-        telescope_radec[1].value = vega["dec"]
-        self.indiclient.sendNewNumber(telescope_radec)
-        # and wait for the scope has finished moving
-        # while telescope_radec.s == PyIndi.IPS_BUSY:
-        #     print("Scope Moving ", telescope_radec[0].value, telescope_radec[1].value)
-        #     time.sleep(2)
-        # -----
         # List out the devices available from the INDI server
         devlist = [d.getDeviceName() for d in self.indiclient.getDevices()]
         print(f"This is the list of connected devices: {devlist}")
@@ -212,6 +154,22 @@ class SBIGCamera(SubAgent):
             time.sleep(0.5)
             device_ccd = self.indiclient.getDevice(self.ccd)
         self.device_ccd = device_ccd
+
+        # This is a special property of the CCD_Simulator.
+        # the CCD_Simulator requires an RA and DEC before it
+        # will take an image.  One way to do this is load
+        # the telescope simulator and connect to it.
+        # The other way is to set this property in the
+        # CCD simulator.  We do that here.
+        eqpe = device_ccd.getNumber("EQUATORIAL_PE")
+        while not eqpe:
+            print("  Waiting for EQ_PE...")
+            time.sleep(0.5)
+            eqpe = device_ccd.getNumber("EQUATORIAL_PE")
+
+        eqpe[0].value = 0.0
+        eqpe[1].value = 0.0
+        self.indiclient.sendNewNumber(eqpe)
 
         # Make the connection -- exit if no connection
         ccd_connect = self.device_ccd.getSwitch("CONNECTION")
@@ -310,22 +268,6 @@ class SBIGCamera(SubAgent):
             # send "go" command to DTO.
             print("camera:take exposure")
             # ---------------------
-            #  """CameraAgent: Take an exposure
-            # This method takes an exposure with the camera.  The various settings
-            # need to have been adjusted before this command is executed.  If any of
-            # the required settings are ``None``, this method will emmit a warning
-            # and return without exposing.
-            # NOTE: An exposure is triggered when the exposure number vector property
-            #   is sent to the camera via the INDI server, like::
-            #     self.indiclient.sendNewNumber(ccd_exposure)
-            # Parameters
-            # ----------
-            # n_exp : ``int``
-            # Number of exposures to be taken.  (Default: 1)
-            # """
-            # if not self.check_camera_connection():
-            #     return
-            # print("QHY600 Expose...")
 
             # Check the required exposure properties
             if not self.exptime:
@@ -337,11 +279,6 @@ class SBIGCamera(SubAgent):
 
             # Say what we're going to do
             print(f"Exposing {self.exptype} frame for {self.exptime:.2f}s...")
-
-            while not (ccd_active_devices := self.device_ccd.getText("ACTIVE_DEVICES")):
-                time.sleep(0.5)
-            ccd_active_devices[0].text = "Telescope Simulator"
-            self.indiclient.sendNewText(ccd_active_devices)
 
             # Retrieve the CCD_EXPOSURE number vector property from the camera
             print("getting ccd_exposure")
@@ -370,6 +307,7 @@ class SBIGCamera(SubAgent):
             self.indiclient.sendNewNumber(ccd_exposure)
 
             self.indiclient.blobEvent.wait()
+
             # while not (self.indiclient.blobEvent.set):
             #     self.indiclient.blobEvent.wait(timeout=0.5)
             #     self.get_status_and_broadcast()

@@ -106,20 +106,20 @@ class CompositeAgent(ABC):
         while i < len(self.incoming_topics):
             compare_1 = self.current_destination.rsplit(".", 1)[-1]
             compare_2 = self.incoming_topics[i].rsplit(".", 1)[-1]
-            print(compare_1)
-            print(compare_2)
+            # print(compare_1)
+            # print(compare_2)
             if compare_1 == compare_2:
-                print("found it!")
-                print(i)
+                # print("found it!")
+                # print(i)
                 agent_position = i
             i = i + 1
-        print("agent_position")
-        print(agent_position)
+        # print("agent_position")
+        # print(agent_position)
         if agent_position != -1:
             # If we found the topic, send the current message to the
             # corresponding agent.
-            print(len(self.agents))
-            print(self.current_message)
+            # print(len(self.agents))
+            # print(self.current_message)
             self.agents[agent_position].handle_message(self.current_message)
 
     class BrokerListener(stomp.ConnectionListener):

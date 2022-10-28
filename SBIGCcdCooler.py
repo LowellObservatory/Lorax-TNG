@@ -97,6 +97,7 @@ class IndiClient(PyIndi.BaseClient):
                     prop_vals.append((val.name, val.value))
                 prop_dict["vals"] = prop_vals
                 self.parent.device_status[prop_name] = prop_dict
+                self.parent.get_status_and_broadcast()
             elif prop_type == 1:
                 # Switch type
                 temp = prop.getSwitch()
@@ -160,7 +161,7 @@ class SBIGCcdCooler(SubAgent):
 
     def get_status_and_broadcast(self):
 
-        # print(self.device_status)
+        # print(self.config)
 
         c_status = {
             "message_id": uuid.uuid4(),
