@@ -1,35 +1,42 @@
 ---
-log_file: CompositeAgent.log
-broker_hosts:
-  - tanagra
-  - 61613
 agents_in_composite:
   - filterwheel:
       agent_name: SBIGFilterWheel
+      dto_command_topic: lorax.timo.filterwheel.dto
       incoming_topic: lorax.timo.dto.filterwheel
       outgoing_topic: lorax.timo.filterwheel.broadcast
-      dto_command_topic: lorax.timo.filterwheel.dto
   - camera:
       agent_name: SBIGCamera
-      camera_name: "CCD Simulator"
       camera_host: morgan.lowell.edu
+      camera_name: CCD Simulator
       camera_port: 7624
+      dto_command_topic: lorax.timo.camera.dto
       incoming_topic: lorax.timo.dto.camera
       outgoing_topic: lorax.timo.camera.broadcast
-      dto_command_topic: lorax.timo.camera.dto
       status:
-        - CCD_EXPOSURE
-        - CCD_BINNING
         - CCD_FRAME_TYPE
+        - CCD_BINNING
         - CCD_GAIN
-        - CCD_OFFSET
-        - CCD_DIRECTORY_LOCATION
+        - CCD_EXPOSURE
+        - CCD_EXPOSURE_VALUE
+        - HOR_BIN
+        - VER_BIN
+        - FRAME_LIGHT
+        - FRAME_BIAS
+        - FRAME_DARK
+        - FRAME_FLAT
+        - GAIN
+        - LOCATION
   - ccdcooler:
       agent_name: SBIGCcdCooler
-      cooler_name: "CCD Simulator"
       cooler_host: morgan.lowell.edu
+      cooler_name: CCD Simulator
       cooler_port: 7624
+      dto_command_topic: lorax.timo.ccdcooler.dto
       incoming_topic: lorax.timo.dto.ccdcooler
       outgoing_topic: lorax.timo.ccdcooler.broadcast
-      dto_command_topic: lorax.timo.ccdcooler.dto
+broker_hosts:
+  - tanagra
+  - 61613
+log_file: CompositeAgent.log
 message_wait_time: 0.5

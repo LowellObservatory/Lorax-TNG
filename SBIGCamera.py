@@ -26,11 +26,12 @@ class IndiClient(PyIndi.BaseClient):
 
     def newProperty(self, p):
         # print(dir(p))
-        # print("new property " + p.getName() + " for device " + p.getDeviceName())
+        print("new property " + p.getName() + " for device " + p.getDeviceName())
         # print("type = " + str(p.getType()))
         # Go store the property in the appropriate status dictionary.
         # prop_name = p.getName()
         prop_name = p.getName()
+        # print(self.config["status"])
         if prop_name in self.config["status"]:
             print("storing prop: " + p.getName())
             self.store_prop(p)
@@ -44,39 +45,25 @@ class IndiClient(PyIndi.BaseClient):
 
     def newSwitch(self, svp):
         prop_name = svp.name
-        prop_type = 1
-        prop_dict = {"prop_type": prop_type}
-        prop_dict["length"] = len(svp)
-        prop_vals = []
         for val in svp:
-            prop_vals.append((val.name, val.s))
-        prop_dict["vals"] = prop_vals
-        if svp.name in self.config["status"]:
-            self.parent.device_status[prop_name] = prop_dict
+            if prop_name in self.config["status"]:
+                self.parent.device_status[val.name] = val.value
+                self.parent.get_status_and_broadcast()
 
     def newNumber(self, nvp):
         prop_name = nvp.name
-        prop_type = 0
-        prop_dict = {"prop_type": prop_type}
-        prop_dict["length"] = len(nvp)
-        prop_vals = []
+        # ----
         for val in nvp:
-            prop_vals.append((val.name, val.value))
-        prop_dict["vals"] = prop_vals
-        if nvp.name in self.config["status"]:
-            self.parent.device_status[prop_name] = prop_dict
+            if prop_name in self.config["status"]:
+                self.parent.device_status[val.name] = val.value
+                self.parent.get_status_and_broadcast()
 
     def newText(self, tvp):
         prop_name = tvp.name
-        prop_type = 2
-        prop_dict = {"prop_type": prop_type}
-        prop_dict["length"] = len(tvp)
-        prop_vals = []
         for val in tvp:
-            prop_vals.append((val.name, val.text))
-        prop_dict["vals"] = prop_vals
-        if tvp.name in self.config["status"]:
-            self.parent.device_status[prop_name] = prop_dict
+            if prop_name in self.config["status"]:
+                self.parent.device_status[val.name] = val.value
+                self.parent.get_status_and_broadcast()
 
     def newLight(self, lvp):
         pass
@@ -93,60 +80,35 @@ class IndiClient(PyIndi.BaseClient):
     def store_prop(self, prop):
         prop_name = prop.getName()
         prop_type = prop.getType()
+        if prop_name in self.config["status"]:
+            if not prop_name in self.parent.device_status:
+                if prop_type == 0:
+                    # Number Type
+                    temp = prop.getNumber()
+                    for val in temp:
+                        if prop_name in self.config["status"]:
+                            self.parent.device_status[val.name] = val.value
 
-        if not prop_name in self.parent.device_status:
-            if prop_type == 0:
-                # Number Type
-                temp = prop.getNumber()
-                prop_dict = {}
-                # prop_dict = {"prop_type": prop_type}
-                # prop_dict["length"] = len(temp)
-                prop_vals = []
-                for val in temp:
-                    # print(dir(val))
-                    prop_vals.append((val.name, val.value))
-                prop_dict["vals"] = prop_vals
-                self.parent.device_status[prop_name] = prop_dict
-            elif prop_type == 1:
-                # Switch type
-                temp = prop.getSwitch()
-                prop_dict = {}
-                # prop_dict = {"prop_type": prop_type}
-                # prop_dict["length"] = len(temp)
-                prop_vals = []
-                for val in temp:
-                    # print(dir(val))
-                    prop_vals.append((val.name, val.s))
-                    # print(val.name)
-                prop_dict["vals"] = prop_vals
-                self.parent.device_status[prop_name] = prop_dict
-            elif prop_type == 2:
-                # Text type
-                temp = prop.getText()
-                # print(len(temp))
-                # print(dir(temp[0]))
-                prop_dict = {}
-                # prop_dict = {"prop_type": prop_type}
-                # prop_dict["length"] = len(temp)
-                prop_vals = []
-                for val in temp:
-                    # print(dir(val))
-                    prop_vals.append((val.name, val.text))
-                # print(val.name)
-                prop_dict["vals"] = prop_vals
-                self.parent.device_status[prop_name] = prop_dict
-                # print(status[prop_name])
-            elif prop_type == 3:
-                # Light type
-                temp = prop.getLight()
-                prop_dict = {}
-                # prop_dict = {"prop_type": prop_type}
-                # prop_dict["length"] = len(temp)
-                prop_vals = []
-                for val in temp:
-                    prop_vals.append((val.name, val.text))
-                prop_dict["vals"] = prop_vals
-                self.parent.device_status[prop_name] = prop_dict
+                elif prop_type == 1:
+                    # Switch type
+                    temp = prop.getSwitch()
+                    for val in temp:
+                        if prop_name in self.config["status"]:
+                            self.parent.device_status[val.name] = val.s
+
+                elif prop_type == 2:
+                    # Text type
+                    temp = prop.getText()
+                    for val in temp:
+                        if prop_name in self.config["status"]:
+                            self.parent.device_status[val.name] = val.text
+
+                elif prop_type == 3:
+                    # Light type
+                    temp = prop.getLight()
+                    for val in temp:
+                        if prop_name in self.config["status"]:
+                            self.parent.device_status[val.name] = val.text
 
 
 class SBIGCamera(SubAgent):
@@ -154,7 +116,6 @@ class SBIGCamera(SubAgent):
         print("in SBIGCamera.init")
         SubAgent.__init__(self, logger, conn, config)
 
-        # -----
         # Get the host and port for the connection to mount.
         # "config", in this case, is just a dictionary.
         self.indiclient = IndiClient(self, config)
@@ -177,14 +138,113 @@ class SBIGCamera(SubAgent):
         self.exptype = "FRAME_LIGHT"
         self.ccd_binning = (1, 1)
         # -----
+        # connect the scope (apparently we need to do this to get expose to work))
+        telescope = "Telescope Simulator"
+        device_telescope = None
+        telescope_connect = None
+
+        # get the telescope device
+        device_telescope = self.indiclient.getDevice(telescope)
+        while not (device_telescope):
+            time.sleep(0.5)
+            device_telescope = self.indiclient.getDevice(telescope)
+
+        # wait CONNECTION property be defined for telescope
+        telescope_connect = device_telescope.getSwitch("CONNECTION")
+        while not (telescope_connect):
+            time.sleep(0.5)
+            telescope_connect = device_telescope.getSwitch("CONNECTION")
+
+        # if the telescope device is not connected, we do connect it
+        if not (device_telescope.isConnected()):
+            # Property vectors are mapped to iterable Python objects
+            # Hence we can access each element of the vector using Python indexing
+            # each element of the "CONNECTION" vector is a ISwitch
+            telescope_connect[0].s = PyIndi.ISS_ON  # the "CONNECT" switch
+            telescope_connect[1].s = PyIndi.ISS_OFF  # the "DISCONNECT" switch
+            self.indiclient.sendNewSwitch(
+                telescope_connect
+            )  # send this new value to the device
+
+        # Now let's make a goto to vega
+        # Beware that ra/dec are in decimal hours/degrees
+        vega = {"ra": (279.23473479 * 24.0) / 360.0, "dec": +38.78368896}
+
+        # We want to set the ON_COORD_SET switch to engage tracking after goto
+        # device.getSwitch is a helper to retrieve a property vector
+        telescope_on_coord_set = device_telescope.getSwitch("ON_COORD_SET")
+        while not (telescope_on_coord_set):
+            time.sleep(0.5)
+            telescope_on_coord_set = device_telescope.getSwitch("ON_COORD_SET")
+        # the order below is defined in the property vector, look at the standard Properties page
+        # or enumerate them in the Python shell when you're developing your program
+        telescope_on_coord_set[0].s = PyIndi.ISS_ON  # TRACK
+        telescope_on_coord_set[1].s = PyIndi.ISS_OFF  # SLEW
+        telescope_on_coord_set[2].s = PyIndi.ISS_OFF  # SYNC
+        self.indiclient.sendNewSwitch(telescope_on_coord_set)
+        # We set the desired coordinates
+        telescope_radec = device_telescope.getNumber("EQUATORIAL_EOD_COORD")
+        while not (telescope_radec):
+            time.sleep(0.5)
+            telescope_radec = device_telescope.getNumber("EQUATORIAL_EOD_COORD")
+        telescope_radec[0].value = vega["ra"]
+        telescope_radec[1].value = vega["dec"]
+        self.indiclient.sendNewNumber(telescope_radec)
+        # and wait for the scope has finished moving
+        # while telescope_radec.s == PyIndi.IPS_BUSY:
+        #     print("Scope Moving ", telescope_radec[0].value, telescope_radec[1].value)
+        #     time.sleep(2)
+        # -----
+        # List out the devices available from the INDI server
+        devlist = [d.getDeviceName() for d in self.indiclient.getDevices()]
+        print(f"This is the list of connected devices: {devlist}")
+
+        # Check that the desired CCD is in the list of devices on the INDI server
+        self.ccd = self.config["camera_name"]
+        if self.ccd not in devlist:
+            print(f"Warning: {self.ccd} not in the list of available INDI devices!")
+            return
+
+        # Get the device from the INDI server
+        device_ccd = self.indiclient.getDevice(self.ccd)
+        while not device_ccd:
+            print("  Waiting on connection to the CCD Camera...")
+            time.sleep(0.5)
+            device_ccd = self.indiclient.getDevice(self.ccd)
+        self.device_ccd = device_ccd
+
+        # Make the connection -- exit if no connection
+        ccd_connect = self.device_ccd.getSwitch("CONNECTION")
+        while not ccd_connect:
+            print("not connected")
+            time.sleep(0.5)
+            ccd_connect = self.device_ccd.getSwitch("CONNECTION")
+        while not device_ccd.isConnected():
+            print("still not connected")
+            ccd_connect[0].s = PyIndi.ISS_ON  # the "CONNECT" switch
+            ccd_connect[1].s = PyIndi.ISS_OFF  # the "DISCONNECT" switch
+            self.indiclient.sendNewSwitch(ccd_connect)
+            time.sleep(0.5)
+        print(f"Are we connected yet? {self.device_ccd.isConnected()}")
+        if not self.device_ccd.isConnected():
+            pass
+
+        # Print a happy acknowledgment
+        print(f"The Agent is now connected to {self.ccd}")
+
+        # Tell the INDI server send the "CCD1" blob to this client
+        self.indiclient.setBLOBMode(PyIndi.B_ALSO, self.ccd, "CCD1")
 
     def get_status_and_broadcast(self):
         c_status = {
             "message_id": uuid.uuid4(),
             "timestamput": datetime.now(timezone.utc),
-            "root": self.device_status,
+            # "camera": self.device_status,
         }
-        status = {"root": c_status}
+        for key in self.device_status.keys():
+            c_status[key] = self.device_status[key]
+
+        status = {"camera": c_status}
         xml_format = xmltodict.unparse(status, pretty=True)
 
         print("/topic/" + self.config["outgoing_topic"])
@@ -310,6 +370,9 @@ class SBIGCamera(SubAgent):
             self.indiclient.sendNewNumber(ccd_exposure)
 
             self.indiclient.blobEvent.wait()
+            # while not (self.indiclient.blobEvent.set):
+            #     self.indiclient.blobEvent.wait(timeout=0.5)
+            #     self.get_status_and_broadcast()
 
             # Meanwhile, process the received exposure
             for blob in ccd_ccd1:
