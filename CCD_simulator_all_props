@@ -1,0 +1,353 @@
+root -- 
+message_id -- 608c4154-ec8a-435f-9a9e-673f36c843c4
+timestamput -- 2022-10-29 17:37:26.992033+00:00
+root -- 
+CONNECTION -- 
+prop_type -- 1
+length -- 2
+vals -- ('CONNECT', 1)
+vals -- ('DISCONNECT', 0)
+DRIVER_INFO -- 
+prop_type -- 2
+length -- 4
+vals -- ('DRIVER_NAME', 'CCD Simulator')
+vals -- ('DRIVER_EXEC', 'indi_simulator_ccd')
+vals -- ('DRIVER_VERSION', '1.0')
+vals -- ('DRIVER_INTERFACE', '22')
+POLLING_PERIOD -- 
+prop_type -- 0
+length -- 1
+vals -- ('PERIOD_MS', 1000.0)
+DEBUG -- 
+prop_type -- 1
+length -- 2
+vals -- ('ENABLE', 0)
+vals -- ('DISABLE', 1)
+CONFIG_PROCESS -- 
+prop_type -- 1
+length -- 4
+vals -- ('CONFIG_LOAD', 0)
+vals -- ('CONFIG_SAVE', 0)
+vals -- ('CONFIG_DEFAULT', 0)
+vals -- ('CONFIG_PURGE', 0)
+ACTIVE_DEVICES -- 
+prop_type -- 2
+length -- 5
+vals -- ('ACTIVE_TELESCOPE', 'Telescope Simulator')
+vals -- ('ACTIVE_ROTATOR', 'Rotator Simulator')
+vals -- ('ACTIVE_FOCUSER', 'Focuser Simulator')
+vals -- ('ACTIVE_FILTER', 'CCD Simulator')
+vals -- ('ACTIVE_SKYQUALITY', 'SQM')
+SIMULATOR_SETTINGS -- 
+prop_type -- 0
+length -- 16
+vals -- ('SIM_XRES', 1280.0)
+vals -- ('SIM_YRES', 1024.0)
+vals -- ('SIM_XSIZE', 5.2)
+vals -- ('SIM_YSIZE', 5.2)
+vals -- ('SIM_MAXVAL', 65000.0)
+vals -- ('SIM_SATURATION', 1.0)
+vals -- ('SIM_LIMITINGMAG', 17.0)
+vals -- ('SIM_NOISE', 10.0)
+vals -- ('SIM_SKYGLOW', 19.5)
+vals -- ('SIM_OAGOFFSET', 0.0)
+vals -- ('SIM_POLAR', 0.0)
+vals -- ('SIM_POLARDRIFT', 0.0)
+vals -- ('SIM_PEPERIOD', 0.0)
+vals -- ('SIM_PEMAX', 0.0)
+vals -- ('SIM_TIME_FACTOR', 1.0)
+vals -- ('SIM_ROTATION', 0.0)
+EQUATORIAL_PE -- 
+prop_type -- 0
+length -- 2
+vals -- ('RA_PE', 0.0)
+vals -- ('DEC_PE', 0.0)
+SIM_FOCUSING -- 
+prop_type -- 0
+length -- 3
+vals -- ('SIM_FOCUS_POSITION', 36700.0)
+vals -- ('SIM_FOCUS_MAX', 100000.0)
+vals -- ('SIM_SEEING', 3.5)
+SIMULATE_BAYER -- 
+prop_type -- 1
+length -- 2
+vals -- ('INDI_ENABLED', 0)
+vals -- ('INDI_DISABLED', 1)
+CCD_SIMULATE_CRASH -- 
+prop_type -- 1
+length -- 1
+vals -- ('CRASH', 0)
+CCD_EXPOSURE -- 
+prop_type -- 0
+length -- 1
+vals -- ('CCD_EXPOSURE_VALUE', 1.0)
+CCD_ABORT_EXPOSURE -- 
+prop_type -- 1
+length -- 1
+vals -- ('ABORT', 0)
+CCD_FRAME -- 
+prop_type -- 0
+length -- 4
+vals -- ('X', 0.0)
+vals -- ('Y', 0.0)
+vals -- ('WIDTH', 1280.0)
+vals -- ('HEIGHT', 1024.0)
+CCD_FRAME_RESET -- 
+prop_type -- 1
+length -- 1
+vals -- ('RESET', 0)
+CCD_BINNING -- 
+prop_type -- 0
+length -- 2
+vals -- ('HOR_BIN', 1.0)
+vals -- ('VER_BIN', 1.0)
+FITS_HEADER -- 
+prop_type -- 2
+length -- 2
+vals -- ('FITS_OBSERVER', 'Unknown')
+vals -- ('FITS_OBJECT', 'Unknown')
+GUIDER_EXPOSURE -- 
+prop_type -- 0
+length -- 1
+vals -- ('GUIDER_EXPOSURE_VALUE', 1.0)
+GUIDER_ABORT_EXPOSURE -- 
+prop_type -- 1
+length -- 1
+vals -- ('ABORT', 0)
+GUIDER_FRAME -- 
+prop_type -- 0
+length -- 4
+vals -- ('X', 0.0)
+vals -- ('Y', 0.0)
+vals -- ('WIDTH', 500.0)
+vals -- ('HEIGHT', 290.0)
+CCD_TEMPERATURE -- 
+prop_type -- 0
+length -- 1
+vals -- ('CCD_TEMPERATURE_VALUE', 0.0)
+CCD_TEMP_RAMP -- 
+prop_type -- 0
+length -- 2
+vals -- ('RAMP_SLOPE', 0.0)
+vals -- ('RAMP_THRESHOLD', 0.2)
+CCD_CAPTURE_FORMAT -- 
+prop_type -- 1
+length -- 1
+vals -- ('INDI_MONO', 1)
+CCD_TRANSFER_FORMAT -- 
+prop_type -- 1
+length -- 2
+vals -- ('FORMAT_FITS', 1)
+vals -- ('FORMAT_NATIVE', 0)
+CCD_INFO -- 
+prop_type -- 0
+length -- 6
+vals -- ('CCD_MAX_X', 1280.0)
+vals -- ('CCD_MAX_Y', 1024.0)
+vals -- ('CCD_PIXEL_SIZE', 5.199999809265137)
+vals -- ('CCD_PIXEL_SIZE_X', 5.199999809265137)
+vals -- ('CCD_PIXEL_SIZE_Y', 5.199999809265137)
+vals -- ('CCD_BITSPERPIXEL', 16.0)
+GUIDER_INFO -- 
+prop_type -- 0
+length -- 6
+vals -- ('CCD_MAX_X', 500.0)
+vals -- ('CCD_MAX_Y', 290.0)
+vals -- ('CCD_PIXEL_SIZE', 9.800000190734863)
+vals -- ('CCD_PIXEL_SIZE_X', 9.800000190734863)
+vals -- ('CCD_PIXEL_SIZE_Y', 12.600000381469727)
+vals -- ('CCD_BITSPERPIXEL', 16.0)
+GUIDER_BINNING -- 
+prop_type -- 0
+length -- 2
+vals -- ('HOR_BIN', 1.0)
+vals -- ('VER_BIN', 1.0)
+CCD_COMPRESSION -- 
+prop_type -- 1
+length -- 2
+vals -- ('INDI_ENABLED', 0)
+vals -- ('INDI_DISABLED', 1)
+GUIDER_COMPRESSION -- 
+prop_type -- 1
+length -- 2
+vals -- ('INDI_ENABLED', 0)
+vals -- ('INDI_DISABLED', 1)
+TELESCOPE_TIMED_GUIDE_NS -- 
+prop_type -- 0
+length -- 2
+vals -- ('TIMED_GUIDE_N', 0.0)
+vals -- ('TIMED_GUIDE_S', 0.0)
+TELESCOPE_TIMED_GUIDE_WE -- 
+prop_type -- 0
+length -- 2
+vals -- ('TIMED_GUIDE_W', 0.0)
+vals -- ('TIMED_GUIDE_E', 0.0)
+CCD_FRAME_TYPE -- 
+prop_type -- 1
+length -- 4
+vals -- ('FRAME_LIGHT', 1)
+vals -- ('FRAME_BIAS', 0)
+vals -- ('FRAME_DARK', 0)
+vals -- ('FRAME_FLAT', 0)
+GUIDER_FRAME_TYPE -- 
+prop_type -- 1
+length -- 4
+vals -- ('FRAME_LIGHT', 1)
+vals -- ('FRAME_BIAS', 0)
+vals -- ('FRAME_DARK', 0)
+vals -- ('FRAME_FLAT', 0)
+TELESCOPE_TYPE -- 
+prop_type -- 1
+length -- 2
+vals -- ('TELESCOPE_PRIMARY', 0)
+vals -- ('TELESCOPE_GUIDE', 1)
+WCS_CONTROL -- 
+prop_type -- 1
+length -- 2
+vals -- ('WCS_ENABLE', 0)
+vals -- ('WCS_DISABLE', 1)
+UPLOAD_MODE -- 
+prop_type -- 1
+length -- 3
+vals -- ('UPLOAD_CLIENT', 1)
+vals -- ('UPLOAD_LOCAL', 0)
+vals -- ('UPLOAD_BOTH', 0)
+UPLOAD_SETTINGS -- 
+prop_type -- 2
+length -- 2
+vals -- ('UPLOAD_DIR', '/home/dlytle')
+vals -- ('UPLOAD_PREFIX', 'IMAGE_XXX')
+CCD_FAST_TOGGLE -- 
+prop_type -- 1
+length -- 2
+vals -- ('INDI_ENABLED', 0)
+vals -- ('INDI_DISABLED', 1)
+CCD_FAST_COUNT -- 
+prop_type -- 0
+length -- 1
+vals -- ('FRAMES', 1.0)
+CCD_VIDEO_STREAM -- 
+prop_type -- 1
+length -- 2
+vals -- ('STREAM_ON', 0)
+vals -- ('STREAM_OFF', 1)
+STREAM_DELAY -- 
+prop_type -- 0
+length -- 1
+vals -- ('STREAM_DELAY_TIME', 0.0)
+STREAMING_EXPOSURE -- 
+prop_type -- 0
+length -- 2
+vals -- ('STREAMING_EXPOSURE_VALUE', 0.1)
+vals -- ('STREAMING_DIVISOR_VALUE', 1.0)
+FPS -- 
+prop_type -- 0
+length -- 2
+vals -- ('EST_FPS', 30.0)
+vals -- ('AVG_FPS', 30.0)
+RECORD_STREAM -- 
+prop_type -- 1
+length -- 4
+vals -- ('RECORD_ON', 0)
+vals -- ('RECORD_DURATION_ON', 0)
+vals -- ('RECORD_FRAME_ON', 0)
+vals -- ('RECORD_OFF', 1)
+RECORD_FILE -- 
+prop_type -- 2
+length -- 2
+vals -- ('RECORD_FILE_DIR', '/home/dlytle/indi__D_')
+vals -- ('RECORD_FILE_NAME', 'indi_record__T_')
+RECORD_OPTIONS -- 
+prop_type -- 0
+length -- 2
+vals -- ('RECORD_DURATION', 1.0)
+vals -- ('RECORD_FRAME_TOTAL', 30.0)
+CCD_STREAM_FRAME -- 
+prop_type -- 0
+length -- 4
+vals -- ('X', 0.0)
+vals -- ('Y', 0.0)
+vals -- ('WIDTH', 1280.0)
+vals -- ('HEIGHT', 1024.0)
+CCD_STREAM_ENCODER -- 
+prop_type -- 1
+length -- 2
+vals -- ('RAW', 1)
+vals -- ('MJPEG', 0)
+CCD_STREAM_RECORDER -- 
+prop_type -- 1
+length -- 2
+vals -- ('SER', 1)
+vals -- ('OGV', 0)
+LIMITS -- 
+prop_type -- 0
+length -- 2
+vals -- ('LIMITS_BUFFER_MAX', 512.0)
+vals -- ('LIMITS_PREVIEW_FPS', 10.0)
+DSP_ACTIVATE_CONVOLUTION -- 
+prop_type -- 1
+length -- 2
+vals -- ('DSP_ACTIVATE_ON', 0)
+vals -- ('DSP_ACTIVATE_OFF', 1)
+DSP_ACTIVATE_DFT -- 
+prop_type -- 1
+length -- 2
+vals -- ('DSP_ACTIVATE_ON', 0)
+vals -- ('DSP_ACTIVATE_OFF', 1)
+DSP_ACTIVATE_IDFT -- 
+prop_type -- 1
+length -- 2
+vals -- ('DSP_ACTIVATE_ON', 0)
+vals -- ('DSP_ACTIVATE_OFF', 1)
+DSP_ACTIVATE_SPECTRUM -- 
+prop_type -- 1
+length -- 2
+vals -- ('DSP_ACTIVATE_ON', 0)
+vals -- ('DSP_ACTIVATE_OFF', 1)
+DSP_ACTIVATE_HISTOGRAM -- 
+prop_type -- 1
+length -- 2
+vals -- ('DSP_ACTIVATE_ON', 0)
+vals -- ('DSP_ACTIVATE_OFF', 1)
+DSP_ACTIVATE_WAVELETS -- 
+prop_type -- 1
+length -- 2
+vals -- ('DSP_ACTIVATE_ON', 0)
+vals -- ('DSP_ACTIVATE_OFF', 1)
+CCD_COOLER -- 
+prop_type -- 1
+length -- 2
+vals -- ('COOLER_ON', 0)
+vals -- ('COOLER_OFF', 1)
+CCD_GAIN -- 
+prop_type -- 0
+length -- 1
+vals -- ('GAIN', 90.0)
+CCD_OFFSET -- 
+prop_type -- 0
+length -- 1
+vals -- ('OFFSET', 0.0)
+CCD_DIRECTORY_LOCATION -- 
+prop_type -- 2
+length -- 1
+vals -- ('LOCATION', '/home/dlytle')
+CCD_DIRECTORY_TOGGLE -- 
+prop_type -- 1
+length -- 2
+vals -- ('INDI_ENABLED', 0)
+vals -- ('INDI_DISABLED', 1)
+FILTER_SLOT -- 
+prop_type -- 0
+length -- 1
+vals -- ('FILTER_SLOT_VALUE', 1.0)
+FILTER_NAME -- 
+prop_type -- 2
+length -- 8
+vals -- ('FILTER_SLOT_NAME_1', 'Red')
+vals -- ('FILTER_SLOT_NAME_2', 'Green')
+vals -- ('FILTER_SLOT_NAME_3', 'Blue')
+vals -- ('FILTER_SLOT_NAME_4', 'H_Alpha')
+vals -- ('FILTER_SLOT_NAME_5', 'SII')
+vals -- ('FILTER_SLOT_NAME_6', 'OIII')
+vals -- ('FILTER_SLOT_NAME_7', 'LPR')
+vals -- ('FILTER_SLOT_NAME_8', 'Luminance')
