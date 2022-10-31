@@ -98,7 +98,6 @@ class SBIGCamera(SubAgent):
         c_status = {
             "message_id": uuid.uuid4(),
             "timestamput": datetime.now(timezone.utc),
-            # "camera": self.device_status,
         }
         for key in self.device_status.keys():
             c_status[key] = self.device_status[key]

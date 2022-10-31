@@ -1,9 +1,7 @@
-import PyIndi
 from SubAgent import SubAgent
 import time
 import uuid
 import xmltodict
-import threading
 from datetime import datetime, timezone
 import numpy as np
 from IndiClient import IndiClient
@@ -13,7 +11,7 @@ class SBIGCcdCooler(SubAgent):
     def __init__(self, logger, conn, config):
         print("in SBIGCcdCooler.init")
         SubAgent.__init__(self, logger, conn, config)
-        # Get the host and port for the connection to mount.
+        # Get the host and port for the connection to cooler.
         # "config", in this case, is just a dictionary.
         self.indiclient = IndiClient(self, config)
         # print(self.config)
@@ -32,15 +30,14 @@ class SBIGCcdCooler(SubAgent):
         self.device_ccd = device_ccd
 
     def get_status_and_broadcast(self):
-
-        # print(self.config)
-
         c_status = {
             "message_id": uuid.uuid4(),
             "timestamput": datetime.now(timezone.utc),
-            "cooler": self.device_status,
         }
-        status = {"cooler": c_status}
+        for key in self.device_status.keys():
+            c_status[key] = self.device_status[key]
+
+        status = {"ccdcooler": c_status}
         xml_format = xmltodict.unparse(status, pretty=True)
 
         print("/topic/" + self.config["outgoing_topic"])

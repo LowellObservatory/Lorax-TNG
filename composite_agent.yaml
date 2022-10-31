@@ -3,8 +3,14 @@ agents_in_composite:
   - filterwheel:
       agent_name: SBIGFilterWheel
       dto_command_topic: lorax.timo.filterwheel.dto
+      fw_host: morgan.lowell.edu
+      fw_name: CCD Simulator
+      fw_port: 7624
       incoming_topic: lorax.timo.dto.filterwheel
       outgoing_topic: lorax.timo.filterwheel.broadcast
+      status:
+        - FILTER_SLOT
+        - FILTER_NAME
   - camera:
       agent_name: SBIGCamera
       camera_host: morgan.lowell.edu
@@ -26,6 +32,7 @@ agents_in_composite:
         - FRAME_DARK
         - FRAME_FLAT
         - GAIN
+        - CCD_DIRECTORY_LOCATION
         - LOCATION
   - ccdcooler:
       agent_name: SBIGCcdCooler

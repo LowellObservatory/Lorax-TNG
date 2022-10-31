@@ -32,24 +32,24 @@ class IndiClient(PyIndi.BaseClient):
 
     def newSwitch(self, svp):
         prop_name = svp.name
-        for val in svp:
-            if prop_name in self.config["status"]:
+        if prop_name in self.config["status"]:
+            for val in svp:
                 self.parent.device_status[val.name] = val.s
-                self.parent.get_status_and_broadcast()
+            self.parent.get_status_and_broadcast()
 
     def newNumber(self, nvp):
         prop_name = nvp.name
-        for val in nvp:
-            if prop_name in self.config["status"]:
+        if prop_name in self.config["status"]:
+            for val in nvp:
                 self.parent.device_status[val.name] = val.value
-                self.parent.get_status_and_broadcast()
+            self.parent.get_status_and_broadcast()
 
     def newText(self, tvp):
         prop_name = tvp.name
-        for val in tvp:
-            if prop_name in self.config["status"]:
+        if prop_name in self.config["status"]:
+            for val in tvp:
                 self.parent.device_status[val.name] = val.text
-                self.parent.get_status_and_broadcast()
+            self.parent.get_status_and_broadcast()
 
     def newLight(self, lvp):
         pass
@@ -65,33 +65,33 @@ class IndiClient(PyIndi.BaseClient):
 
     def store_prop(self, prop):
         prop_name = prop.getName()
+        print(prop_name)
         prop_type = prop.getType()
         if prop_name in self.config["status"]:
-            if not prop_name in self.parent.device_status:
-                if prop_type == 0:
-                    # Number Type
-                    temp = prop.getNumber()
-                    for val in temp:
-                        if prop_name in self.config["status"]:
-                            self.parent.device_status[val.name] = val.value
+            if prop_type == 0:
+                # Number Type
+                temp = prop.getNumber()
+                for val in temp:
+                    # if val.name in self.config["status"]:
+                    self.parent.device_status[val.name] = val.value
 
-                elif prop_type == 1:
-                    # Switch type
-                    temp = prop.getSwitch()
-                    for val in temp:
-                        if prop_name in self.config["status"]:
-                            self.parent.device_status[val.name] = val.s
+            elif prop_type == 1:
+                # Switch type
+                temp = prop.getSwitch()
+                for val in temp:
+                    # if val.name in self.config["status"]:
+                    self.parent.device_status[val.name] = val.s
 
-                elif prop_type == 2:
-                    # Text type
-                    temp = prop.getText()
-                    for val in temp:
-                        if prop_name in self.config["status"]:
-                            self.parent.device_status[val.name] = val.text
+            elif prop_type == 2:
+                # Text type
+                temp = prop.getText()
+                for val in temp:
+                    # if val.name in self.config["status"]:
+                    self.parent.device_status[val.name] = val.text
 
-                elif prop_type == 3:
-                    # Light type
-                    temp = prop.getLight()
-                    for val in temp:
-                        if prop_name in self.config["status"]:
-                            self.parent.device_status[val.name] = val.text
+            elif prop_type == 3:
+                # Light type
+                temp = prop.getLight()
+                for val in temp:
+                    # if val.name in self.config["status"]:
+                    self.parent.device_status[val.name] = val.text
