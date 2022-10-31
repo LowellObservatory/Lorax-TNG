@@ -3,7 +3,7 @@ Created on Aept. 19, 2022
 @author: dlytle
 
 """
-from abc import ABC, abstractmethod
+from abc import ABC
 import logging
 
 import stomp
@@ -85,7 +85,7 @@ class CompositeAgent(ABC):
         # Keep them in an array.
         for agent in agent_list:
             sub_agent = list(agent.values())[0]["agent_name"]
-            the_agent = __import__(f"lorax.{sub_agent}", fromlist=[sub_agent])
+            the_agent = __import__(sub_agent, fromlist=[sub_agent])
             the_agent = getattr(the_agent, sub_agent)
             self.agents.append(
                 the_agent(self.logger, self.conn, list(agent.values())[0])

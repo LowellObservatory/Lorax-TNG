@@ -31,7 +31,7 @@ import numpy as np
 import xmltodict
 
 # Internal Imports
-from HardwareClients import IndiClient
+from IndiClient import IndiClient
 from SubAgent import CcdCoolerSubAgent
 
 
@@ -55,7 +55,7 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
         super().__init__(logger, conn, config)
         # Get the host and port for the connection to mount.
         # "config", in this case, is just a dictionary.
-        self.indiclient = IndiClient(self)
+        self.indiclient = IndiClient(self, config)
         # print(self.config)
         self.indiclient.setServer(
             self.config["cooler_host"], self.config["cooler_port"]
@@ -77,7 +77,9 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
     def get_status_and_broadcast(self):
 
         # Check if the cooler is connected
-        device_status = self.device_status #if self.device_cooler.isConnected() else {}
+        device_status = (
+            self.device_status
+        )  # if self.device_cooler.isConnected() else {}
 
         c_status = {
             "message_id": uuid.uuid4(),
@@ -150,7 +152,6 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
         # Reset instance attributes
         self.cooler = None
         self.device_cooler = None
-
 
     def set_temperature(self, cool_temp, tolerance=1.0):
         """Set the cooler temperature

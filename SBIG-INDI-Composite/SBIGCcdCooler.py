@@ -1,10 +1,15 @@
-from AbstractAgents.SubAgent import SubAgent
+# Built-In Libraries
+import datetime
 import time
 import uuid
-import xmltodict
-from datetime import datetime, timezone
+
+# 3rd Party Libraries
 import numpy as np
+import xmltodict
+
+# Internal Imports
 from IndiClient import IndiClient
+from AbstractAgents.SubAgent import SubAgent
 
 
 class SBIGCcdCooler(SubAgent):
@@ -32,7 +37,7 @@ class SBIGCcdCooler(SubAgent):
     def get_status_and_broadcast(self):
         c_status = {
             "message_id": uuid.uuid4(),
-            "timestamput": datetime.now(timezone.utc),
+            "timestamput": datetime.datetime.utcnow(),
         }
         for key in self.device_status.keys():
             c_status[key] = self.device_status[key]

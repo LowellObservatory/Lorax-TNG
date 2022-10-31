@@ -56,7 +56,9 @@ class QHY600Composite(CompositeAgent):
 
 if __name__ == "__main__":
     print(" in main ")
-    QHY600_comp = QHY600Composite("lorax/qhy600_agent.yaml")
+    QHY600_comp = QHY600Composite(
+        "lorax/QHY600-INDI_Composite/QHY600_composite_agent.yaml"
+    )
     print("   ===> Agent Initialized... waiting on commands")
     while True:
         if QHY600_comp.message_received:

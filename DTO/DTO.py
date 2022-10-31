@@ -144,15 +144,15 @@ if __name__ == "__main__":
                 )
             if "sleep" in targ:
                 time.sleep(float(comm))
-#            if "allserv" in targ:
-#                dto.conn.send(
-#                    body=comm,
-#                    destination="/topic/" + dto.config["camera_command_topic"],
-#                )
-#                dto.conn.send(
-#                    body=comm,
-#                    destination="/topic/" + dto.config["mount_command_topic"],
-#                )
+            #            if "allserv" in targ:
+            #                dto.conn.send(
+            #                    body=comm,
+            #                    destination="/topic/" + dto.config["camera_command_topic"],
+            #                )
+            #                dto.conn.send(
+            #                    body=comm,
+            #                    destination="/topic/" + dto.config["mount_command_topic"],
+            #                )
             time.sleep(1.0)
             while dto.message_from_mount != "Go":
                 time.sleep(0.1)

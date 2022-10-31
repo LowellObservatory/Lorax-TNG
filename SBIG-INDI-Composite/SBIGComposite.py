@@ -1,13 +1,18 @@
-import time
-import sys
-import os
+# Built-In Libraries
 import inspect
-from datetime import datetime
+import os
+import sys
+import time
+
+# 3rd Party Libraries
+
+# Internal Imports
+from AbstractAgents.CompositeAgent import CompositeAgent
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
-from AbstractAgents.CompositeAgent import CompositeAgent
+
 
 
 class SBIGComposite(CompositeAgent):

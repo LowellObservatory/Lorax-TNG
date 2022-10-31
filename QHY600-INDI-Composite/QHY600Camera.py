@@ -32,7 +32,7 @@ import PyIndi
 import xmltodict
 
 # Internal Imports
-from HardwareClients import IndiClient
+from IndiClient import IndiClient
 from SubAgent import CameraSubAgent
 
 
@@ -62,7 +62,7 @@ class QHY600Camera(CameraSubAgent):
         # -----
         # Get the host and port for the connection to mount.
         # "config", in this case, is just a dictionary.
-        self.indiclient = IndiClient(self)
+        self.indiclient = IndiClient(self, config)
         # print(self.config)
         self.indiclient.setServer(
             self.config["camera_host"], self.config["camera_port"]
@@ -82,7 +82,9 @@ class QHY600Camera(CameraSubAgent):
     def get_status_and_broadcast(self):
 
         # Check if the cooler is connected
-        print(f" &&&&&&&& Should we even be asking after the status? {self.device_ccd.isConnected()}")
+        print(
+            f" &&&&&&&& Should we even be asking after the status? {self.device_ccd.isConnected()}"
+        )
         device_status = self.device_status if self.device_ccd.isConnected() else {}
 
         c_status = {
@@ -242,7 +244,9 @@ class QHY600Camera(CameraSubAgent):
             for blob in ccd_ccd1:
                 # Print out some information about this exposure
                 print(
-                    f"BLOB name: {blob.name}  size: {blob.size/1024**2:.2f} MB  format: {blob.format}"
+                    f"BLOB name: {blob.name}  "
+                    f"size: {blob.size/1024**2:.2f} MB  "
+                    f"format: {blob.format}"
                 )
 
                 # Use the PyIndi-supplied getblobdata() method to access the contents of

@@ -1,14 +1,18 @@
-import PyIndi
-from AbstractAgents.SubAgent import SubAgent
-import time
-import sys
-import astropy.io.fits
+# Built-In Libraries
+import datetime
 import io
-import threading
+import sys
+import time
 import uuid
+
+# 3rd Party Libraries
+import astropy.io.fits
+import PyIndi
 import xmltodict
-from datetime import datetime, timezone
+
+# Internal Imports
 from IndiClient import IndiClient
+from AbstractAgents.SubAgent import SubAgent
 
 
 class SBIGCamera(SubAgent):
@@ -97,7 +101,7 @@ class SBIGCamera(SubAgent):
     def get_status_and_broadcast(self):
         c_status = {
             "message_id": uuid.uuid4(),
-            "timestamput": datetime.now(timezone.utc),
+            "timestamput": datetime.datetime.utcnow(),
         }
         for key in self.device_status.keys():
             c_status[key] = self.device_status[key]
