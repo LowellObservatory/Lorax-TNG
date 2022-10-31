@@ -1,0 +1,4 @@
+dto        : waituntil("time", 1:30)
+ccdcooler  : settemp(-20.0)
+sleep      : 5
+allserv    : end

@@ -1,0 +1,6 @@
+dto        : waituntil("time", 1:30)
+ccdcooler  : settemp(-10.0)
+filterwheel: move(2)
+camera     : expose
+sleep      : 10
+allserv    : end

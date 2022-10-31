@@ -1,0 +1,13 @@
+dto        : waituntil("time", 1:30)
+mount      : connectMount
+mount      : enableMount
+mount      : homeMount
+mount      : gotoAltAz(45.6, 170.34)
+mount      : gotoAltAz(20.6, 340.34)
+mount      : gotoAltAz(75.6, 10.34)
+ccdcooler  : settemp(-12.0)
+sleep      : 10
+mount      : parkMount
+mount      : disableMount
+mount      : disconnectMount
+allserv    : end
