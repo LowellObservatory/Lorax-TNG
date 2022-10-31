@@ -24,16 +24,7 @@ agents_in_composite:
         - CCD_BINNING
         - CCD_GAIN
         - CCD_EXPOSURE
-        - CCD_EXPOSURE_VALUE
-        - HOR_BIN
-        - VER_BIN
-        - FRAME_LIGHT
-        - FRAME_BIAS
-        - FRAME_DARK
-        - FRAME_FLAT
-        - GAIN
         - CCD_DIRECTORY_LOCATION
-        - LOCATION
   - ccdcooler:
       agent_name: SBIGCcdCooler
       cooler_host: morgan.lowell.edu
@@ -44,10 +35,7 @@ agents_in_composite:
       outgoing_topic: lorax.timo.ccdcooler.broadcast
       status:
         - CCD_COOLER
-        - COOLER_ON
-        - COOLER_OFF
         - CCD_TEMPERATURE
-        - CCD_TEMPERATURE_VALUE
 broker_hosts:
   - tanagra
   - 61613
