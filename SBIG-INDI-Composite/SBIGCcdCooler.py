@@ -1,4 +1,4 @@
-from SubAgent import SubAgent
+from AbstractAgents.SubAgent import SubAgent
 import time
 import uuid
 import xmltodict

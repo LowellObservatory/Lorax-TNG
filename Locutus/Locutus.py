@@ -9,8 +9,14 @@ import time
 import logging
 import xmltodict
 import redis
+import sys
+import os
+import inspect
 
-from SpecialAgent import SpecialAgent
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+from AbstractAgents.SpecialAgent import SpecialAgent
 
 # Set stomp so it only logs WARNING and higher messages. (default is DEBUG)
 logging.getLogger("stomp").setLevel(logging.WARNING)
@@ -88,7 +94,7 @@ class Locutus(SpecialAgent):
 
 
 if __name__ == "__main__":
-    locutus = Locutus("locutus.yaml")
+    locutus = Locutus("Locutus/locutus.yaml")
 
     while True:
         if locutus.message_received:

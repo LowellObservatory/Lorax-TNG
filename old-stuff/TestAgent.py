@@ -1,4 +1,4 @@
-from CompositeAgent import CompositeAgent
+from AbstractAgents.CompositeAgent import CompositeAgent
 import time
 from datetime import datetime
 

@@ -34,7 +34,7 @@ class PlanewaveMountAgent:
     def __init__(self):
 
         # Read the config file.
-        with open("PWMountConfig.yaml", "r") as stream:
+        with open("PWMount_Agent/PWMountConfig.yaml", "r") as stream:
             try:
                 self.config = yaml.safe_load(stream)
             except yaml.YAMLError as exc:

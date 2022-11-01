@@ -1,6 +1,13 @@
-from CompositeAgent import CompositeAgent
 import time
+import sys
+import os
+import inspect
 from datetime import datetime
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+from AbstractAgents.CompositeAgent import CompositeAgent
 
 
 class SBIGComposite(CompositeAgent):
@@ -17,7 +24,7 @@ class SBIGComposite(CompositeAgent):
 
 if __name__ == "__main__":
     print(" in main ")
-    SBIG_comp = SBIGComposite("composite_agent.yaml")
+    SBIG_comp = SBIGComposite("SBIG-INDI-Composite/SBIG_composite_config.yaml")
     print(" in main after instantiate ")
     while True:
         if SBIG_comp.message_received:

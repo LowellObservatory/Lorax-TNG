@@ -1,5 +1,5 @@
 import PyIndi
-from SubAgent import SubAgent
+from AbstractAgents.SubAgent import SubAgent
 import time
 import sys
 import astropy.io.fits
