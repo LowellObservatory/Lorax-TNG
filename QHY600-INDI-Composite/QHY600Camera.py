@@ -32,8 +32,8 @@ import PyIndi
 import xmltodict
 
 # Internal Imports
+from AbstractAgents.SubAgent import CameraSubAgent
 from IndiClient import IndiClient
-from SubAgent import CameraSubAgent
 
 
 class QHY600Camera(CameraSubAgent):
@@ -77,10 +77,12 @@ class QHY600Camera(CameraSubAgent):
             device_ccd = self.indiclient.getDevice(self.config["camera_name"])
 
         self.device_ccd = device_ccd
-        # -----
 
     def get_status_and_broadcast(self):
+        """Get the current status and broadcast it
 
+        _extended_summary_
+        """
         # Check if the cooler is connected
         print(
             f" &&&&&&&& Should we even be asking after the status? {self.device_ccd.isConnected()}"

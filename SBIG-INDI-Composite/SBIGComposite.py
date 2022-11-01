@@ -14,8 +14,17 @@ parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
 
-
 class SBIGComposite(CompositeAgent):
+    """SBIG Composite Agent
+
+    _extended_summary_
+
+    Parameters
+    ----------
+    config_file : _type_
+        _description_
+    """
+
     def __init__(self, config_file):
         CompositeAgent.__init__(self, config_file)
         print("in SBIGComposite.init")

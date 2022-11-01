@@ -26,7 +26,7 @@ import time
 # 3rd Party Libraries
 
 # Internal Imports
-from CompositeAgent import CompositeAgent
+from AbstractAgents.CompositeAgent import CompositeAgent
 
 
 class QHY600Composite(CompositeAgent):

@@ -32,7 +32,7 @@ import xmltodict
 
 # Internal Imports
 from IndiClient import IndiClient
-from SubAgent import CcdCoolerSubAgent
+from AbstractAgents.SubAgent import CcdCoolerSubAgent
 
 
 class QHY600CcdCooler(CcdCoolerSubAgent):
@@ -75,7 +75,10 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
         self.cooler = None
 
     def get_status_and_broadcast(self):
+        """Get the current status and broadcast it
 
+        _extended_summary_
+        """
         # Check if the cooler is connected
         device_status = (
             self.device_status

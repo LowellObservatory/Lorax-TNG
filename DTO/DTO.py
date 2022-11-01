@@ -15,6 +15,11 @@ logging.getLogger("stomp").setLevel(logging.WARNING)
 
 
 class DTO:
+    """Digital Telescope Operator Class
+
+    _extended_summary_
+    """
+
     hosts = ""
     log_file = ""
     command_input_file = ""
@@ -25,7 +30,7 @@ class DTO:
         self.message_from_mount = "Go"
 
         # Read the config file.
-        with open("DTO/configure.yaml", "r") as stream:
+        with open("DTO/configure.yaml", "r", encoding="utf-8") as stream:
             try:
                 self.config = yaml.safe_load(stream)
             except yaml.YAMLError as exc:
@@ -49,7 +54,7 @@ class DTO:
         # Make a connection to the broker.
         self.hosts = [tuple(self.config["broker_hosts"])]
         self.dto_logger.info(
-            "connecting to broker at " + str(self.config["broker_hosts"])
+            "connecting to broker at %s", str(self.config["broker_hosts"])
         )
 
         try:
@@ -63,7 +68,7 @@ class DTO:
             self.dto_logger.error("Connection to broker failed")
 
         self.dto_logger.info("connected to broker")
-        self.dto_logger.info("subscribing to topic: " + self.config["mount_dto_topic"])
+        self.dto_logger.info("subscribing to topic: %s", self.config["mount_dto_topic"])
 
         # Subscribe to messages from "mount_dto_topic"
         # and "camera_dto_topic".
@@ -73,7 +78,7 @@ class DTO:
             headers={},
         )
 
-        self.dto_logger.info("subscribed to topic " + self.config["mount_dto_topic"])
+        self.dto_logger.info("subscribed to topic %s", self.config["mount_dto_topic"])
 
         """     self.dto_logger.info(
             "subscribing to topic: " + self.config["camera_incoming_topic"]
@@ -94,10 +99,9 @@ class DTO:
     class MyListener(stomp.ConnectionListener):
         def __init__(self, parent):
             self.parent = parent
-            pass
 
         def on_error(self, message):
-            print('received an error "%s"' % message)
+            print(f'received an error "{message}"')
 
         def on_message(self, message):
             topic = message.headers["destination"]
@@ -111,7 +115,7 @@ if __name__ == "__main__":
     dto = DTO()
 
     # print(dto.command_input_file)
-    with open(dto.command_input_file) as fp:
+    with open(dto.command_input_file, "r", encoding="utf-8") as fp:
         line = fp.readline()
         cnt = 1
         while line:
@@ -144,15 +148,15 @@ if __name__ == "__main__":
                 )
             if "sleep" in targ:
                 time.sleep(float(comm))
-            #            if "allserv" in targ:
-            #                dto.conn.send(
-            #                    body=comm,
-            #                    destination="/topic/" + dto.config["camera_command_topic"],
-            #                )
-            #                dto.conn.send(
-            #                    body=comm,
-            #                    destination="/topic/" + dto.config["mount_command_topic"],
-            #                )
+            # if "allserv" in targ:
+            #     dto.conn.send(
+            #         body=comm,
+            #         destination="/topic/" + dto.config["camera_command_topic"],
+            #     )
+            #     dto.conn.send(
+            #         body=comm,
+            #         destination="/topic/" + dto.config["mount_command_topic"],
+            #     )
             time.sleep(1.0)
             while dto.message_from_mount != "Go":
                 time.sleep(0.1)

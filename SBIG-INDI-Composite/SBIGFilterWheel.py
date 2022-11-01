@@ -13,6 +13,20 @@ from AbstractAgents.SubAgent import SubAgent
 
 
 class SBIGFilterWheel(SubAgent):
+    """SBIG Filter Wheel SubAgent
+
+    _extended_summary_
+
+    Parameters
+    ----------
+    logger : _type_
+        _description_
+    conn : _type_
+        _description_
+    config : _type_
+        _description_
+    """
+
     def __init__(self, logger, conn, config):
         print("in SBIGFilterWheel.init")
         SubAgent.__init__(self, logger, conn, config)
@@ -26,7 +40,7 @@ class SBIGFilterWheel(SubAgent):
         self.indiclient.connectServer()
 
         device_ccd = self.indiclient.getDevice(self.config["fw_name"])
-        while not (device_ccd):
+        while not device_ccd:
             time.sleep(0.5)
             device_ccd = self.indiclient.getDevice(self.config["fw_name"])
 
@@ -63,7 +77,7 @@ class SBIGFilterWheel(SubAgent):
             "message_id": uuid.uuid4(),
             "timestamput": datetime.datetime.utcnow(),
         }
-        for key in self.device_status.keys():
+        for key in self.device_status:
             c_status[key] = self.device_status[key]
 
         status = {"filterwheel": c_status}
