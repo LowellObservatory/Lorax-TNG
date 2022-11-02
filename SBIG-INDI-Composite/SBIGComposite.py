@@ -1,16 +1,30 @@
-import time
-import sys
-import os
+# Built-In Libraries
 import inspect
-from datetime import datetime
+import os
+import sys
+import time
+
+# 3rd Party Libraries
+
+# Internal Imports
+from AbstractAgents.CompositeAgent import CompositeAgent
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
-from AbstractAgents.CompositeAgent import CompositeAgent
 
 
 class SBIGComposite(CompositeAgent):
+    """SBIG Composite Agent
+
+    _extended_summary_
+
+    Parameters
+    ----------
+    config_file : _type_
+        _description_
+    """
+
     def __init__(self, config_file):
         CompositeAgent.__init__(self, config_file)
         print("in SBIGComposite.init")

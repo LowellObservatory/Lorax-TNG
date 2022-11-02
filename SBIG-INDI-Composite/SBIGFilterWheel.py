@@ -1,13 +1,32 @@
-from AbstractAgents.SubAgent import SubAgent
+# Built-In Libraries
+import datetime
 import time
-from datetime import datetime, timezone
 import uuid
-import xmltodict
+
+# 3rd Party Libraries
 import numpy as np
+import xmltodict
+
+# Internal Imports
 from IndiClient import IndiClient
+from AbstractAgents.SubAgent import SubAgent
 
 
 class SBIGFilterWheel(SubAgent):
+    """SBIG Filter Wheel SubAgent
+
+    _extended_summary_
+
+    Parameters
+    ----------
+    logger : _type_
+        _description_
+    conn : _type_
+        _description_
+    config : _type_
+        _description_
+    """
+
     def __init__(self, logger, conn, config):
         print("in SBIGFilterWheel.init")
         SubAgent.__init__(self, logger, conn, config)
@@ -21,7 +40,7 @@ class SBIGFilterWheel(SubAgent):
         self.indiclient.connectServer()
 
         device_ccd = self.indiclient.getDevice(self.config["fw_name"])
-        while not (device_ccd):
+        while not device_ccd:
             time.sleep(0.5)
             device_ccd = self.indiclient.getDevice(self.config["fw_name"])
 
@@ -56,9 +75,9 @@ class SBIGFilterWheel(SubAgent):
     def get_status_and_broadcast(self):
         c_status = {
             "message_id": uuid.uuid4(),
-            "timestamput": datetime.now(timezone.utc),
+            "timestamput": datetime.datetime.utcnow(),
         }
-        for key in self.device_status.keys():
+        for key in self.device_status:
             c_status[key] = self.device_status[key]
 
         status = {"filterwheel": c_status}

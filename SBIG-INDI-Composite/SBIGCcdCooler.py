@@ -1,13 +1,32 @@
-from AbstractAgents.SubAgent import SubAgent
+# Built-In Libraries
+import datetime
 import time
 import uuid
-import xmltodict
-from datetime import datetime, timezone
+
+# 3rd Party Libraries
 import numpy as np
+import xmltodict
+
+# Internal Imports
 from IndiClient import IndiClient
+from AbstractAgents.SubAgent import SubAgent
 
 
 class SBIGCcdCooler(SubAgent):
+    """SBIG CCD Cooler SubAgent
+
+    _extended_summary_
+
+    Parameters
+    ----------
+    logger : _type_
+        _description_
+    conn : _type_
+        _description_
+    config : _type_
+        _description_
+    """
+
     def __init__(self, logger, conn, config):
         print("in SBIGCcdCooler.init")
         SubAgent.__init__(self, logger, conn, config)
@@ -23,7 +42,7 @@ class SBIGCcdCooler(SubAgent):
         self.indiclient.connectServer()
 
         device_ccd = self.indiclient.getDevice(self.config["cooler_name"])
-        while not (device_ccd):
+        while not device_ccd:
             time.sleep(0.5)
             device_ccd = self.indiclient.getDevice(self.config["cooler_name"])
 
@@ -32,9 +51,9 @@ class SBIGCcdCooler(SubAgent):
     def get_status_and_broadcast(self):
         c_status = {
             "message_id": uuid.uuid4(),
-            "timestamput": datetime.now(timezone.utc),
+            "timestamput": datetime.datetime.utcnow(),
         }
-        for key in self.device_status.keys():
+        for key in self.device_status:
             c_status[key] = self.device_status[key]
 
         status = {"ccdcooler": c_status}

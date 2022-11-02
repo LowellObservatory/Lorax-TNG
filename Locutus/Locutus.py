@@ -4,19 +4,20 @@ Created on Aug 22, 2022
 @author: dlytle
 
 """
-
-import time
-import logging
-import xmltodict
-import redis
-import sys
-import os
 import inspect
+import logging
+import time
+import os
+import sys
+
+import redis
+import xmltodict
+
+from AbstractAgents.SpecialAgent import SpecialAgent
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
-from AbstractAgents.SpecialAgent import SpecialAgent
 
 # Set stomp so it only logs WARNING and higher messages. (default is DEBUG)
 logging.getLogger("stomp").setLevel(logging.WARNING)
@@ -26,10 +27,12 @@ class Locutus(SpecialAgent):
     def __init__(self, cfile):
         print("in Locutus.init")
         SpecialAgent.__init__(self, cfile)
+        self.message_received = 0
+        self.current_destination = ""
         [redis_host, redis_port] = self.config["redis_host"]
         print("redis_host = " + redis_host)
         print("redis_port = " + str(redis_port))
-        self.logger.info("Connecting to Redis at: " + redis_host)
+        self.logger.info("Connecting to Redis at: %s", redis_host)
         self.redis_handle = redis.Redis(host=redis_host, port=redis_port)
         # Subscribe to dictrequest and inforequest.
         self.broker_subscribe(self.config["dictionary_request_topic"])

@@ -5,16 +5,28 @@ Created on Sept. 7, 2022
 
 """
 
+from abc import ABC, abstractmethod
 import logging
+
 import stomp
 import yaml
-from abc import ABC, abstractmethod
+
 
 # Set stomp so it only logs WARNING and higher messages. (default is DEBUG)
 logging.getLogger("stomp").setLevel(logging.WARNING)
 
 # Special Agent class, inherit from Abstract Base Class
 class SpecialAgent(ABC):
+    """Special Agent (Abstract)
+
+    _extended_summary_
+
+    Parameters
+    ----------
+    ABC : _type_
+        _description_
+    """
+
     host = ""
     log_file = ""
     current_message = ""
@@ -24,7 +36,7 @@ class SpecialAgent(ABC):
 
         print("in special_agent.init")
         # Read the config file.
-        with open(config_file, "r") as stream:
+        with open(config_file, "r", encoding="utf-8") as stream:
             try:
                 self.config = yaml.safe_load(stream)
             except yaml.YAMLError as exc:
@@ -47,7 +59,7 @@ class SpecialAgent(ABC):
         # Get the broker host from the configuration.
         # Make a connection to the broker.
         self.host = [tuple(self.config["broker_host"])]
-        self.logger.info("connecting to broker at " + str(self.config["broker_host"]))
+        self.logger.info("connecting to broker at %s", str(self.config["broker_host"]))
         try:
             # Get a connection handle.
             self.conn = stomp.Connection(host_and_ports=self.host)
@@ -67,30 +79,51 @@ class SpecialAgent(ABC):
             self.broker_subscribe(this_topic)
 
     def broker_subscribe(self, topic):
-        self.logger.info("subscribing to topic: " + topic)
+        """Subscribe to broker topic
+
+        _extended_summary_
+
+        Parameters
+        ----------
+        topic : _type_
+            _description_
+        """
+        self.logger.info("subscribing to topic: %s", topic)
         self.conn.subscribe(
             id=1,
             destination="/topic/" + topic,
             headers={},
         )
-        self.logger.info("subscribed to topic " + topic)
+        self.logger.info("subscribed to topic %s", topic)
 
     @abstractmethod
     def handle_message(self):
-        pass
+        """Handle message from broker
+
+        _extended_summary_
+        """
 
     class BrokerListener(stomp.ConnectionListener):
+        """Broker Listener Class
+
+        _extended_summary_
+
+        Parameters
+        ----------
+        stomp : _type_
+            _description_
+        """
+
         def __init__(self, parent):
             self.parent = parent
-            pass
 
         def on_error(self, message):
-            print('received an error "%s"' % message)
+            print(f'received an error "{message}"')
 
         def on_message(self, message):
             # print('received a message "%s"' % message)
 
-            self.parent.logger.info('received a message "%s"' % message.body)
+            self.parent.logger.info(f'received a message "{message.body}"')
             # print(message.headers["destination"])
             self.parent.current_destination = message.headers["destination"]
             self.parent.current_message = message.body
