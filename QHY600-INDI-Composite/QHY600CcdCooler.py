@@ -186,6 +186,8 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
             body="WAIT", destination="/topic/" + self.config["dto_command_topic"]
         )
 
+        print(f"Device Status Keys: {list(self.device_status.keys())}")
+
         ccd_cooler_temp = self.device_status["CCD_TEMPERATURE"]["vals"][0][1]
         ccd_cooler_powr = self.device_status["CCD_COOLER_POWER"]["vals"][0][1]
         ccd_cooler_ramp = self.device_status["CCD_TEMP_RAMP"]["vals"][0][1]

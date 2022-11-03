@@ -1,4 +1,5 @@
 ---
+agent_name: "LDT Boresight Wide Red"
 agents_in_composite:
   - camera1:
       agent_name: QHY600Camera
@@ -25,8 +26,10 @@ agents_in_composite:
       status:
         - CCD_COOLER
         - CCD_TEMPERATURE
+        - CCD_COOLER_POWER
+        - CCD_TEMP_RAMP
 broker_hosts:
   - tanagra
   - 61613
-log_file: qhy600_composite.log
+log_file: qhy600_lbwr.log
 message_wait_time: 0.5
