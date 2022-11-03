@@ -3,6 +3,7 @@ agent_name: "LDT Boresight Wide Red"
 agents_in_composite:
   - camera1:
       agent_name: IndiCamera
+      agent_protocol: IndiAgents
       camera_name: "QHY CCD QHY600M-d0a5a44"
       camera_host: "localhost"
       camera_port: 7624
@@ -17,6 +18,7 @@ agents_in_composite:
         - CCD_DIRECTORY_LOCATION
   - ccdcooler1:
       agent_name: IndiCcdCooler
+      agent_protocol: IndiAgents
       cooler_name: "QHY CCD QHY600M-d0a5a44"
       cooler_host: "localhost"
       cooler_port: 7624

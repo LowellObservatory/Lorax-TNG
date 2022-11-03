@@ -8,15 +8,16 @@
 #
 #  @author: dlytle, tbowers
 
-"""Lorax CCD Cooler Agent for the QHY 600M CMOS Camera
+"""Lorax CcdCooler Agent for INDI-based CCD and CMOS cameras
 
 This module is part of the Lorax-TNG package, written at Lowell Observatory.
 
-This CCD Cooler Agent concerns itself with the cooler aspects of the QHY600M, and
-its functionality is called from the QHY600Composite module.
+This CCD Cooler Agent concerns itself with the cooler aspects of the INDI
+device.  This agent is called from the CompositeAgent class by instruction from
+the instrument-specific configuration file.
 
-Hardware control of the QHY 600M is accomplished through an INDI interface,
-contained in the HardwareClients module.
+Hardware control of the thermoelectric cooler is accomplished through an INDI
+interface, contained in the IndiClient module.
 """
 
 # Built-In Libraries
@@ -31,14 +32,16 @@ import numpy as np
 import xmltodict
 
 # Internal Imports
-from IndiClient import IndiClient
-from AbstractAgents.SubAgent import CcdCoolerSubAgent
+from AbstractAgents import CcdCoolerSubAgent
+from IndiAgents.IndiClient import IndiClient
 
 
-class QHY600CcdCooler(CcdCoolerSubAgent):
-    """QHY600M CCD Cooler Agent (SubAgent to QHY600Composite)
+class IndiCcdCooler(CcdCoolerSubAgent):
+    """INDI CCD Cooler Agent (SubAgent to CompositeAgent)
 
-    _extended_summary_
+    This class handles all of the hardware-specific portions of the
+    CcdCoolerAgent implementation, leaving the more general, generic methods
+    for the abstract parent class.
 
     Parameters
     ----------
@@ -51,7 +54,9 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
     """
 
     def __init__(self, logger, conn, config):
-        print("   ---> Initializing the QHY600 Cooler SubAgent")
+        print(
+            f"   ---> Initializing the INDI Camera SubAgent for {config['cooler_name']}"
+        )
         super().__init__(logger, conn, config)
         # Get the host and port for the connection to mount.
         # "config", in this case, is just a dictionary.
@@ -64,6 +69,7 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
 
         self.indiclient.connectServer()
 
+        # Make the connection to the specified device
         device_cooler = self.indiclient.getDevice(self.config["cooler_name"])
         while not device_cooler:
             time.sleep(0.5)
@@ -117,7 +123,7 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
         # Get the device from the INDI server
         device_cooler = self.indiclient.getDevice(self.cooler)
         while not device_cooler:
-            print("  Waiting on connection to the CMOS Camera...")
+            print("  Waiting on connection to the cooler...")
             time.sleep(0.5)
             device_cooler = self.indiclient.getDevice(self.cooler)
         self.device_cooler = device_cooler
@@ -159,8 +165,8 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
     def set_temperature(self, cool_temp, tolerance=1.0):
         """Set the cooler temperature
 
-        Set the temperature goal of the cooler.  For the QHY600M, this also
-        turns on the cooler power.
+        Set the temperature goal of the cooler, which also turns on the cooler
+        power.
 
         Parameters
         ----------
@@ -172,7 +178,7 @@ class QHY600CcdCooler(CcdCoolerSubAgent):
         """
         if not self.check_cooler_connection():
             return
-        print(f"QHY600 Setting Cooler Temperature to {cool_temp:.1f}ºC")
+        print(f"Setting Cooler Temperature to {cool_temp:.1f}ºC")
 
         # Get the number vector property, set the new value, and send it back
         temp = self.device_cooler.getNumber("CCD_TEMPERATURE")

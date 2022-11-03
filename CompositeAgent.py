@@ -76,19 +76,20 @@ class CompositeAgent():
 
         # For each agent in list, subscribe to agent "incoming_topic".
         agent_list = self.config["agents_in_composite"]
-        # print("agent_list")
-        # print(agent_list)
         for agent in agent_list:
-            # print(agent)
+            # print(f"Subscribing to broker topic for {agent}")
             this_topic = list(agent.values())[0]["incoming_topic"]
             self.incoming_topics.append(this_topic)
             self.broker_subscribe(this_topic)
 
-        # Create each of the sub-agents in the agent list.
+        # Instantiate each of the sub-agents in the agent list.
         # Keep them in an array.
         for agent in agent_list:
             sub_agent = list(agent.values())[0]["agent_name"]
-            the_agent = __import__(sub_agent, fromlist=[sub_agent])
+            protocol = list(agent.values())[0]["agent_protocol"]
+            print(f"This is the SubAgent we want to instantiate: {protocol}.{sub_agent}")
+
+            the_agent = __import__(f"{protocol}.{sub_agent}", fromlist=[sub_agent])
             the_agent = getattr(the_agent, sub_agent)
             self.agents.append(
                 the_agent(self.logger, self.conn, list(agent.values())[0])

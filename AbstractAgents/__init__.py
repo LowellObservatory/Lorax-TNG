@@ -16,5 +16,5 @@ The Abstract Agents in the modules within this directory are imported into the
 AbstractAgents namespace for ease of calling them.
 """
 
-from SpecialAgent import *  # noqa
-from SubAgent import *  #noqa
+from AbstractAgents.SpecialAgent import *  # noqa
+from AbstractAgents.SubAgent import *  # noqa

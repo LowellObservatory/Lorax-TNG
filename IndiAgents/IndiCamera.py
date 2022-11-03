@@ -8,15 +8,16 @@
 #
 #  @author: dlytle, tbowers
 
-"""Lorax Camera Agent for the QHY 600M CMOS Camera
+"""Lorax Camera Agent for INDI-based CCD and CMOS cameras
 
 This module is part of the Lorax-TNG package, written at Lowell Observatory.
 
-This Camera Agent concerns itself with the camera aspects of the QHY600M, and
-its functionality is called from the QHY600Composite module.
+This Camera Agent concerns itself with the camera aspects only of the INDI
+device.  This agent is called from the CompositeAgent class by instruction from
+the instrument-specific configuration file.
 
-Hardware control of the QHY 600M is accomplished through an INDI interface,
-contained in the HardwareClients module.
+Hardware control of the camera is accomplished through an INDI interface,
+contained in the IndiClient module.
 """
 
 # Built-In Libraries
@@ -32,14 +33,12 @@ import PyIndi
 import xmltodict
 
 # Internal Imports
-from AbstractAgents.SubAgent import CameraSubAgent
-from IndiClient import IndiClient
+from AbstractAgents import CameraSubAgent
+from IndiAgents.IndiClient import IndiClient
 
 
-class QHY600Camera(CameraSubAgent):
-    """QHY600M Camera Agent (SubAgent to QHY600Composite)
-
-    The QHY600M Camera communicates via INDI.
+class IndiCamera(CameraSubAgent):
+    """INDI Camera Agent (SubAgent to CompositeAgent)
 
     This class handles all of the hardware-specific portions of the CameraAgent
     implementation, leaving the more general, generic methods for the abstract
@@ -56,11 +55,13 @@ class QHY600Camera(CameraSubAgent):
     """
 
     def __init__(self, logger, conn, config):
-        print("   ---> Initializing the QHY600 Camera SubAgent")
+        print(
+            f"   ---> Initializing the INDI Camera SubAgent for {config['camera_name']}"
+        )
         super().__init__(logger, conn, config)
 
         # -----
-        # Get the host and port for the connection to mount.
+        # Get the host and port for the connection to camera.
         # "config", in this case, is just a dictionary.
         self.indiclient = IndiClient(self, config)
         # print(self.config)
@@ -71,6 +72,7 @@ class QHY600Camera(CameraSubAgent):
 
         self.indiclient.connectServer()
 
+        # Make the connection to the specified device
         device_ccd = self.indiclient.getDevice(self.config["camera_name"])
         while not device_ccd:
             time.sleep(0.5)
@@ -122,7 +124,7 @@ class QHY600Camera(CameraSubAgent):
         # Get the device from the INDI server
         device_ccd = self.indiclient.getDevice(self.ccd)
         while not device_ccd:
-            print("  Waiting on connection to the CMOS Camera...")
+            print("  Waiting on connection to the camera...")
             time.sleep(0.5)
             device_ccd = self.indiclient.getDevice(self.ccd)
         self.device_ccd = device_ccd
@@ -169,7 +171,7 @@ class QHY600Camera(CameraSubAgent):
         """
         if not self.check_camera_connection():
             return
-        print("QHY600 Expose...")
+        print("IndiCamera Expose...")
 
         # Check the required exposure properties
         if not self.exptime:
