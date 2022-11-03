@@ -3,7 +3,6 @@ Created on Aept. 19, 2022
 @author: dlytle
 
 """
-from abc import ABC
 import logging
 
 import stomp
@@ -12,15 +11,19 @@ import yaml
 # Set stomp so it only logs WARNING and higher messages. (default is DEBUG)
 logging.getLogger("stomp").setLevel(logging.WARNING)
 
-# General Composite Agent class, inherit from Abstract Base Class
-class CompositeAgent(ABC):
-    """Composite Agent Abstract Class
+# General Composite Agent class
+class CompositeAgent():
+    """Composite Agent Class
 
-    _extended_summary_
+    The ``config_file`` contains the information about which SubAgents will be
+    instantiated to form the CompositeAgent.  In this way, the CompositeAgent
+    components are defined only at runtime; CompositeAgents are not pre-
+    constructed entities.  This allows flexibility with a minimal repitition of
+    code.
 
     Parameters
     ----------
-    config_file : str
+    config_file : :obj:`str` or :obj:`pathlib.Path`
         Filename of the configuration file to read in
     """
 
@@ -34,7 +37,7 @@ class CompositeAgent(ABC):
 
     def __init__(self, config_file):
 
-        print("in composite_agent.init")
+        print(" In CompositeAgent.__init__()")
         # Read the config file.
         with open(config_file, "r", encoding="utf-8") as stream:
             try:
@@ -110,7 +113,6 @@ class CompositeAgent(ABC):
         )
         self.logger.info("subscribed to topic %s", topic)
 
-    # @abstractmethod
     def get_status_and_broadcast(self):
         """Get status and broadcast on the broker
 
