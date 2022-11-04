@@ -8,7 +8,7 @@ import numpy as np
 import xmltodict
 
 # Internal Imports
-from IndiClient import IndiClient
+from IndiAgents.IndiClient import IndiClient
 from AbstractAgents.SubAgent import SubAgent
 
 

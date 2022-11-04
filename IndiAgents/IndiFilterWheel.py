@@ -8,11 +8,11 @@ import numpy as np
 import xmltodict
 
 # Internal Imports
-from IndiClient import IndiClient
-from AbstractAgents.SubAgent import SubAgent
+from AbstractAgents import SubAgent
+from IndiAgents.IndiClient import IndiClient
 
 
-class SBIGFilterWheel(SubAgent):
+class IndiFilterWheel(SubAgent):
     """SBIG Filter Wheel SubAgent
 
     _extended_summary_
