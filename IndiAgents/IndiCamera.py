@@ -60,7 +60,6 @@ class IndiCamera(CameraSubAgent):
         )
         super().__init__(logger, conn, config)
 
-        # -----
         # Get the host and port for the connection to camera.
         # "config", in this case, is just a dictionary.
         self.indiclient = IndiClient(self, config)
@@ -80,6 +79,68 @@ class IndiCamera(CameraSubAgent):
 
         self.device_ccd = device_ccd
 
+        ##### The following is from SBIGCamera.py::
+        # print(self.device_ccd)
+        # self.exptime = 1.0
+        # self.exptype = "FRAME_LIGHT"
+        # self.ccd_binning = (1, 1)
+
+        # # List out the devices available from the INDI server
+        # devlist = [d.getDeviceName() for d in self.indiclient.getDevices()]
+        # print(f"This is the list of connected devices: {devlist}")
+
+        # # Check that the desired CCD is in the list of devices on the INDI server
+        # self.ccd = self.config["camera_name"]
+        # if self.ccd not in devlist:
+        #     print(f"Warning: {self.ccd} not in the list of available INDI devices!")
+        #     return
+
+        # # Get the device from the INDI server
+        # device_ccd = self.indiclient.getDevice(self.ccd)
+        # while not device_ccd:
+        #     print("  Waiting on connection to the CCD Camera...")
+        #     time.sleep(0.5)
+        #     device_ccd = self.indiclient.getDevice(self.ccd)
+        # self.device_ccd = device_ccd
+
+        # # This is a special property of the CCD_Simulator.
+        # # the CCD_Simulator requires an RA and DEC before it
+        # # will take an image.  One way to do this is load
+        # # the telescope simulator and connect to it.
+        # # The other way is to set this property in the
+        # # CCD simulator.  We do that here.
+        # eqpe = device_ccd.getNumber("EQUATORIAL_PE")
+        # while not eqpe:
+        #     print("  Waiting for EQ_PE...")
+        #     time.sleep(0.5)
+        #     eqpe = device_ccd.getNumber("EQUATORIAL_PE")
+
+        # eqpe[0].value = 0.0
+        # eqpe[1].value = 0.0
+        # self.indiclient.sendNewNumber(eqpe)
+
+        # # Make the connection -- exit if no connection
+        # ccd_connect = self.device_ccd.getSwitch("CONNECTION")
+        # while not ccd_connect:
+        #     print("not connected")
+        #     time.sleep(0.5)
+        #     ccd_connect = self.device_ccd.getSwitch("CONNECTION")
+        # while not device_ccd.isConnected():
+        #     print("still not connected")
+        #     ccd_connect[0].s = PyIndi.ISS_ON  # the "CONNECT" switch
+        #     ccd_connect[1].s = PyIndi.ISS_OFF  # the "DISCONNECT" switch
+        #     self.indiclient.sendNewSwitch(ccd_connect)
+        #     time.sleep(0.5)
+        # print(f"Are we connected yet? {self.device_ccd.isConnected()}")
+        # if not self.device_ccd.isConnected():
+        #     pass
+
+        # # Print a happy acknowledgment
+        # print(f"The Agent is now connected to {self.ccd}")
+
+        # # Tell the INDI server send the "CCD1" blob to this client
+        # self.indiclient.setBLOBMode(PyIndi.B_ALSO, self.ccd, "CCD1")
+
     def get_status_and_broadcast(self):
         """Get the current status and broadcast it
 
@@ -96,7 +157,9 @@ class IndiCamera(CameraSubAgent):
             "timestamput": datetime.datetime.utcnow(),
             "root": device_status,
         }
-        status = {"root": c_status}
+        for key in self.device_status:
+            c_status[key] = self.device_status[key]
+        status = {"camera": c_status}
         xml_format = xmltodict.unparse(status, pretty=True)
 
         # print("/topic/" + self.config["outgoing_topic"])

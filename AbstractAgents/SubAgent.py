@@ -69,7 +69,7 @@ class CameraSubAgent(SubAgent):
     def handle_message(self, message):
         print(f"\nReceived message in CameraSubAgent: {message}")
 
-        if "connect_to_camera" in message:
+        if "init" in message:
             print("Connecting to the camera...")
             self.connect_to_camera()
 
@@ -281,7 +281,7 @@ class CcdCoolerSubAgent(SubAgent):
     def handle_message(self, message):
         print(f"\nReceived message in CcdCoolerSubAgent: {message}")
 
-        if "connect_to_cooler" in message:
+        if "init" in message:
             print("Connecting to the cooler...")
             self.connect_to_cooler()
 
@@ -393,7 +393,7 @@ class FilterWheelSubAgent(SubAgent):
     def handle_message(self, message):
         print(f"\nReceived message in FilterWheelSubAgent: {message}")
 
-        if "connect_to_filterwheel" in message:
+        if "init" in message:
             print("Connecting to the filter wheel...")
             self.connect_to_filterwheel()
 
@@ -502,7 +502,7 @@ class MountSubAgent(SubAgent):
     def handle_message(self, message):
         print(f"\nReceived message in MountSubAgent: {message}")
 
-        if "connect_to_mount" in message:
+        if "init" in message:
             print("Connecting to the mount...")
             self.connect_to_mount()
 
@@ -608,7 +608,7 @@ class DomeSubAgent(SubAgent):
     def handle_message(self, message):
         print(f"\nReceived message in DomeSubAgent: {message}")
 
-        if "connect_to_dome" in message:
+        if "init" in message:
             print("Connecting to the dome...")
             self.connect_to_dome()
 

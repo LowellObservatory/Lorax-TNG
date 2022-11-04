@@ -58,7 +58,7 @@ class IndiCcdCooler(CcdCoolerSubAgent):
             f"   ---> Initializing the INDI Camera SubAgent for {config['cooler_name']}"
         )
         super().__init__(logger, conn, config)
-        # Get the host and port for the connection to mount.
+        # Get the host and port for the connection to cooler.
         # "config", in this case, is just a dictionary.
         self.indiclient = IndiClient(self, config)
         # print(self.config)
@@ -95,7 +95,10 @@ class IndiCcdCooler(CcdCoolerSubAgent):
             "timestamput": datetime.datetime.utcnow(),
             "root": device_status,
         }
-        status = {"root": c_status}
+        for key in self.device_status:
+            c_status[key] = self.device_status[key]
+
+        status = {"ccdcooler": c_status}
         xml_format = xmltodict.unparse(status, pretty=True)
 
         # print("/topic/" + self.config["outgoing_topic"])
