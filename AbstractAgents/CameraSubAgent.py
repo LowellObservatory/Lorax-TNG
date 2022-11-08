@@ -77,7 +77,8 @@ class CameraSubAgent(SubAgent):
     regardless of the hardware communication protocol.  Namely, the populated
     methods contained herein merely set instance attributes and do not
     communicate directly with the hardware.  Also, this class handles all of
-    the camera message commands, to minimize replication between pieces of hardware.
+    the camera message commands, to minimize replication between pieces of
+    hardware.
 
     Abstract methods are supplied for the functions expected to have hardware-
     specific implementation needs.

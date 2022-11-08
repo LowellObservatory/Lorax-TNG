@@ -8,27 +8,33 @@
 #
 #  @author: dlytle, tbowers
 
-"""Lorax Filter Wheel SubAgent Abstract Class
+"""Lorax Rotator SubAgent Abstract Class
 
 This module is part of the Lorax-TNG package, written at Lowell Observatory.
 
-This SubAgent is to be inherited by all protocol-based FilterWheel Agents, and
-provides the complete API for all Lorax FilterWheen Agents (contained in the
+This SubAgent is to be inherited by all protocol-based Rotator Agents, and
+provides the complete API for all Lorax Rotator Agents (contained in the
 :func:`handle_message` method).
 
-The Lorax Filter Wheel API is as follows:
+The Lorax Rotator API is as follows:
 ===================================
 
     init
-        Initialize and connect to the filter wheel
+        Initialize and connect to the rotator
     disconnect
-        Disconnect from the filter wheel
+        Disconnect from the rotator
     status
-        Broadcast the current status of the filter wheel
+        Broadcast the current status of the rotator
     home
-        Home the filter wheel
-    move
-        Move the filter wheel to a specified slot
+        Home the rotator
+    stop
+        Stop rotator motion
+    goto_field
+        Go to the field rotation angle specified by the mount
+    goto_mech
+        Go to a specified mechanical rotator angle
+    offset
+        Apply the specified offset to the rotator
 
 """
 
@@ -42,15 +48,14 @@ import warnings
 from AbstractAgents.SubAgent import SubAgent
 
 
-class FilterWheelSubAgent(SubAgent):
-    """Filter Wheel SubAgent
+class RotatorSubAgent(SubAgent):
+    """Rotator SubAgent
 
-    This SubAgent contains the methods common to all FILTER WHEEL instances,
+    This SubAgent contains the methods common to all ROTATOR instances,
     regardless of the hardware communication protocol.  Namely, the populated
     methods contained herein merely set instance attributes and do not
     communicate directly with the hardware.  Also, this class handles all of
-    the filter wheel message commands, to minimize replication between pieces
-    of hardware.
+    the rotator message commands, to minimize replication between pieces of hardware.
 
     Abstract methods are supplied for the functions expected to have hardware-
     specific implementation needs.
@@ -69,17 +74,17 @@ class FilterWheelSubAgent(SubAgent):
         super().__init__(logger, conn, config)
 
         # Define other instance attributes for later population
-        self.filterwheel = None
-        self.device_filterwheel = None
+        self.rotator = None
+        self.device_rotator = None
 
     def handle_message(self, message):
         """Handle an incoming message
 
-        This method contains the API for the FilterWheelSubAgent.  Incoming
+        This method contains the API for the RotatorSubAgent.  Incoming
         messages are compared against the command list, and the proper method
-        is called.  Some of the API commands are general to all Filter Wheel
-        Agents and are fully implemented here; others are hardware-specific and
-        are left as abstract methods for later implementation.
+        is called.  Some of the API commands are general to all Rotator Agents
+        and are fully implemented here; others are hardware-specific and are
+        left as abstract methods for later implementation.
 
         Parameters
         ----------
@@ -87,75 +92,63 @@ class FilterWheelSubAgent(SubAgent):
             The incoming message from the broker, as passed down from the
             Composite Agent.
         """
-        print(f"\nReceived message in FilterWheelSubAgent: {message}")
+        print(f"\nReceived message in RotatorSubAgent: {message}")
 
         if "init" in message:
-            print("Connecting to the filter wheel...")
-            self.connect_to_filterwheel()
+            print("Connecting to the rotator...")
+            self.connect_to_rotator()
 
         elif "disconnect" in message:
-            print("Disconnecting from filter wheel...")
-            self.disconnect_from_filterwheel()
-
-        elif "status" in message:
-            # print("doing status")
-            self.get_status_and_broadcast()
+            print("Disconnecting from rotator...")
+            self.disconnect_from_rotator()
 
         elif "home" in message:
-            # send wheel home.
+            # send mount home.
             # send "wait" to DTO.
             # send specific command, "home", to filter wheel
             # keep checking status until done.
             # send "go" command to DTO.
-            print("filter wheel: home (no effect)")
+            print("rotator: home (no effect)")
 
-        elif "move" in message:
-            # send wheel to specific position.
-            # check arguments against position limits.
-            # send "wait" to DTO.
-            # send specific command, "movoto x", to filter wheel
-            # keep checking status until done.
-            # send "go" command to DTO.
-            print("filter wheel: move (no effect)")
+        elif "stop" in message:
+            print("rotator: stop (no effect)")
+
+        elif "goto_field" in message:
+            print("rotator: goto_field (no effect)")
+
+        elif "goto_mech" in message:
+            print("rotator: goto_mech (no effect)")
+
+        elif "offset" in message:
+            print("rotator: offset (no effect)")
 
         else:
             warnings.warn("Unknown command")
 
-    def check_filterwheel_connection(self):
-        """Check that the client is connected to the filter wheel
-
+    def check_rotator_connection(self):
+        """Check that the client is connected to the rotator
         Returns
         -------
         ``bool``
-            Whether the filter wheel is connected
+            Whether the rotator is connected
         """
-        if self.device_filterwheel and self.device_filterwheel.isConnected():
+        if self.device_rotator and self.device_rotator.isConnected():
             return True
 
-        print(
-            "Warning: Filter Wheel must be connected first (filterwheel : connect_to_filterwheel)"
-        )
+        print("Warning: Mount must be connected first (rotator : connect_to_rotator)")
         return False
 
     @abstractmethod
-    def connect_to_filterwheel(self):
-        """Connect to filter wheel
+    def connect_to_rotator(self):
+        """Connect to rotator
 
         Must be implemented by hardware-specific Agent
         """
         raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
-    def disconnect_from_filterwheel(self):
-        """Disconnect from filter wheel
-
-        Must be implemented by hardware-specific Agent
-        """
-        raise NotImplementedError("Specific hardware Agent must implement this method.")
-
-    @abstractmethod
-    def home(self):
-        """Home the filter wheel
+    def disconnect_from_rotator(self):
+        """Disconnect from rotator
 
         Must be implemented by hardware-specific Agent
         """
@@ -163,7 +156,15 @@ class FilterWheelSubAgent(SubAgent):
 
     @abstractmethod
     def move(self, slot):
-        """Move the filter wheel
+        """Move the rotator
+
+        Must be implemented by hardware-specific Agent
+        """
+        raise NotImplementedError("Specific hardware Agent must implement this method.")
+
+    @abstractmethod
+    def home(self):
+        """Home the mount
 
         Must be implemented by hardware-specific Agent
         """

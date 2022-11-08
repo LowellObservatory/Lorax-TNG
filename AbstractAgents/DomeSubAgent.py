@@ -1,9 +1,52 @@
-"""
-Created on Sept. 19, 2022
-@author: dlytle
+# -*- coding: utf-8 -*-
+#
+#  This Source Code Form is subject to the terms of the Mozilla Public
+#  License, v. 2.0. If a copy of the MPL was not distributed with this
+#  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+#  Created on 08-Nov-2022
+#
+#  @author: dlytle, tbowers
+
+"""Lorax Dome SubAgent Abstract Class
+
+This module is part of the Lorax-TNG package, written at Lowell Observatory.
+
+This SubAgent is to be inherited by all protocol-based Dome Agents, and
+provides the complete API for all Lorax Dome Agents (contained in the
+:func:`handle_message` method).
+
+The Lorax Dome API is as follows:
+===================================
+
+    init
+        Initialize and connect to the dome
+    disconnect
+        Disconnect from the dome
+    status
+        Broadcast the current status of the dome
+    home
+        Home the dome
+    move
+        Move the dome to a specified azimuth
+    track_mount
+        Track the mount in azimuth
+    stop_tracking
+        Stop tracking the mount and stay in this position
+    open_shutter
+        Open the dome shutter
+    close_shutter
+        Close the dome shutter
 
 """
+
+# Built-In Libraries
 from abc import abstractmethod
+import warnings
+
+# 3rd Party Libraries
+
+# Internal Imports
 from AbstractAgents.SubAgent import SubAgent
 
 
@@ -14,7 +57,8 @@ class DomeSubAgent(SubAgent):
     regardless of the hardware communication protocol.  Namely, the populated
     methods contained herein merely set instance attributes and do not
     communicate directly with the hardware.  Also, this class handles all of
-    the cooler message commands, to minimize replication between pieces of hardware.
+    the dome message commands, to minimize replication between pieces of
+    hardware.
 
     Abstract methods are supplied for the functions expected to have hardware-
     specific implementation needs.
@@ -37,6 +81,20 @@ class DomeSubAgent(SubAgent):
         self.device_dome = None
 
     def handle_message(self, message):
+        """Handle an incoming message
+
+        This method contains the API for the DomeSubAgent.  Incoming
+        messages are compared against the command list, and the proper method
+        is called.  Some of the API commands are general to all Dome Agents
+        and are fully implemented here; others are hardware-specific and are
+        left as abstract methods for later implementation.
+
+        Parameters
+        ----------
+        message : str
+            The incoming message from the broker, as passed down from the
+            Composite Agent.
+        """
         print(f"\nReceived message in DomeSubAgent: {message}")
 
         if "init" in message:
@@ -46,6 +104,10 @@ class DomeSubAgent(SubAgent):
         elif "disconnect" in message:
             print("Disconnecting from dome...")
             self.disconnect_from_dome()
+
+        elif "status" in message:
+            # print("doing status")
+            self.get_status_and_broadcast()
 
         elif "home" in message:
             # send dome home.
@@ -64,8 +126,20 @@ class DomeSubAgent(SubAgent):
             # send "go" command to DTO.
             print("dome: move")
 
+        elif "track_mount" in message:
+            print("dome: track_mount (no effect)")
+
+        elif "stop_tracking" in message:
+            print("dome: stop_tracking (no effect)")
+
+        elif "open_shutter" in message:
+            print("dome: open_shutter (no effect)")
+
+        elif "close_shutter" in message:
+            print("dome: close_shutter (no effect)")
+
         else:
-            print("Unknown command")
+            warnings.warn("Unknown command")
 
     def check_dome_connection(self):
         """Check that the client is connected to the dome
@@ -97,16 +171,16 @@ class DomeSubAgent(SubAgent):
         raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
-    def move(self, slot):
-        """Move the dome
+    def home(self):
+        """Home the dome
 
         Must be implemented by hardware-specific Agent
         """
         raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
-    def home(self):
-        """Home the dome
+    def move(self, azimuth):
+        """Move the dome
 
         Must be implemented by hardware-specific Agent
         """

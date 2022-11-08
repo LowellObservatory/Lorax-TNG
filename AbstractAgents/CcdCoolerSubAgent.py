@@ -53,7 +53,8 @@ class CcdCoolerSubAgent(SubAgent):
     regardless of the hardware communication protocol.  Namely, the populated
     methods contained herein merely set instance attributes and do not
     communicate directly with the hardware.  Also, this class handles all of
-    the cooler message commands, to minimize replication between pieces of hardware.
+    the cooler message commands, to minimize replication between pieces of
+    hardware.
 
     Abstract methods are supplied for the functions expected to have hardware-
     specific implementation needs.
@@ -80,9 +81,9 @@ class CcdCoolerSubAgent(SubAgent):
 
         This method contains the API for the CcdCoolerSubAgent.  Incoming
         messages are compared against the command list, and the proper method
-        is called.  Some of the API commands are general to all Camera Agents
-        and are fully implemented here; others are hardware-specific and are
-        left as abstract methods for later implementation.
+        is called.  Some of the API commands are general to all CCD Cooler
+        Agents and are fully implemented here; others are hardware-specific and
+        are left as abstract methods for later implementation.
 
         Parameters
         ----------
