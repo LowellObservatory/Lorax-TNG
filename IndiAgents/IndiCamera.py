@@ -18,6 +18,19 @@ the instrument-specific configuration file.
 
 Hardware control of the camera is accomplished through an INDI interface,
 contained in the IndiClient module.
+
+The likely needed INDI API components for Lorax are:
+    CCD_EXPOSURE - take an exposure
+    CCD_ABORT_EXPOSURE - stop the exposure
+    CCD_FRAME - set lower left corner and width / height of frame
+    CCD_FRAME_RESET - set frame back to whole CCD, set binning to 1x1
+    CCD_BINNING - set vertical and horizontal binning values
+    CCD_FRAME_TYPE - set light, bias, dark, flat
+    CCD_INFO - sends back size, pixel_size, bits_per_pixel of the CCD
+    CCD_GAIN - may need this
+    CCD_OFFSET - again, may need this
+    CCD_DIRECTORY_LOCATION - where to dump the FITS files
+    CCD_DIRECTORY_TOGGLE - on or off
 """
 
 # Built-In Libraries

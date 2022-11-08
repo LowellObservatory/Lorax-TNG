@@ -1,9 +1,70 @@
-"""
-Created on Sept. 19, 2022
-@author: dlytle
+# -*- coding: utf-8 -*-
+#
+#  This Source Code Form is subject to the terms of the Mozilla Public
+#  License, v. 2.0. If a copy of the MPL was not distributed with this
+#  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+#  Created on 08-Nov-2022
+#
+#  @author: dlytle, tbowers
+
+"""Lorax Camera SubAgent Abstract Class
+
+This module is part of the Lorax-TNG package, written at Lowell Observatory.
+
+This SubAgent is to be inherited by all protocol-based Camera Agents, and
+provides the complete API for all Lorax Camera Agents (contained in the
+:func:`handle_message` method).
+
+The Lorax Camera API is as follows:
+===================================
+
+    init
+        Initialize and connect to the camera
+    disconnect
+        Disconnect from the camera
+    expose
+        Take an exposure with the currently defined settings
+    pause_exposure
+        Pause the exposure without reading out the detector
+    resume_exposure
+        Resume a previously paused exposure
+    abort
+        Abort the exposure completely (exposure lost)
+    set_exposure_length
+        Set the exposure length
+    set_num_exposures
+        Set the number of exposures to take
+    set_exposure_type
+        Set the exposure type
+    set_binning
+        Set the binning of the detector
+    set_origin
+        Set the origin for a subframe
+    set_size
+        Set the size for a subframe
+    set_gain
+        Set the gain of the detector
+    set_image_title
+        Set the image title to be placed in the FITS header
+    set_fits_comment
+        Set the FITS comment field to be included in the header
+    set_image_directory
+        Set the directory into which the FITS images will be stored
+    reset_frame
+        Reset the binning, origin, and size properties to initial values
+    reset_properties
+        Reset all of the ``set_*`` properties to initial values
 
 """
+
+# Built-In Libraries
 from abc import abstractmethod
+import warnings
+
+# 3rd Party Libraries
+
+# Internal Imports
 from AbstractAgents.SubAgent import SubAgent
 
 
@@ -41,6 +102,20 @@ class CameraSubAgent(SubAgent):
         self.ccd_binning = (1, 1)
 
     def handle_message(self, message):
+        """Handle an incoming message
+
+        This method contains the API for the CameraSubAgent.  Incoming messages
+        are compared against the command list, and the proper method is called.
+        Some of the API commands are general to all Camera Agents and are fully
+        implemented here; others are hardware-specific and are left as abstract
+        methods for later implementation.
+
+        Parameters
+        ----------
+        message : str
+            The incoming message from the broker, as passed down from the
+            Composite Agent.
+        """
         print(f"\nReceived message in CameraSubAgent: {message}")
 
         if "init" in message:
@@ -69,6 +144,15 @@ class CameraSubAgent(SubAgent):
             # print("camera:take exposure")
             self.expose()
 
+        elif "pause_exposure" in message:
+            print("camera:pause_exposure (no effect)")
+
+        elif "resume_exposure" in message:
+            print("camera:resume_exposure (no effect)")
+
+        elif "abort" in message:
+            print("camera:abort (no effect)")
+
         elif "set_exposure_length" in message:
             # check arguments against exposure length limits.
             # send camera specific set_exposure_length.
@@ -80,6 +164,9 @@ class CameraSubAgent(SubAgent):
                 return
             self.set_exposure_length(exptime)
             print(f"Exposure length set to {exptime:.2f}s")
+
+        elif "set_num_exposures" in message:
+            print("camera:set_num_exposures (no effect)")
 
         elif "set_exposure_type" in message:
             # check arguments against exposure types.
@@ -108,8 +195,28 @@ class CameraSubAgent(SubAgent):
             # send camera specific set_size.
             print("camera:set_size (no effect)")
 
+        elif "set_gain" in message:
+            # check arguments against gain limits.
+            # send camera specific set_gain.
+            print("camera:set_size (no effect)")
+
+        elif "set_image_title" in message:
+            print("camera:set_image_title (no effect)")
+
+        elif "set_fits_comment" in message:
+            print("camera:set_fits_comment (no effect)")
+
+        elif "set_image_directory" in message:
+            print("camera:set_image_directory (no effect)")
+
+        elif "reset_frame" in message:
+            print("camera:reset_frame (no effect)")
+
+        elif "reset_properties" in message:
+            print("camera:reset_properties (no effect)")
+
         else:
-            print("Unknown command")
+            warnings.warn("Unknown command")
 
     def check_camera_connection(self):
         """Check that the client is connected to the camera
