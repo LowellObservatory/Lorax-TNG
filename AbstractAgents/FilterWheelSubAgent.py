@@ -1,9 +1,44 @@
-"""
-Created on Sept. 19, 2022
-@author: dlytle
+# -*- coding: utf-8 -*-
+#
+#  This Source Code Form is subject to the terms of the Mozilla Public
+#  License, v. 2.0. If a copy of the MPL was not distributed with this
+#  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+#  Created on 08-Nov-2022
+#
+#  @author: dlytle, tbowers
+
+"""Lorax Filter Wheel SubAgent Abstract Class
+
+This module is part of the Lorax-TNG package, written at Lowell Observatory.
+
+This SubAgent is to be inherited by all protocol-based FilterWheel Agents, and
+provides the complete API for all Lorax FilterWheen Agents (contained in the
+:func:`handle_message` method).
+
+The Lorax Filter Wheel API is as follows:
+===================================
+
+    init
+        Initialize and connect to the camera
+    disconnect
+        Disconnect from the camera
+    status
+        Broadcast the current status of the camera
+    home
+        Home the filter wheel
+    move
+        Move the filter wheel to a specified slot
 
 """
+
+# Built-In Libraries
 from abc import abstractmethod
+import warnings
+
+# 3rd Party Libraries
+
+# Internal Imports
 from AbstractAgents.SubAgent import SubAgent
 
 
@@ -47,13 +82,17 @@ class FilterWheelSubAgent(SubAgent):
             print("Disconnecting from filter wheel...")
             self.disconnect_from_filterwheel()
 
+        elif "status" in message:
+            # print("doing status")
+            self.get_status_and_broadcast()
+
         elif "home" in message:
             # send wheel home.
             # send "wait" to DTO.
             # send specific command, "home", to filter wheel
             # keep checking status until done.
             # send "go" command to DTO.
-            print("filter wheel: home")
+            print("filter wheel: home (no effect)")
 
         elif "move" in message:
             # send wheel to specific position.
@@ -62,10 +101,10 @@ class FilterWheelSubAgent(SubAgent):
             # send specific command, "movoto x", to filter wheel
             # keep checking status until done.
             # send "go" command to DTO.
-            print("filter wheel: move")
+            print("filter wheel: move (no effect)")
 
         else:
-            print("Unknown command")
+            warnings.warn("Unknown command")
 
     def check_filterwheel_connection(self):
         """Check that the client is connected to the filter wheel
@@ -100,16 +139,16 @@ class FilterWheelSubAgent(SubAgent):
         raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
-    def move(self, slot):
-        """Move the filter wheel
+    def home(self):
+        """Home the filter wheel
 
         Must be implemented by hardware-specific Agent
         """
         raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
-    def home(self):
-        """Home the filter wheel
+    def move(self, slot):
+        """Move the filter wheel
 
         Must be implemented by hardware-specific Agent
         """

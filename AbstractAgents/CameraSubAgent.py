@@ -23,6 +23,8 @@ The Lorax Camera API is as follows:
         Initialize and connect to the camera
     disconnect
         Disconnect from the camera
+    status
+        Broadcast the current status of the camera
     expose
         Take an exposure with the currently defined settings
     pause_exposure
@@ -131,6 +133,10 @@ class CameraSubAgent(SubAgent):
             self.exptype = None
             self.ccd_binning = (1, 1)
 
+        elif "status" in message:
+            # print("doing status")
+            self.get_status_and_broadcast()
+
         elif "expose" in message:
             # check arguments.
             # check exposure settings.
@@ -145,13 +151,13 @@ class CameraSubAgent(SubAgent):
             self.expose()
 
         elif "pause_exposure" in message:
-            print("camera:pause_exposure (no effect)")
+            print("camera: pause_exposure (no effect)")
 
         elif "resume_exposure" in message:
-            print("camera:resume_exposure (no effect)")
+            print("camera: resume_exposure (no effect)")
 
         elif "abort" in message:
-            print("camera:abort (no effect)")
+            print("camera: abort (no effect)")
 
         elif "set_exposure_length" in message:
             # check arguments against exposure length limits.
@@ -166,7 +172,7 @@ class CameraSubAgent(SubAgent):
             print(f"Exposure length set to {exptime:.2f}s")
 
         elif "set_num_exposures" in message:
-            print("camera:set_num_exposures (no effect)")
+            print("camera: set_num_exposures (no effect)")
 
         elif "set_exposure_type" in message:
             # check arguments against exposure types.
@@ -183,37 +189,37 @@ class CameraSubAgent(SubAgent):
         elif "set_binning" in message:
             # check arguments against binning limits.
             # send camera specific set_binning.
-            print("camera:set_binning (no effect)")
+            print("camera: set_binning (no effect)")
 
         elif "set_origin" in message:
             # check arguments against origin limits.
             # send camera specific set_origin.
-            print("camera:set_origin (no effect)")
+            print("camera: set_origin (no effect)")
 
         elif "set_size" in message:
             # check arguments against size limits.
             # send camera specific set_size.
-            print("camera:set_size (no effect)")
+            print("camera: set_size (no effect)")
 
         elif "set_gain" in message:
             # check arguments against gain limits.
             # send camera specific set_gain.
-            print("camera:set_size (no effect)")
+            print("camera: set_size (no effect)")
 
         elif "set_image_title" in message:
-            print("camera:set_image_title (no effect)")
+            print("camera: set_image_title (no effect)")
 
         elif "set_fits_comment" in message:
-            print("camera:set_fits_comment (no effect)")
+            print("camera: set_fits_comment (no effect)")
 
         elif "set_image_directory" in message:
-            print("camera:set_image_directory (no effect)")
+            print("camera: set_image_directory (no effect)")
 
         elif "reset_frame" in message:
-            print("camera:reset_frame (no effect)")
+            print("camera: reset_frame (no effect)")
 
         elif "reset_properties" in message:
-            print("camera:reset_properties (no effect)")
+            print("camera: reset_properties (no effect)")
 
         else:
             warnings.warn("Unknown command")
@@ -316,6 +322,14 @@ class CameraSubAgent(SubAgent):
     @abstractmethod
     def connect_to_camera(self):
         """Connect to camera
+
+        Must be implemented by hardware-specific Agent
+        """
+        raise NotImplementedError("Specific hardware Agent must implement this method.")
+
+    @abstractmethod
+    def disconnect_from_camera(self):
+        """Disconnect from camera
 
         Must be implemented by hardware-specific Agent
         """
