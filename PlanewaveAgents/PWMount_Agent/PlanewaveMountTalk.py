@@ -51,21 +51,6 @@ class PlanewaveMountTalk(object):
                 pass
         return False
 
-    """ def connect_to_mount(self):
-        self.mount_status = self.pwi4.status()
-        print("Mount connected:", self.mount_status.mount.is_connected)
-
-        if not self.mount_status.mount.is_connected:
-            print("Connecting to mount...")
-            self.mount_status = self.pwi4.mount_connect()
-            print("Mount connected:", self.mount_status.mount.is_connected)
-        self.parent.mount_status = self.mount_status
-        return ()
-
-    def disconnect_from_mount(self):
-        print("Disconnecting from mount...")
-        self.parent.mount_status = self.pwi4.mount_disconnect() """
-
     def send_command_to_mount(self, mount_command):
         # s = self.pwi4.status()
         # s = self.pwi4.mount_connect()
@@ -129,29 +114,8 @@ class PlanewaveMountTalk(object):
             print(mount_command)
             print("Slewing...")
             self.parent.mount_status = self.pwi4.mount_goto_alt_az(alt, az)
-            """ while True:
-                self.mount_status = self.pwi4.status()
-                print(
-                    "alt: %.5f hours;  az: %.4f degs, Axis0 dist: %.1f arcsec, Axis1 dist: %.1f arcsec"
-                    % (
-                        self.mount_status.mount.altitude_degs,
-                        self.mount_status.mount.azimuth_degs,
-                        self.mount_status.mount.axis0.dist_to_target_arcsec,
-                        self.mount_status.mount.axis1.dist_to_target_arcsec,
-                    )
-                )
-                self.parent.mount_status = self.mount_status
-                if not self.mount_status.mount.is_slewing:
-                    break
-                time.sleep(0.2) """
-
-            """ print("Slew complete. Stopping...")
-            self.pwi4.mount_stop()
-            print("Mount to Alt, Az") """
 
         else:
             print("Unknown command")
 
-        # if command is x send this other command to pwi4
-        # check status, send acknowledgement when done.
         return ()

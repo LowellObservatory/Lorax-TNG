@@ -1,11 +1,23 @@
 ---
+agents_in_composite:
+  - PWMount:
+      agent_name: PlanewaveMountAgent
+      dto_command_topic: lorax.timo.mount.dto
+      mount_type: "PWI4"
+      mount_host: "localhost"
+      mount_port: 8220
+      incoming_topic: lorax.timo.dto.mount
+      broadcast_topic: lorax.timo.mount.broadcast
+      status:
+        - RA-J2000
+        - dec-j2000
+        - altitude
+        - azimuth
+        - is_slewing
+        - is_tracking
+        - rotator-angle
 log_file: "pw_mount.log"
 broker_hosts:
   - tanagra
   - 61613
-incoming_topic: "lorax.timo.dto.mount"
-dto_topic: "lorax.timo.mount.dto"
-broadcast_topic: "lorax.timo.mount.broadcast"
-mount_type: "PWI4"
-mount_host: "localhost"
-mount_port: 8220
+message_wait_time: 0.5
