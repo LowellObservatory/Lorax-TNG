@@ -8,11 +8,11 @@ import numpy as np
 import xmltodict
 
 # Internal Imports
-from AbstractAgents import SubAgent
+from AbstractAgents.FilterWheelSubAgent import FilterWheelSubAgent
 from IndiAgents.IndiClient import IndiClient
 
 
-class IndiFilterWheel(SubAgent):
+class IndiFilterWheel(FilterWheelSubAgent):
     """SBIG Filter Wheel SubAgent
 
     _extended_summary_
@@ -29,7 +29,7 @@ class IndiFilterWheel(SubAgent):
 
     def __init__(self, logger, conn, config):
         print("in SBIGFilterWheel.init")
-        SubAgent.__init__(self, logger, conn, config)
+        super().__init__(logger, conn, config)
 
         # Get the host and port for the connection to filter wheel.
         # "config", in this case, is just a dictionary.

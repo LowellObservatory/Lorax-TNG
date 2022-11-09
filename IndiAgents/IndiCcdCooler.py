@@ -32,7 +32,7 @@ import numpy as np
 import xmltodict
 
 # Internal Imports
-from AbstractAgents import CcdCoolerSubAgent
+from AbstractAgents.CcdCoolerSubAgent import CcdCoolerSubAgent
 from IndiAgents.IndiClient import IndiClient
 
 
@@ -232,3 +232,7 @@ class IndiCcdCooler(CcdCoolerSubAgent):
         self.conn.send(
             body="GO", destination="/topic/" + self.config["dto_command_topic"]
         )
+
+    def power_off(self):
+        print("INDI CCD Cooler: Power Off (no effect)")
+        return super().power_off()

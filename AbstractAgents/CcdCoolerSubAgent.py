@@ -44,6 +44,7 @@ import warnings
 
 # Internal Imports
 from AbstractAgents.SubAgent import SubAgent
+from CommandLanguage import parse_dscl
 
 
 class CcdCoolerSubAgent(SubAgent):
@@ -93,36 +94,50 @@ class CcdCoolerSubAgent(SubAgent):
         """
         print(f"\nReceived message in CcdCoolerSubAgent: {message}")
 
-        if "init" in message:
+        # Parse out the message; check it went to the right place
+        target, command, arguments = parse_dscl.parse_command(message)
+        if target not in ["cooler", "allserv"]:
+            raise ValueError("NON-COOLER command sent to cooler!")
+
+        # CASE out the COMMAND
+        if command == "init":
             print("Connecting to the cooler...")
+            # Call hardware-specific method
             self.connect_to_cooler()
 
-        elif "disconnect" in message:
+        elif command == "disconnect":
             print("Disconnecting from cooler...")
-            self.disconnect_from_cooler()
             self.cooler = None
             self.device_cooler = None
+            # Call hardware-specific method
+            self.disconnect_from_cooler()
 
-        elif "status" in message:
-            # print("doing status")
+
+        elif command == "status":
+            # Call hardware-specific method
             self.get_status_and_broadcast()
 
-        elif "set_temperature" in message:
-            # Get the arguments.
-            # setTemp(-45.0)
-            # print("doing settemp")
-            com = message
-            temperature = float(com[com.find("(") + 1 : com.find(")")])
+        elif command == "set_temperature":
+            # There should be ONE argument, and it should be a float
+            if len(arguments) != 1 or not isinstance(arguments[0], float):
+                warnings.warn("Set temperature must be a single float value.")
+                return
+            temperature = arguments[0]
+
+            # Check arguments against temperature limits.
+
+            # Call hardware-specific method
             self.set_temperature(temperature)
             print(f"Temperature set to {temperature:.1f}ºC")
 
-        elif "set_temp_tolerance" in message:
+        elif command == "set_temp_tolerance":
             print("cooler: set_temp_tolerance (no effect)")
 
-        elif "power_off" in message:
-            print("cooler: power_off (no effect)")
+        elif command == "power_off":
+            # Call hardware-specific method
+            self.power_off()
 
-        elif "power_on" in message:
+        elif command == "power_on":
             print("cooler: power_on (no effect)")
 
         else:
@@ -170,3 +185,10 @@ class CcdCoolerSubAgent(SubAgent):
         is stable.
         """
         raise NotImplementedError("Specific hardware Agent must implement this method.")
+
+    @abstractmethod
+    def power_off(self):
+        """Turn the cooler power off
+
+        Must be implemented by hardware-specific Agent
+        """

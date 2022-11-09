@@ -36,7 +36,10 @@ from CompositeAgent import CompositeAgent
 
 
 def main():
+    """MAIN
 
+    _extended_summary_
+    """
     # Parse Arguments
     parser = argparse.ArgumentParser("run_CompositeAgent")
     parser.add_argument("conffile", type=str, help="Configuration file for Agent")

@@ -46,7 +46,7 @@ import PyIndi
 import xmltodict
 
 # Internal Imports
-from AbstractAgents import CameraSubAgent
+from AbstractAgents.CameraSubAgent import CameraSubAgent
 from IndiAgents.IndiClient import IndiClient
 
 
@@ -227,6 +227,10 @@ class IndiCamera(CameraSubAgent):
         # Tell the INDI server send the "CCD1" blob to this client
         self.indiclient.setBLOBMode(PyIndi.B_ALSO, self.ccd, "CCD1")
 
+    def disconnect_from_camera(self):
+        print("INDI Camera: Disconnect from camera (no effect)")
+        return super().disconnect_from_camera()
+
     def expose(self, n_exp=1):
         """CameraAgent: Take an exposure
 
@@ -345,3 +349,15 @@ class IndiCamera(CameraSubAgent):
             body="GO",
             destination="/topic/" + self.config["dto_command_topic"],
         )
+
+    def pause_exposure(self):
+        """CameraAgent: Pause an in-progress exposure"""
+        print("Exposure pausing not available at this time")
+
+    def resume_exposure(self):
+        """CameraAgent: Resume a paused exposure"""
+        print("Exposure pausing not available at this time")
+
+    def abort_exposure(self):
+        """CameraAgent: Abort an in-progress or paused exposure"""
+        print("Exposure aborting not available at this time")

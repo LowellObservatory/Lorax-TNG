@@ -68,6 +68,7 @@ import warnings
 
 # Internal Imports
 from AbstractAgents.SubAgent import SubAgent
+from CommandLanguage import parse_dscl
 
 
 class CameraSubAgent(SubAgent):
@@ -97,11 +98,14 @@ class CameraSubAgent(SubAgent):
         super().__init__(logger, conn, config)
 
         # Define other instance attributes for later population
-
         self.ccd = None
         self.device_ccd = None
         self.exptime = None
         self.exptype = None
+        self.gain = None
+        self.n_exposures = None
+        self.img_title = None
+        self.fits_comment = None
         self.ccd_binning = (1, 1)
 
     def handle_message(self, message):
@@ -121,11 +125,18 @@ class CameraSubAgent(SubAgent):
         """
         print(f"\nReceived message in CameraSubAgent: {message}")
 
-        if "init" in message:
+        # Parse out the message; check it went to the right place
+        target, command, arguments = parse_dscl.parse_command(message)
+        if target not in ["camera", "allserv"]:
+            raise ValueError("NON-CAMERA command sent to camera!")
+
+        # CASE out the COMMAND
+        if command == "init":
             print("Connecting to the camera...")
+            # Call hardware-specific method
             self.connect_to_camera()
 
-        elif "disconnect" in message:
+        elif command == "disconnect":
             print("Disconnecting from camera...")
             # Reset all internal attributes
             self.ccd = None
@@ -133,12 +144,14 @@ class CameraSubAgent(SubAgent):
             self.exptime = None
             self.exptype = None
             self.ccd_binning = (1, 1)
+            # Call hardware-specific method
+            self.disconnect_from_camera()
 
-        elif "status" in message:
-            # print("doing status")
+        elif command == "status":
+            # Call hardware-specific method
             self.get_status_and_broadcast()
 
-        elif "expose" in message:
+        elif command == "expose":
             # check arguments.
             # check exposure settings.
             # send "wait" to DTO.
@@ -149,81 +162,122 @@ class CameraSubAgent(SubAgent):
             # spawn fits_writer in seperate process (data, fits1, fits2)
             # send "go" command to DTO.
             # print("camera:take exposure")
+
+            # Call hardware-specific method
             self.expose()
 
-        elif "pause_exposure" in message:
-            print("camera: pause_exposure (no effect)")
+        elif command == "pause_exposure":
+            # Call hardware-specific method
+            self.pause_exposure()
 
-        elif "resume_exposure" in message:
-            print("camera: resume_exposure (no effect)")
+        elif command == "resume_exposure":
+            # Call hardware-specific method
+            self.resume_exposure()
 
-        elif "abort" in message:
-            print("camera: abort (no effect)")
+        elif command == "abort":
+            # Call hardware-specific method
+            self.abort_exposure()
 
-        elif "set_exposure_length" in message:
-            # check arguments against exposure length limits.
-            # send camera specific set_exposure_length.
-            # print("camera:set_exposure_length")
-            try:
-                exptime = float(message[message.find("(") + 1 : message.find(")")])
-            except ValueError:
-                print("Exposure time must be a float.")
+        elif command == "set_exposure_length":
+            # There should be ONE argument, and it should be a float
+            if len(arguments) != 1 or not isinstance(arguments[0], float):
+                warnings.warn("Exposure time must be a single float value.")
                 return
-            self.set_exposure_length(exptime)
+            exptime = arguments[0]
+
+            # Check arguments against exposure length limits.
+
+            # Set the instance attribute
+            self.exptime = exptime
             print(f"Exposure length set to {exptime:.2f}s")
 
-        elif "set_num_exposures" in message:
-            print("camera: set_num_exposures (no effect)")
-
-        elif "set_exposure_type" in message:
-            # check arguments against exposure types.
-            # send camera specific set_exposure_type.
-            # print("camera:set_exposure_type")
-            try:
-                exptype = str(message[message.find("(") + 1 : message.find(")")])
-            except ValueError:
-                print("Exposure type must be a str.")
+        elif command == "set_num_exposures":
+            # There should be ONE argument, and it should be a float
+            if len(arguments) != 1 or not isinstance(arguments[0], float):
+                warnings.warn("Number of exposures must be a single number.")
                 return
-            self.set_exposure_type(exptype)
+            n_exposures = int(arguments[0])
+
+            # Check arguments against number of exposure limits.
+
+            # Set the instance attribute
+            self.n_exposures = n_exposures
+            print(f"Number of exposures set to {n_exposures}")
+
+        elif command == "set_exposure_type":
+            # There should be ONE argument, and it should be a string
+            if len(arguments) != 1 or not isinstance(arguments[0], str):
+                warnings.warn("Exposure type must be a single string.")
+                return
+            exptype = arguments[0]
+
+            # Check arguments against exposure types.
+
+            # Set the instance attribute
+            self.exptype = exptype
             print(f"Exposure type set to {exptype}")
 
-        elif "set_binning" in message:
+        elif command == "set_binning":
             # check arguments against binning limits.
             # send camera specific set_binning.
             print("camera: set_binning (no effect)")
 
-        elif "set_origin" in message:
+        elif command == "set_origin":
             # check arguments against origin limits.
             # send camera specific set_origin.
             print("camera: set_origin (no effect)")
 
-        elif "set_size" in message:
+        elif command == "set_size":
             # check arguments against size limits.
             # send camera specific set_size.
             print("camera: set_size (no effect)")
 
-        elif "set_gain" in message:
-            # check arguments against gain limits.
-            # send camera specific set_gain.
-            print("camera: set_size (no effect)")
+        elif command == "set_gain":
+            # There should be ONE argument, and it should be a float
+            if len(arguments) != 1 or not isinstance(arguments[0], float):
+                warnings.warn("Gain must be a single float value.")
+                return
+            gain = arguments[0]
 
-        elif "set_image_title" in message:
-            print("camera: set_image_title (no effect)")
+            # Check arguments against exposure length limits.
 
-        elif "set_fits_comment" in message:
-            print("camera: set_fits_comment (no effect)")
+            # Set the instance attribute
+            self.gain = gain
+            print(f"Gain set to {gain:.2f}s")
 
-        elif "set_image_directory" in message:
+        elif command == "set_image_title":
+            # There should be ONE argument, and it should be a string
+            if len(arguments) != 1 or not isinstance(arguments[0], str):
+                warnings.warn("Image title must be a single string.")
+                return
+            img_title = arguments[0]
+
+            # Set the instance attribute
+            self.img_title = img_title
+            print(f"Image title set to {img_title}")
+
+        elif command == "set_fits_comment":
+            # There should be ONE argument, and it should be a string
+            if len(arguments) != 1 or not isinstance(arguments[0], str):
+                warnings.warn("FITS comment must be a single string.")
+                return
+            fits_comment = arguments[0]
+
+            # Set the instance attribute
+            self.fits_comment = fits_comment
+            print(f"FITS comment set to {img_title}")
+
+        elif command == "set_image_directory":
             print("camera: set_image_directory (no effect)")
 
-        elif "reset_frame" in message:
+        elif command == "reset_frame":
             print("camera: reset_frame (no effect)")
 
-        elif "reset_properties" in message:
+        elif command == "reset_properties":
             print("camera: reset_properties (no effect)")
 
         else:
-            warnings.warn("Unknown command")
+            warnings.warn(f"Unknown command: {command}")
 
     def check_camera_connection(self):
         """Check that the client is connected to the camera
@@ -236,40 +290,8 @@ class CameraSubAgent(SubAgent):
         if self.device_ccd and self.device_ccd.isConnected():
             return True
 
-        print("Warning: Camera must be connected first (camera : connect_to_camera)")
+        print("Warning: Camera must be connected first (camera: connect_to_camera)")
         return False
-
-    def set_exposure_length(self, exposure_length):
-        """Set the exposure length
-
-        This is a separate command from expose(), and saves the desired
-        exposure time into the instance attribute ``exptime``.
-
-        Parameters
-        ----------
-        exposure_length : ``float``
-            The desired exposure time in seconds.
-        """
-        if not self.check_camera_connection():
-            return
-        print(f"CameraSubAgent Setting Exposure Length to {exposure_length}s")
-        self.exptime = exposure_length
-
-    def set_exposure_type(self, exposure_type):
-        """Set the exposure type
-
-        This is a separate command from expose(), and saves the desired
-        exposure type into the instance attribute ``exptype``.
-
-        Parameters
-        ----------
-        exposure_type : ``str``
-            The desired exposure type.
-        """
-        if not self.check_camera_connection():
-            return
-        print(f"CameraSubAgent Setting Exposure Type to {exposure_type}")
-        self.exptype = exposure_type
 
     def set_binning(self, x_binning, y_binning):
         """Set the CCD binning
@@ -326,7 +348,6 @@ class CameraSubAgent(SubAgent):
 
         Must be implemented by hardware-specific Agent
         """
-        raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
     def disconnect_from_camera(self):
@@ -334,7 +355,6 @@ class CameraSubAgent(SubAgent):
 
         Must be implemented by hardware-specific Agent
         """
-        raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
     def expose(self):
@@ -342,4 +362,24 @@ class CameraSubAgent(SubAgent):
 
         Must be implemented by hardware-specific Agent
         """
-        raise NotImplementedError("Specific hardware Agent must implement this method.")
+
+    @abstractmethod
+    def pause_exposure(self):
+        """Pause an in-progress exposure
+
+        Must be implemented by hardware-specific Agent
+        """
+
+    @abstractmethod
+    def resume_exposure(self):
+        """Resume a paused exposure
+
+        Must be implemented by hardware-specific Agent
+        """
+
+    @abstractmethod
+    def abort_exposure(self):
+        """Abort an in-progress or paused exposure
+
+        Must be implemented by hardware-specific Agent
+        """

@@ -12,7 +12,7 @@ import yaml
 logging.getLogger("stomp").setLevel(logging.WARNING)
 
 # General Composite Agent class
-class CompositeAgent():
+class CompositeAgent:
     """Composite Agent Class
 
     The ``config_file`` contains the information about which SubAgents will be
@@ -87,7 +87,9 @@ class CompositeAgent():
         for agent in agent_list:
             sub_agent = list(agent.values())[0]["agent_name"]
             protocol = list(agent.values())[0]["agent_protocol"]
-            print(f"This is the SubAgent we want to instantiate: {protocol}.{sub_agent}")
+            print(
+                f"This is the SubAgent we want to instantiate: {protocol}.{sub_agent}"
+            )
 
             the_agent = __import__(f"{protocol}.{sub_agent}", fromlist=[sub_agent])
             the_agent = getattr(the_agent, sub_agent)
@@ -158,7 +160,6 @@ class CompositeAgent():
             # print('received a message "%s"' % message)
 
             self.parent.logger.info('received a message "%s"', message.body)
-            # self.parent.current_message = message
             self.parent.current_destination = message.headers["destination"]
             self.parent.current_message = message.body
             self.parent.message_received = 1
