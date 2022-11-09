@@ -52,6 +52,7 @@ import warnings
 
 # Internal Imports
 from AbstractAgents.SubAgent import SubAgent
+from CommandLanguage import parse_dscl
 
 
 class MountSubAgent(SubAgent):
@@ -101,15 +102,20 @@ class MountSubAgent(SubAgent):
         """
         print(f"\nReceived message in MountSubAgent: {message}")
 
-        if "init" in message:
+        # Parse out the message; check it went to the right place
+        target, command, arguments = parse_dscl.parse_command(message)
+        if target not in ["mount", "allserv"]:
+            raise ValueError("NON-MOUNT command sent to mount!")
+
+        if command == "init":
             print("Connecting to the mount...")
             self.connect_to_mount()
 
-        elif "disconnect" in message:
+        elif command == "disconnect":
             print("Disconnecting from mount...")
             self.disconnect_from_mount()
 
-        elif "park" in message:
+        elif command == "park":
             # send mount to the park.
             # send "wait" to DTO.
             # send specific command, "park", to mount
@@ -117,7 +123,7 @@ class MountSubAgent(SubAgent):
             # send "go" command to DTO.
             print("mount: park (no effect)")
 
-        elif "move" in message:
+        elif command == "move":
             # send mount to specific position.
             # check arguments against position limits.
             # send "wait" to DTO.
@@ -126,29 +132,29 @@ class MountSubAgent(SubAgent):
             # send "go" command to DTO.
             print("mount: move")
 
-        elif "stop" in message:
+        elif command == "stop":
             print("mount: stop (no effect)")
 
-        elif "track_sidereal" in message:
+        elif command == "track_sidereal":
             print("mount: track_sidereal (no effect)")
 
-        elif "track_ephemeris" in message:
+        elif command == "track_ephemeris":
             print("mount: track_ephemeris (no effect)")
 
-        elif "goto_ra_dec_apparent" in message:
+        elif command == "goto_ra_dec_apparent":
             print("mount: goto_ra_dec_apparent (no effect)")
 
-        elif "goto_ra_dec_j2000" in message:
+        elif command == "goto_ra_dec_j2000":
             print("mount: goto_ra_dec_j2000 (no effect)")
 
-        elif "goto_alt_az" in message:
+        elif command == "goto_alt_az":
             print("mount: goto_alt_az (no effect)")
 
-        elif "offset" in message:
+        elif command == "offset":
             print("mount: offset (no effect)")
 
         else:
-            warnings.warn("Unknown command")
+            warnings.warn(f"Unknown command: {command}")
 
     def check_mount_connection(self):
         """Check that the client is connected to the mount

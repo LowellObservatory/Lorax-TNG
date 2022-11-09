@@ -112,7 +112,6 @@ class CcdCoolerSubAgent(SubAgent):
             # Call hardware-specific method
             self.disconnect_from_cooler()
 
-
         elif command == "status":
             # Call hardware-specific method
             self.get_status_and_broadcast()
@@ -141,7 +140,7 @@ class CcdCoolerSubAgent(SubAgent):
             print("cooler: power_on (no effect)")
 
         else:
-            warnings.warn("Unknown command")
+            warnings.warn(f"Unknown command: {command}")
 
     def check_cooler_connection(self):
         """Check that the client is connected to the CCD cooler

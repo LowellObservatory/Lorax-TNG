@@ -40,6 +40,7 @@ import warnings
 
 # Internal Imports
 from AbstractAgents.SubAgent import SubAgent
+from CommandLanguage import parse_dscl
 
 
 class FilterWheelSubAgent(SubAgent):
@@ -89,19 +90,24 @@ class FilterWheelSubAgent(SubAgent):
         """
         print(f"\nReceived message in FilterWheelSubAgent: {message}")
 
-        if "init" in message:
+        # Parse out the message; check it went to the right place
+        target, command, arguments = parse_dscl.parse_command(message)
+        if target not in ["filterwheel", "allserv"]:
+            raise ValueError("NON-FILTER-WHEEL command sent to filter wheel!")
+
+        if command == "init":
             print("Connecting to the filter wheel...")
             self.connect_to_filterwheel()
 
-        elif "disconnect" in message:
+        elif command == "disconnect":
             print("Disconnecting from filter wheel...")
             self.disconnect_from_filterwheel()
 
-        elif "status" in message:
+        elif command == "status":
             # print("doing status")
             self.get_status_and_broadcast()
 
-        elif "home" in message:
+        elif command == "home":
             # send wheel home.
             # send "wait" to DTO.
             # send specific command, "home", to filter wheel
@@ -109,7 +115,7 @@ class FilterWheelSubAgent(SubAgent):
             # send "go" command to DTO.
             print("filter wheel: home (no effect)")
 
-        elif "move" in message:
+        elif command == "move":
             # send wheel to specific position.
             # check arguments against position limits.
             # send "wait" to DTO.
@@ -119,7 +125,7 @@ class FilterWheelSubAgent(SubAgent):
             print("filter wheel: move (no effect)")
 
         else:
-            warnings.warn("Unknown command")
+            warnings.warn(f"Unknown command: {command}")
 
     def check_filterwheel_connection(self):
         """Check that the client is connected to the filter wheel

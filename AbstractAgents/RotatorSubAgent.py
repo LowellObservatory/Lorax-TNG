@@ -46,6 +46,7 @@ import warnings
 
 # Internal Imports
 from AbstractAgents.SubAgent import SubAgent
+from CommandLanguage import parse_dscl
 
 
 class RotatorSubAgent(SubAgent):
@@ -94,15 +95,20 @@ class RotatorSubAgent(SubAgent):
         """
         print(f"\nReceived message in RotatorSubAgent: {message}")
 
-        if "init" in message:
+        # Parse out the message; check it went to the right place
+        target, command, arguments = parse_dscl.parse_command(message)
+        if target not in ["rotator", "allserv"]:
+            raise ValueError("NON-ROTATOR command sent to rotator!")
+
+        if command == "init":
             print("Connecting to the rotator...")
             self.connect_to_rotator()
 
-        elif "disconnect" in message:
+        elif command == "disconnect":
             print("Disconnecting from rotator...")
             self.disconnect_from_rotator()
 
-        elif "home" in message:
+        elif command == "home":
             # send mount home.
             # send "wait" to DTO.
             # send specific command, "home", to filter wheel
@@ -110,20 +116,20 @@ class RotatorSubAgent(SubAgent):
             # send "go" command to DTO.
             print("rotator: home (no effect)")
 
-        elif "stop" in message:
+        elif command == "stop":
             print("rotator: stop (no effect)")
 
-        elif "goto_field" in message:
+        elif command == "goto_field":
             print("rotator: goto_field (no effect)")
 
-        elif "goto_mech" in message:
+        elif command == "goto_mech":
             print("rotator: goto_mech (no effect)")
 
-        elif "offset" in message:
+        elif command == "offset":
             print("rotator: offset (no effect)")
 
         else:
-            warnings.warn("Unknown command")
+            warnings.warn(f"Unknown command: {command}")
 
     def check_rotator_connection(self):
         """Check that the client is connected to the rotator

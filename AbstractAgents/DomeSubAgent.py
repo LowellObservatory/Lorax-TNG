@@ -48,6 +48,7 @@ import warnings
 
 # Internal Imports
 from AbstractAgents.SubAgent import SubAgent
+from CommandLanguage import parse_dscl
 
 
 class DomeSubAgent(SubAgent):
@@ -97,19 +98,24 @@ class DomeSubAgent(SubAgent):
         """
         print(f"\nReceived message in DomeSubAgent: {message}")
 
-        if "init" in message:
+        # Parse out the message; check it went to the right place
+        target, command, arguments = parse_dscl.parse_command(message)
+        if target not in ["dome", "allserv"]:
+            raise ValueError("NON-DOME command sent to dome!")
+
+        if command == "init":
             print("Connecting to the dome...")
             self.connect_to_dome()
 
-        elif "disconnect" in message:
+        elif command == "disconnect":
             print("Disconnecting from dome...")
             self.disconnect_from_dome()
 
-        elif "status" in message:
+        elif command == "status":
             # print("doing status")
             self.get_status_and_broadcast()
 
-        elif "home" in message:
+        elif command == "home":
             # send dome home.
             # send "wait" to DTO.
             # send specific command, "home", to filter wheel
@@ -117,7 +123,7 @@ class DomeSubAgent(SubAgent):
             # send "go" command to DTO.
             print("dome: home")
 
-        elif "move" in message:
+        elif command == "move":
             # send dome to specific position.
             # check arguments against position limits.
             # send "wait" to DTO.
@@ -126,20 +132,20 @@ class DomeSubAgent(SubAgent):
             # send "go" command to DTO.
             print("dome: move")
 
-        elif "track_mount" in message:
+        elif command == "track_mount":
             print("dome: track_mount (no effect)")
 
-        elif "stop_tracking" in message:
+        elif command == "stop_tracking":
             print("dome: stop_tracking (no effect)")
 
-        elif "open_shutter" in message:
+        elif command == "open_shutter":
             print("dome: open_shutter (no effect)")
 
-        elif "close_shutter" in message:
+        elif command == "close_shutter":
             print("dome: close_shutter (no effect)")
 
         else:
-            warnings.warn("Unknown command")
+            warnings.warn(f"Unknown command: {command}")
 
     def check_dome_connection(self):
         """Check that the client is connected to the dome
