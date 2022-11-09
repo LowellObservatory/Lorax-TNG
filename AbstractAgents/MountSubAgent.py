@@ -102,10 +102,8 @@ class MountSubAgent(SubAgent):
         """
         print(f"\nReceived message in MountSubAgent: {message}")
 
-        # Parse out the message; check it went to the right place
-        target, command, arguments = parse_dscl.parse_command(message)
-        if target not in ["mount", "allserv"]:
-            raise ValueError("NON-MOUNT command sent to mount!")
+        # Parse out the message
+        command, arguments = parse_dscl.parse_command(message)
 
         if command == "init":
             print("Connecting to the mount...")

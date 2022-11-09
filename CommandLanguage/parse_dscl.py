@@ -22,7 +22,7 @@ Parser module for Dyer's Simple Command Language
 # Internal Imports
 
 
-def parse_command(cmd: str) -> tuple:
+def parse_command(command: str) -> tuple:
     """VERY Simple-Minded Command Parsing
 
     I am QUITE sure there is a better way to do this, but brute force does get
@@ -30,25 +30,21 @@ def parse_command(cmd: str) -> tuple:
 
     Parameters
     ----------
-    cmd : str
+    command : str
         The command sent from the DTO in "Dyer's Simple Command Language"
 
     Returns
     -------
-    target : str
-        The target of the command; can be used for vetting
     command : str
-        The actual command sent
+        The actual command sent (minus any arguments)
     arguments : list
         Arguments, if any, of the command (`e.g.`, ``settemp(-12.0)``)
     """
-
-    # First split command into target : command
-    target, command = cmd.strip().split(": ")
-    target = target.strip()
+    # Strip all whitespace from ends of the string; set arguments to list of None
     command = command.strip()
+    arguments = [None]
 
-    # Next, parse any arguments to the command
+    # Parse any arguments to the command
     if "(" in command:
         args = command[command.find("(") + 1 : command.find(")")]
 
@@ -66,19 +62,15 @@ def parse_command(cmd: str) -> tuple:
                 # Try stripping off any quotes
                 arguments[i] = arg.strip("'").strip('"')
 
-    # No arguments
-    else:
-        arguments = [None]
-
-    return (target, command, arguments)
+    return (command, arguments)
 
 
 # =============================================================================#
 # For command-line testing
 if __name__ == "__main__":
 
-    print(parse_command("camera     :  expose"))
-    print(parse_command("dto        : waituntil('time', 1:30)"))
-    print(parse_command("ccdcooler  :  set_temperature(-10)"))
-    print(parse_command("mount      : gotoAltAz(45.6, 170.34)"))
-    print(parse_command("allserv    : end"))
+    print(parse_command("  expose"))
+    print(parse_command(" waituntil('time', 1:30)"))
+    print(parse_command("  set_temperature(-10)"))
+    print(parse_command(" gotoAltAz(45.6, 170.34)"))
+    print(parse_command(" end"))

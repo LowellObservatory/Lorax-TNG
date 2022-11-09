@@ -125,10 +125,8 @@ class CameraSubAgent(SubAgent):
         """
         print(f"\nReceived message in CameraSubAgent: {message}")
 
-        # Parse out the message; check it went to the right place
-        target, command, arguments = parse_dscl.parse_command(message)
-        if target not in ["camera", "allserv"]:
-            raise ValueError("NON-CAMERA command sent to camera!")
+        # Parse out the message
+        command, arguments = parse_dscl.parse_command(message)
 
         # CASE out the COMMAND
         if command == "init":

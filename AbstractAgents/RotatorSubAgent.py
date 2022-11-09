@@ -95,10 +95,8 @@ class RotatorSubAgent(SubAgent):
         """
         print(f"\nReceived message in RotatorSubAgent: {message}")
 
-        # Parse out the message; check it went to the right place
-        target, command, arguments = parse_dscl.parse_command(message)
-        if target not in ["rotator", "allserv"]:
-            raise ValueError("NON-ROTATOR command sent to rotator!")
+        # Parse out the message
+        command, arguments = parse_dscl.parse_command(message)
 
         if command == "init":
             print("Connecting to the rotator...")

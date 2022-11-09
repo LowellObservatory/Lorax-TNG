@@ -90,10 +90,8 @@ class FilterWheelSubAgent(SubAgent):
         """
         print(f"\nReceived message in FilterWheelSubAgent: {message}")
 
-        # Parse out the message; check it went to the right place
-        target, command, arguments = parse_dscl.parse_command(message)
-        if target not in ["filterwheel", "allserv"]:
-            raise ValueError("NON-FILTER-WHEEL command sent to filter wheel!")
+        # Parse out the message
+        command, arguments = parse_dscl.parse_command(message)
 
         if command == "init":
             print("Connecting to the filter wheel...")

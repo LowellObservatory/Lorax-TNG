@@ -160,9 +160,6 @@ class IndiCamera(CameraSubAgent):
         _extended_summary_
         """
         # Check if the cooler is connected
-        print(
-            f" &&&&&&&& Should we even be asking after the status? {self.device_ccd.isConnected()}"
-        )
         device_status = self.device_status if self.device_ccd.isConnected() else {}
 
         c_status = {

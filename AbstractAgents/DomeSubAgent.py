@@ -98,10 +98,8 @@ class DomeSubAgent(SubAgent):
         """
         print(f"\nReceived message in DomeSubAgent: {message}")
 
-        # Parse out the message; check it went to the right place
-        target, command, arguments = parse_dscl.parse_command(message)
-        if target not in ["dome", "allserv"]:
-            raise ValueError("NON-DOME command sent to dome!")
+        # Parse out the message
+        command, arguments = parse_dscl.parse_command(message)
 
         if command == "init":
             print("Connecting to the dome...")

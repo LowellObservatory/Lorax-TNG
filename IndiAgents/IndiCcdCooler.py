@@ -86,9 +86,7 @@ class IndiCcdCooler(CcdCoolerSubAgent):
         _extended_summary_
         """
         # Check if the cooler is connected
-        device_status = (
-            self.device_status
-        )  # if self.device_cooler.isConnected() else {}
+        device_status = self.device_status if self.device_cooler.isConnected() else {}
 
         c_status = {
             "message_id": uuid.uuid4(),
@@ -156,14 +154,9 @@ class IndiCcdCooler(CcdCoolerSubAgent):
         _extended_summary_
         """
         # Turn off cooler
-        cooler_power = self.device_cooler.getSwitch("CCD_COOLER")
-        cooler_power[0].s = PyIndi.ISS_OFF  # the "COOLER_ON" switch
-        cooler_power[1].s = PyIndi.ISS_ON  # the "COOLER_OFF" switch
-        self.indiclient.sendNewSwitch(cooler_power)
-
-        # Reset instance attributes
-        self.cooler = None
-        self.device_cooler = None
+        self.power_off()
+        # Reset parameters
+        self.reset_parameters()
 
     def set_temperature(self, cool_temp, tolerance=1.0):
         """Set the cooler temperature
@@ -196,10 +189,11 @@ class IndiCcdCooler(CcdCoolerSubAgent):
         )
 
         print(f"Device Status Keys: {list(self.device_status.keys())}")
+        print(f"Device Status: {self.device_status}")
 
-        ccd_cooler_temp = self.device_status["CCD_TEMPERATURE"]["vals"][0][1]
-        ccd_cooler_powr = self.device_status["CCD_COOLER_POWER"]["vals"][0][1]
-        ccd_cooler_ramp = self.device_status["CCD_TEMP_RAMP"]["vals"][0][1]
+        ccd_cooler_temp = self.device_status["CCD_TEMPERATURE_VALUE"]
+        ccd_cooler_powr = self.device_status["CCD_COOLER_VALUE"]
+        ccd_cooler_ramp = self.device_status["RAMP_SLOPE"]
 
         print(
             f"Temperature difference: {np.abs(ccd_cooler_temp - cool_temp):.1f}Cº  "
@@ -217,13 +211,14 @@ class IndiCcdCooler(CcdCoolerSubAgent):
             # Broadcast the status while we're waiting
             self.get_status_and_broadcast()
 
-            ccd_cooler_temp = self.device_status["CCD_TEMPERATURE"]["vals"][0][1]
-            ccd_cooler_powr = self.device_status["CCD_COOLER_POWER"]["vals"][0][1]
-            ccd_cooler_ramp = self.device_status["CCD_TEMP_RAMP"]["vals"][0][1]
+            ccd_cooler_temp = self.device_status["CCD_TEMPERATURE_VALUE"]
+            ccd_cooler_powr = self.device_status["CCD_COOLER_VALUE"]
+            ccd_cooler_ramp = self.device_status["RAMP_SLOPE"]
             print(
                 f"CCD Temp: {ccd_cooler_temp:.1f}ºC  "
                 f"Set point: {cool_temp:.1f}ºC  "
                 f"Cooler Ramp: {ccd_cooler_ramp:.3f}Cº/min  "
+                f"Cooler State: {'ON' if self.device_status['COOLER_ON'] else 'OFF'}  "
                 f"Cooler Power: {ccd_cooler_powr:.0f}%"
             )
         print(
@@ -234,5 +229,15 @@ class IndiCcdCooler(CcdCoolerSubAgent):
         )
 
     def power_off(self):
-        print("INDI CCD Cooler: Power Off (no effect)")
-        return super().power_off()
+        """Turn the cooler power off
+
+        _extended_summary_
+        """
+        cooler_power = self.device_cooler.getSwitch("CCD_COOLER")
+        cooler_power[0].s = PyIndi.ISS_OFF  # the "COOLER_ON" switch
+        cooler_power[1].s = PyIndi.ISS_ON  # the "COOLER_OFF" switch
+        self.indiclient.sendNewSwitch(cooler_power)
+        print("INDI CCD Cooler: Power switched off")
+
+    def reset_parameters():
+        pass

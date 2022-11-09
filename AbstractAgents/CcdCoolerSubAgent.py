@@ -94,10 +94,8 @@ class CcdCoolerSubAgent(SubAgent):
         """
         print(f"\nReceived message in CcdCoolerSubAgent: {message}")
 
-        # Parse out the message; check it went to the right place
-        target, command, arguments = parse_dscl.parse_command(message)
-        if target not in ["cooler", "allserv"]:
-            raise ValueError("NON-COOLER command sent to cooler!")
+        # Parse out the message
+        command, arguments = parse_dscl.parse_command(message)
 
         # CASE out the COMMAND
         if command == "init":
@@ -107,10 +105,10 @@ class CcdCoolerSubAgent(SubAgent):
 
         elif command == "disconnect":
             print("Disconnecting from cooler...")
-            self.cooler = None
-            self.device_cooler = None
             # Call hardware-specific method
             self.disconnect_from_cooler()
+            self.cooler = None
+            self.device_cooler = None
 
         elif command == "status":
             # Call hardware-specific method
@@ -164,7 +162,6 @@ class CcdCoolerSubAgent(SubAgent):
 
         Must be implemented by hardware-specific Agent
         """
-        raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
     def disconnect_from_cooler(self):
@@ -172,7 +169,6 @@ class CcdCoolerSubAgent(SubAgent):
 
         Must be implemented by hardware-specific Agent
         """
-        raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
     def set_temperature(self, cool_temp):
@@ -183,7 +179,6 @@ class CcdCoolerSubAgent(SubAgent):
         Should have some command back to the DTO to wait until the temperature
         is stable.
         """
-        raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
     def power_off(self):
