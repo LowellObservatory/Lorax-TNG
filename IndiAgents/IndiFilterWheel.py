@@ -72,51 +72,9 @@ class IndiFilterWheel(FilterWheelSubAgent):
         self.device_ccd = device_ccd
         # ----------
 
-    def get_status_and_broadcast(self):
-        c_status = {
-            "message_id": uuid.uuid4(),
-            "timestamput": datetime.datetime.utcnow(),
-        }
-        for key in self.device_status:
-            c_status[key] = self.device_status[key]
-
-        status = {"filterwheel": c_status}
-        xml_format = xmltodict.unparse(status, pretty=True)
-
-        print("/topic/" + self.config["outgoing_topic"])
-
-        # print(xml_format)
-        self.conn.send(
-            body=xml_format,
-            destination="/topic/" + self.config["outgoing_topic"],
-        )
-
-    def handle_message(self, message):
-        print("got message: in SBIGFilterWheel")
-        print(message)
-        if "(" in message:
-            mcom = message[0 : message.find("(")]
-        else:
-            mcom = message
-        print(mcom)
-
-        if "home" in message:
-            # send wheel home.
-            # send "wait" to DTO.
-            # send specific command, "home", to filter wheel
-            # keep checking status until done.
-            # send "go" command to DTO.
-            print("filter wheel: home")
-        if "move" in message:
-            # send wheel to specific position.
-            # check arguments against position limits.
-            # send "wait" to DTO.
-            # send specific command, "movoto x", to filter wheel
-            # keep checking status until done.
-            # send "go" command to DTO.
-            com = message
-            position = int(com[com.find("(") + 1 : com.find(")")])
-            print("setting position to " + str(position))
-            slot = self.device_ccd.getNumber("FILTER_SLOT")
-            slot[0].value = np.int(position)  # new position to reach
-            self.indiclient.sendNewNumber(slot)
+    def move(self, position):
+        """Move the filter wheel"""
+        print(f"Setting filter wheel position to {position}")
+        slot = self.device_filterwheel.getNumber("FILTER_SLOT")
+        slot[0].value = int(position)  # new position to reach
+        self.indiclient.sendNewNumber(slot)

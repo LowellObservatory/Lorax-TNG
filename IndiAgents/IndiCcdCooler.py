@@ -80,32 +80,6 @@ class IndiCcdCooler(CcdCoolerSubAgent):
         # Define other instance attributes for later population
         self.cooler = None
 
-    def get_status_and_broadcast(self):
-        """Get the current status and broadcast it
-
-        _extended_summary_
-        """
-        # Check if the cooler is connected
-        device_status = self.device_status if self.device_cooler.isConnected() else {}
-
-        c_status = {
-            "message_id": uuid.uuid4(),
-            "timestamput": datetime.datetime.utcnow(),
-            "root": device_status,
-        }
-        for key in self.device_status:
-            c_status[key] = self.device_status[key]
-
-        status = {"ccdcooler": c_status}
-        xml_format = xmltodict.unparse(status, pretty=True)
-
-        # print("/topic/" + self.config["outgoing_topic"])
-
-        self.conn.send(
-            body=xml_format,
-            destination="/topic/" + self.config["outgoing_topic"],
-        )
-
     def connect_to_cooler(self):
         """Connect to the cooler
 

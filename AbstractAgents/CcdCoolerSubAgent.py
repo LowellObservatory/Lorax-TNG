@@ -140,6 +140,16 @@ class CcdCoolerSubAgent(SubAgent):
         else:
             warnings.warn(f"Unknown command: {command}")
 
+    def get_status_and_broadcast(self):
+        """Get the current cooler status and broadcast it
+
+        _extended_summary_
+        """
+        # Check if the cooler is connected; get status or set empty dictionary
+        device_status = self.device_status if self.device_cooler.isConnected() else {}
+        # Broadcast
+        self.broadcast_status(device_status)
+
     def check_cooler_connection(self):
         """Check that the client is connected to the CCD cooler
 

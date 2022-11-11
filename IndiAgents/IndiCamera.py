@@ -154,31 +154,6 @@ class IndiCamera(CameraSubAgent):
         # # Tell the INDI server send the "CCD1" blob to this client
         # self.indiclient.setBLOBMode(PyIndi.B_ALSO, self.ccd, "CCD1")
 
-    def get_status_and_broadcast(self):
-        """Get the current status and broadcast it
-
-        _extended_summary_
-        """
-        # Check if the cooler is connected
-        device_status = self.device_status if self.device_ccd.isConnected() else {}
-
-        c_status = {
-            "message_id": uuid.uuid4(),
-            "timestamput": datetime.datetime.utcnow(),
-            "root": device_status,
-        }
-        for key in self.device_status:
-            c_status[key] = self.device_status[key]
-        status = {"camera": c_status}
-        xml_format = xmltodict.unparse(status, pretty=True)
-
-        # print("/topic/" + self.config["outgoing_topic"])
-
-        self.conn.send(
-            body=xml_format,
-            destination="/topic/" + self.config["outgoing_topic"],
-        )
-
     def connect_to_camera(self):
         """CameraAgent: Connect to the camera
 

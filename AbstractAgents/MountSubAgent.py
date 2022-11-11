@@ -154,6 +154,16 @@ class MountSubAgent(SubAgent):
         else:
             warnings.warn(f"Unknown command: {command}")
 
+    def get_status_and_broadcast(self):
+        """Get the current mount status and broadcast it
+
+        _extended_summary_
+        """
+        # Check if the cooler is connected; get status or set empty dictionary
+        device_status = self.device_status if self.device_mount.isConnected() else {}
+        # Broadcast
+        self.broadcast_status(device_status)
+
     def check_mount_connection(self):
         """Check that the client is connected to the mount
         Returns
@@ -173,7 +183,6 @@ class MountSubAgent(SubAgent):
 
         Must be implemented by hardware-specific Agent
         """
-        raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
     def disconnect_from_mount(self):
@@ -181,7 +190,6 @@ class MountSubAgent(SubAgent):
 
         Must be implemented by hardware-specific Agent
         """
-        raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
     def park(self):
@@ -189,4 +197,3 @@ class MountSubAgent(SubAgent):
 
         Must be implemented by hardware-specific Agent
         """
-        raise NotImplementedError("Specific hardware Agent must implement this method.")

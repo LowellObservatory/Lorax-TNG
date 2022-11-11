@@ -125,6 +125,18 @@ class FilterWheelSubAgent(SubAgent):
         else:
             warnings.warn(f"Unknown command: {command}")
 
+    def get_status_and_broadcast(self):
+        """Get the current filter wheel status and broadcast it
+
+        _extended_summary_
+        """
+        # Check if the cooler is connected; get status or set empty dictionary
+        device_status = (
+            self.device_status if self.device_filterwheel.isConnected() else {}
+        )
+        # Broadcast
+        self.broadcast_status(device_status)
+
     def check_filterwheel_connection(self):
         """Check that the client is connected to the filter wheel
 
@@ -147,7 +159,6 @@ class FilterWheelSubAgent(SubAgent):
 
         Must be implemented by hardware-specific Agent
         """
-        raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
     def disconnect_from_filterwheel(self):
@@ -155,7 +166,6 @@ class FilterWheelSubAgent(SubAgent):
 
         Must be implemented by hardware-specific Agent
         """
-        raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
     def home(self):
@@ -163,7 +173,6 @@ class FilterWheelSubAgent(SubAgent):
 
         Must be implemented by hardware-specific Agent
         """
-        raise NotImplementedError("Specific hardware Agent must implement this method.")
 
     @abstractmethod
     def move(self, slot):
@@ -171,4 +180,3 @@ class FilterWheelSubAgent(SubAgent):
 
         Must be implemented by hardware-specific Agent
         """
-        raise NotImplementedError("Specific hardware Agent must implement this method.")
