@@ -213,5 +213,5 @@ class IndiCcdCooler(CcdCoolerSubAgent):
         self.indiclient.sendNewSwitch(cooler_power)
         print("INDI CCD Cooler: Power switched off")
 
-    def reset_parameters():
+    def reset_parameters(self):
         pass

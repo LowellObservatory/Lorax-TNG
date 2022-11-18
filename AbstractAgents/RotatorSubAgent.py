@@ -135,7 +135,7 @@ class RotatorSubAgent(SubAgent):
         _extended_summary_
         """
         # Check if the cooler is connected; get status or set empty dictionary
-        device_status = self.device_status if self.device_rotator.isConnected() else {}
+        device_status = self.device_status if self.check_rotator_connection() else {}
         # Broadcast
         self.broadcast_status(device_status)
 

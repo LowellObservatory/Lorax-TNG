@@ -283,7 +283,7 @@ class CameraSubAgent(SubAgent):
         _extended_summary_
         """
         # Check if the cooler is connected; get status or set empty dictionary
-        device_status = self.device_status if self.device_ccd.isConnected() else {}
+        device_status = self.device_status if self.check_camera_connection() else {}
         # Broadcast
         self.broadcast_status(device_status)
 
@@ -298,7 +298,7 @@ class CameraSubAgent(SubAgent):
         if self.device_ccd and self.device_ccd.isConnected():
             return True
 
-        print("Warning: Camera must be connected first (camera: connect_to_camera)")
+        # print("Warning: Camera must be connected first (camera: connect_to_camera)")
         return False
 
     def set_binning(self, x_binning, y_binning):

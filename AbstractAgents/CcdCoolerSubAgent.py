@@ -146,7 +146,7 @@ class CcdCoolerSubAgent(SubAgent):
         _extended_summary_
         """
         # Check if the cooler is connected; get status or set empty dictionary
-        device_status = self.device_status if self.device_cooler.isConnected() else {}
+        device_status = self.device_status if self.check_cooler_connection() else {}
         # Broadcast
         self.broadcast_status(device_status)
 
@@ -161,9 +161,9 @@ class CcdCoolerSubAgent(SubAgent):
         if self.device_cooler and self.device_cooler.isConnected():
             return True
 
-        print(
-            "Warning: CCD Cooler must be connected first (cooler : connect_to_cooler)"
-        )
+        # print(
+        #     "Warning: CCD Cooler must be connected first (cooler : connect_to_cooler)"
+        # )
         return False
 
     @abstractmethod

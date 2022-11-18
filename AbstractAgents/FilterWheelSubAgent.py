@@ -132,7 +132,7 @@ class FilterWheelSubAgent(SubAgent):
         """
         # Check if the cooler is connected; get status or set empty dictionary
         device_status = (
-            self.device_status if self.device_filterwheel.isConnected() else {}
+            self.device_status if self.check_filterwheel_connection() else {}
         )
         # Broadcast
         self.broadcast_status(device_status)
