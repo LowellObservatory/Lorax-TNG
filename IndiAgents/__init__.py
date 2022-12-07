@@ -8,13 +8,11 @@
 #
 #  @author: dlytle, tbowers
 
-"""Lorax Abstract Agent Module
+"""INDI-Based Agents Module
 
 This module is part of the Lorax-TNG package, written at Lowell Observatory.
-
-The Abstract Agents in the modules within this directory are imported into the
-AbstractAgents namespace for ease of calling them.
 """
 
-from AbstractAgents.SpecialAgent import *  # noqa
-from AbstractAgents.SubAgent import *  # noqa
+# from IndiAgents.IndiCamera import *  # noqa
+# from IndiAgents.IndiCcdCooler import *  # noqa
+# from IndiAgents.IndiProtocol import *  # noqa

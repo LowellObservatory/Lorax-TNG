@@ -1,7 +1,8 @@
 ---
 agents_in_composite:
   - filterwheel:
-      agent_name: SBIGFilterWheel
+      agent_name: IndiFilterWheel
+      agent_protocol: IndiAgents
       dto_command_topic: lorax.timo.filterwheel.dto
       fw_host: morgan.lowell.edu
       fw_name: CCD Simulator
@@ -12,7 +13,8 @@ agents_in_composite:
         - FILTER_SLOT
         - FILTER_NAME
   - camera:
-      agent_name: SBIGCamera
+      agent_name: IndiCamera
+      agent_protocol: IndiAgents
       camera_host: morgan.lowell.edu
       camera_name: CCD Simulator
       camera_port: 7624
@@ -26,7 +28,8 @@ agents_in_composite:
         - CCD_EXPOSURE
         - CCD_DIRECTORY_LOCATION
   - ccdcooler:
-      agent_name: SBIGCcdCooler
+      agent_name: IndiCcdCooler
+      agent_protocol: IndiAgents
       cooler_host: morgan.lowell.edu
       cooler_name: CCD Simulator
       cooler_port: 7624

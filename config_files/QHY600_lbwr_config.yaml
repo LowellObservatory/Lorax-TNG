@@ -1,0 +1,37 @@
+---
+agent_name: "LDT Boresight Wide Red"
+agents_in_composite:
+  - camera1:
+      agent_name: IndiCamera
+      agent_protocol: IndiAgents
+      camera_name: "QHY CCD QHY600M-d0a5a44"
+      camera_host: "localhost"
+      camera_port: 7624
+      incoming_topic: lorax.ldtboresight.dto.camera1
+      outgoing_topic: lorax.ldtboresight.camera1.broadcast
+      dto_command_topic: lorax.ldtboresight.camera1.dto
+      status:
+        - CCD_FRAME_TYPE
+        - CCD_BINNING
+        - CCD_GAIN
+        - CCD_EXPOSURE
+        - CCD_DIRECTORY_LOCATION
+  - ccdcooler1:
+      agent_name: IndiCcdCooler
+      agent_protocol: IndiAgents
+      cooler_name: "QHY CCD QHY600M-d0a5a44"
+      cooler_host: "localhost"
+      cooler_port: 7624
+      incoming_topic: lorax.ldtboresight.dto.ccdcooler1
+      outgoing_topic: lorax.ldtboresight.ccdcooler1.broadcast
+      dto_command_topic: lorax.ldtboresight.ccdcooler1.dto
+      status:
+        - CCD_COOLER
+        - CCD_TEMPERATURE
+        - CCD_COOLER_POWER
+        - CCD_TEMP_RAMP
+broker_hosts:
+  - tanagra
+  - 61613
+log_file: qhy600_lbwr.log
+message_wait_time: 0.5

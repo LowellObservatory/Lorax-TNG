@@ -10,11 +10,11 @@ import time
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
-from AbstractAgents.CompositeAgent import CompositeAgent
+from CompositeAgent import CompositeAgent
 
 
-class SBIGComposite(CompositeAgent):
-    """SBIG Composite Agent
+class PWMountComposite(CompositeAgent):
+    """PWMount Composite Agent
 
     _extended_summary_
 
@@ -26,7 +26,7 @@ class SBIGComposite(CompositeAgent):
 
     def __init__(self, config_file):
         CompositeAgent.__init__(self, config_file)
-        print("in SBIGComposite.init")
+        print("in PWMountComposite.init")
 
     def get_status_and_broadcast(self):
         # Send "get_status_and_broadcast" to each of the sub_agents.
@@ -37,12 +37,12 @@ class SBIGComposite(CompositeAgent):
 
 if __name__ == "__main__":
     print(" in main ")
-    SBIG_comp = SBIGComposite("SBIG-INDI-Composite/SBIG_composite_config.yaml")
+    PWMount_comp = PWMountComposite("PWMount_Agent/PWMountConfig.yaml")
     print(" in main after instantiate ")
     while True:
-        if SBIG_comp.message_received:
-            SBIG_comp.handle_message()
-            SBIG_comp.message_received = 0
+        if PWMount_comp.message_received:
+            PWMount_comp.handle_message()
+            PWMount_comp.message_received = 0
         else:
-            SBIG_comp.get_status_and_broadcast()
-        time.sleep(SBIG_comp.config["message_wait_time"])
+            PWMount_comp.get_status_and_broadcast()
+        time.sleep(PWMount_comp.config["message_wait_time"])
